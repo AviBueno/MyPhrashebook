@@ -5,4 +5,5 @@
 	<string name="Button">Button</string>
 	<string name="CategorySpinTitle">Category:</string>
 	<string name="LanguageSpinTitle">Language:</string>
+	<string name="MyPhrasebookTitle">My Phrasebook</string>	
 </resources>
