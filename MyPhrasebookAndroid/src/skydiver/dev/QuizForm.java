@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,27 +33,53 @@ public class QuizForm extends Activity
 	private SpinnerData mSDCategory;
 	private Cursor mCat2PhraseRows = null;
 	private HashSet<Integer> mAlreadyUsedQuestionRows = new HashSet<Integer>();
+	private ArrayList<Button> mAnswerButtons = new ArrayList<Button>();
+	private HashMap<Integer, String> mTheOptionalAnswers;
 	private TextView mTxtQuestion;
 	private TextView mTxtQuestionsCounter;
-	private ArrayList<Button> mAnswerButtons = new ArrayList<Button>();
-	String[] mTheOptionalAnswers = new String[ 4 ];
+	private TextView mTxtSuccessPercentage;
+	private int mNumCorrectlyAnswered;
+	private int mNumTotalAnswered;
+	private Button mRevealButton;
+	private ViewGroup mAnswerButtonsPanel;
+	private int mNumAnswers = 4;
 	
 	private OnClickListener mButtonsListener = new OnClickListener() {
 	    public void onClick(View v) {
-	        // Perform action on clicks
-	        Button b = (Button) v;
-	        String sUserAnswer = b.getText().toString();
-	        if ( sUserAnswer.equals(mTheAnswer) ) // Correct!
-	        {
-	        	DrawQuestion();
-	        }
-	        else
-	        {
-		        String toastMsg = "Try Again";	// TODO Get string from strings.xml
-		        Toast.makeText(QuizForm.this.getApplicationContext(), toastMsg, Toast.LENGTH_SHORT).show();
+	    	if ( mRevealButton.getVisibility() != View.GONE )
+	    	{
+	    		mRevealButton.setVisibility( View.GONE );
+	    		mAnswerButtonsPanel.setVisibility( View.VISIBLE );
+	    	}
+	    	else
+	    	{
+		        // Perform action on clicks
+		        Button b = (Button) v;
+		        String sUserAnswer = b.getText().toString();
+	
+		        mNumTotalAnswered++;
+		        
+		        if ( sUserAnswer.equals(mTheAnswer) ) // Correct!
+		        {
+		        	mNumCorrectlyAnswered++;
+		        	
+		        	DrawQuestion();
+		        }
+		        else
+		        {
+			        Toast.makeText(QuizForm.this.getApplicationContext(), R.string.TryAgain, Toast.LENGTH_SHORT).show();
+			    }
+		        
+		        setPercentage( mNumCorrectlyAnswered, mNumTotalAnswered );
 		    }
 	    }
 	};	
+
+	private void setPercentage(int nCorrectlyAnswered, int nTotalAnswered)
+	{
+        int nPercentage = (int)(((float)nCorrectlyAnswered / nTotalAnswered) * 100);
+		mTxtSuccessPercentage.setText( String.format( "%d / %d (%d%%)", nCorrectlyAnswered, nTotalAnswered, nPercentage ) );
+	}
 	
     /** Called when the activity is first created. */
     @Override
@@ -60,25 +87,33 @@ public class QuizForm extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.quiz);
 
-        // Save a pointer to the question text
+        // Get a reference to certain views
         mTxtQuestion = (TextView)findViewById(R.id.txtQuestion);
         mTxtQuestionsCounter = (TextView)findViewById(R.id.txtQuestionsCounter);
+        mTxtSuccessPercentage = (TextView)findViewById(R.id.txtSuccessPercentage);
+        
+        mRevealButton = (Button)findViewById(R.id.bttRevealAnswer);
+        mRevealButton.setOnClickListener( mButtonsListener );
         
         InitCategoriesSpinner();
         InitLanguageSpinner();
-
-        // Attach a click listener to all Answer buttons
-        ViewGroup buttonsPanel = (ViewGroup)findViewById(R.id.panelAnswerButtons);
-        int nChildren = buttonsPanel.getChildCount();
-        for ( int i = 0; i < nChildren; i++ )
+        
+        // Create answer buttons and attach a click listener to them
+        mAnswerButtonsPanel = (ViewGroup)findViewById(R.id.panelAnswerButtons);
+        for ( int i = 0; i < mNumAnswers; i++ )
         {
-        	View child = buttonsPanel.getChildAt(i);
-        	if ( child instanceof Button )
-        	{
-        		Button b = (Button)child;
-        		b.setOnClickListener( mButtonsListener );
-        		mAnswerButtons.add( b );	// Add to buttons array
-        	}
+        	Button b = null;
+        	try {
+        		View v = this.getLayoutInflater().inflate( R.layout.quiz_answer_button, mAnswerButtonsPanel, false );
+        		b = (Button)v;
+        		mAnswerButtonsPanel.addView( b );
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        	
+    		b.setOnClickListener( mButtonsListener );
+    		mAnswerButtons.add( b );	// Add to buttons array
         }
         
         ResetQuestions();
@@ -86,8 +121,11 @@ public class QuizForm extends Activity
 
     private void DrawQuestion()
     {
+		mRevealButton.setVisibility( View.VISIBLE );
+		mAnswerButtonsPanel.setVisibility( View.GONE );
+		
 		boolean bQuestionIsInLang1;
-
+		
 		// Decide if to ask in LANG1 or LANG2
 		if ( mQuestionLanguage == MyPhrasebookDB.TblPhrasebook.LANG1 )
 		{
@@ -127,7 +165,10 @@ public class QuizForm extends Activity
             quizRow = MyPhrasebookDB.Instance().GetPhraseRowByID( phraseRowId );
 	    }
 	    
-        if ( quizRow != null ) { quizRow.moveToFirst(); }
+        if ( quizRow != null )
+        {
+        	quizRow.moveToFirst();
+        }
 
        	// Select the question text
    	    mTheQuestion = getQuestion( bQuestionIsInLang1, quizRow );
@@ -208,6 +249,7 @@ public class QuizForm extends Activity
 		int nCorrectAnswerIdx = mRandom.nextInt( nFalseAnswers );
 
 		// Fill the answers
+		mTheOptionalAnswers = new HashMap<Integer, String>();
 		int nOptionalAnswersIdx = 0;	// We need to keep count of which answer we are using next
 		for ( int i = 0; i < nAnswers; i++ )
 		{
@@ -221,8 +263,8 @@ public class QuizForm extends Activity
 				sAnswer = optionalAnswers[ nOptionalAnswersIdx++ ];
 			}
 
-			mAnswerButtons.get( i ).setText(sAnswer); //mAnswerButtons.get( i ).setText("");
-			mTheOptionalAnswers[ i ] = sAnswer;		// Save the answer's text for later (see timer1_Tick)
+			mAnswerButtons.get( i ).setText(sAnswer); // TODO cleanup: mAnswerButtons.get( i ).setText(sAnswer);
+			mTheOptionalAnswers.put( i, sAnswer );	// Save the answer's text for later
 		}
 
 		mTxtQuestionsCounter.setText( String.format( "%d / %d", mAlreadyUsedQuestionRows.size(), mCat2PhraseRows.getCount() ) );
@@ -334,7 +376,13 @@ public class QuizForm extends Activity
     private void ResetQuestions()
     {
     	mCat2PhraseRows = MyPhrasebookDB.Instance().SelectCat2PhraseRowsByFilter( mSDCategory.getValue() );
+    	
     	mAlreadyUsedQuestionRows.clear();
+    	
+    	mNumCorrectlyAnswered = 0;
+    	mNumTotalAnswered = 0;
+        setPercentage( mNumCorrectlyAnswered, mNumTotalAnswered );
+    	
         DrawQuestion();
 	}
     

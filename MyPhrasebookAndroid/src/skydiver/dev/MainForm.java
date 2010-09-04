@@ -17,7 +17,7 @@ public class MainForm extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         
-//		launchQuizActivity();
+		launchQuizActivity();
         
         try {
 			MyPhrasebookDB.CreateInstance( this.getApplicationContext() );

@@ -25,7 +25,7 @@ public class PhrasebookForm extends Activity {
 		        super.onCreate(savedInstanceState);
 		        setContentView(R.layout.phrasebook);
 		        
-				Cursor cursor = MyPhrasebookDB.Instance().FilterData("");
+				Cursor cursor = MyPhrasebookDB.Instance().FilterPhrasebookRows("");
 		
 				// create the adapter and assign it to the list view
 				m_itemsAdapter = null;
@@ -33,7 +33,7 @@ public class PhrasebookForm extends Activity {
 						this,
 						R.layout.pb_list_item,
 						cursor,
-						new String[] {MyPhrasebookDB.FLD_LANG1, MyPhrasebookDB.FLD_LANG2},
+						new String[] {MyPhrasebookDB.TblPhrasebook.LANG1, MyPhrasebookDB.TblPhrasebook.LANG2},
 						new int[] {R.id.LANG1, R.id.LANG2}
 					);
 				
@@ -47,7 +47,7 @@ public class PhrasebookForm extends Activity {
 			        public void afterTextChanged(Editable s) {}
 			        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 			        public void onTextChanged(CharSequence s, int start, int before, int count) {
-						Cursor cursor = MyPhrasebookDB.Instance().FilterData( s.toString() );
+						Cursor cursor = MyPhrasebookDB.Instance().FilterPhrasebookRows( s.toString() );
 						m_itemsAdapter.changeCursor( cursor );
 			        }
 			    });				

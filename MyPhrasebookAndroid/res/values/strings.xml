@@ -6,4 +6,7 @@
 	<string name="CategorySpinTitle">Category:</string>
 	<string name="LanguageSpinTitle">Ask in:</string>
 	<string name="MyPhrasebookTitle">My Phrasebook</string>	
+	<string name="TryAgain">Try Again</string>	
+	<string name="catWords">Words</string>	
+	<string name="RevealAnswer">\?</string>	
 </resources>

@@ -38,7 +38,7 @@ android:orientation="vertical"
 	</TableLayout>
 	
 	<LinearLayout
-	android:id="@+id/panelAnswerButtons"
+	android:id="@+id/panelMain"
 	android:layout_width="fill_parent"
 	android:layout_height="wrap_content"
 	android:orientation="vertical"
@@ -51,16 +51,38 @@ android:orientation="vertical"
 		android:textSize="20sp"
 		android:text="Question"
 		android:gravity="center"
-		android:layout_weight="1"
+		android:layout_weight="0"
 		/>
 
-		<include android:id="@+id/bttAnswer0" layout="@layout/quiz_answer_button" />
-		<include android:id="@+id/bttAnswer1" layout="@layout/quiz_answer_button" />
-		<include android:id="@+id/bttAnswer2" layout="@layout/quiz_answer_button" />
-		<include android:id="@+id/bttAnswer3" layout="@layout/quiz_answer_button" />
+		<LinearLayout
+		android:id="@+id/panelAnswerButtons"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:orientation="vertical"
+		android:layout_weight="1"
+		>	
+			<include android:id="@+id/bttAnswer0" layout="@layout/quiz_answer_button" />
+			<include android:id="@+id/bttAnswer1" layout="@layout/quiz_answer_button" />
+			<include android:id="@+id/bttAnswer2" layout="@layout/quiz_answer_button" />
+		</LinearLayout>
+		
+		<Button
+			android:id="@+id/bttRevealAnswer"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
+			android:text="@string/RevealAnswer"
+			android:textSize="100sp"
+		/>
 		
 	</LinearLayout>
 
+	<RelativeLayout
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_weight="0"
+		>
+		
 		<TextView
 		android:id="@+id/txtQuestionsCounter"
 		android:layout_width="fill_parent"
@@ -68,7 +90,16 @@ android:orientation="vertical"
 		android:textSize="20sp"
 		android:text="X / Y"
 		android:gravity="left"
-		android:layout_weight="0"
 		/>
-
+		
+		<TextView
+		android:id="@+id/txtSuccessPercentage"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:textSize="20sp"
+		android:text="100%"
+		android:gravity="right"
+		/>
+	</RelativeLayout>
+	
 </LinearLayout>

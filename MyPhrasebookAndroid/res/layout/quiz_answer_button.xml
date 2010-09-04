@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Button
+xmlns:android="http://schemas.android.com/apk/res/android"
+android:id="@+id/bttAnswer"
+android:layout_width="fill_parent"
+android:layout_height="wrap_content"
+android:text="Answer"
+android:textSize="18sp"
+android:layout_weight="1"
+>
+</Button>

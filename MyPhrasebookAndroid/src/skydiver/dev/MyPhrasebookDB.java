@@ -12,7 +12,7 @@ public class MyPhrasebookDB
 {
 	public enum QueryMethod { Contains, BeginsWith, EndsWith, Exact };
 	
-	public class TblPhrasebook
+	public static final class TblPhrasebook
 	{
 		public static final String TABLE_NAME = "Phrasebook";
 		public static final String ID = "_id";
@@ -20,14 +20,14 @@ public class MyPhrasebookDB
 		public static final String LANG2 = "_language";
 	}
 	
-	public class TblCategories
+	public static final class TblCategories
 	{
 		public static final String TABLE_NAME = "Categories";
 		public static final String ID = "_id";
 		public static final String NAME = "_name";
 	}
 	
-	public class TblCat2Phrase
+	public static final class TblCat2Phrase
 	{
 		public static final String TABLE_NAME = "Cat2Phrase";
 		public static final String ID = "_id";
@@ -41,6 +41,8 @@ public class MyPhrasebookDB
 	private Context m_context;
 	private QueryMethod m_queryMethod = QueryMethod.Contains;
 	private HashMap<String,String> mCategoryToQueryMap = new HashMap<String,String>();
+	private HashMap<Integer, String> mCatIdToStringMap;
+
 	
 	private static MyPhrasebookDB mInstance = null;	
 	public static void CreateInstance(Context context) throws InstantiationException
@@ -50,7 +52,7 @@ public class MyPhrasebookDB
 			throw new InstantiationException("MyPhrasebookDB instance already exists");
 		}
 		
-		mInstance = new MyPhrasebookDB( context );
+		mInstance = new MyPhrasebookDB( context.getApplicationContext() );
 	}
 
 	public static void DestroyInstance()
@@ -110,7 +112,7 @@ public class MyPhrasebookDB
 	        String name; 
 	        String id; 
 	        int nameColumn = cursor.getColumnIndex(TblCategories.NAME); 
-	        int idColumn = cursor.getColumnIndex(TblCategories.ID); 
+	        int idColumn = cursor.getColumnIndex(TblCategories.ID);
 	    
 	        do {
 	            name = cursor.getString(nameColumn);
@@ -125,7 +127,7 @@ public class MyPhrasebookDB
 				{
 					// Artificial query for single words.
 					queryString = TblCat2Phrase.CATEGORY_ID + " <> " + id;					
-					mCategoryToQueryMap.put( "Word", queryString );  // TODO Get the string from strings.xml
+					mCategoryToQueryMap.put( m_context.getString( R.string.catWords ), queryString );  // TODO Get the string from strings.xml
 				}
 	        } while (cursor.moveToNext());		
 	    }
@@ -169,7 +171,7 @@ public class MyPhrasebookDB
 	
 	public Cursor SelectCat2PhraseRowsByFilter( String categoryQuery )
 	{
-        Cursor cursor = this.TheDB().rawQuery( "SELECT * FROM " + TblCat2Phrase.TABLE_NAME + " WHERE " + categoryQuery, null );        
+        Cursor cursor = this.TheDB().rawQuery( "SELECT * FROM " + TblCat2Phrase.TABLE_NAME + " WHERE " + categoryQuery, null );
         return cursor;
 	}
 
@@ -182,7 +184,7 @@ public class MyPhrasebookDB
 	public static int getInt(Cursor cursor, String columnName)
 	{
 		int nColIdx = cursor.getColumnIndex(columnName);
-		return cursor.getInt( nColIdx );		
+		return cursor.getInt( nColIdx );
 	}
 
 	public static String dumpCursor(Cursor c)
