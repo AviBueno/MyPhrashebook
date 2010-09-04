@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="hello">Hello World, MainForm!</string>
     <string name="app_name">MPB</string>
-	<string name="Button">Button</string>
 	<string name="CategorySpinTitle">Category:</string>
 	<string name="LanguageSpinTitle">Ask in:</string>
 	<string name="MyPhrasebookTitle">My Phrasebook</string>	
 	<string name="TryAgain">Try Again</string>	
 	<string name="catWords">Words</string>	
 	<string name="RevealAnswer">\?</string>	
+	<string name="Level1">Level 1</string>	
+	<string name="Level2">Level 2</string>	
+	<string name="Level3">Level 3</string>	
+	<string name="Lang1">English</string>	
+	<string name="Lang2">Finnish</string>	
+	<string name="LangBoth">Both</string>
+	<string name="GuessingOn">Turn Guessing On</string>
+	<string name="GuessingOff">Turn Guessing Off</string>
+		
 </resources>

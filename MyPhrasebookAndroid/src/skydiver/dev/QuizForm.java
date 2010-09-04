@@ -11,13 +11,14 @@ import skydiver.dev.MyPhrasebookDB.TblPhrasebook;
 import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,6 +26,10 @@ import android.widget.Toast;
 public class QuizForm extends Activity
 {
 	private static final String LANG_ANY = "ANY";
+	private static final int MI_0 = 0;
+	private static final int MI_1 = 1;
+	private static final int MI_2 = 2;
+	private static final int MI_3 = 3;
 	
 	static Random mRandom = new Random();
 	private String mTheQuestion;
@@ -43,13 +48,13 @@ public class QuizForm extends Activity
 	private Button mRevealButton;
 	private ViewGroup mAnswerButtonsPanel;
 	private int mNumAnswers = 4;
+	private boolean mGuessingOn;
 	
 	private OnClickListener mButtonsListener = new OnClickListener() {
 	    public void onClick(View v) {
 	    	if ( mRevealButton.getVisibility() != View.GONE )
 	    	{
-	    		mRevealButton.setVisibility( View.GONE );
-	    		mAnswerButtonsPanel.setVisibility( View.VISIBLE );
+	    		showGuessingButton( false );
 	    	}
 	    	else
 	    	{
@@ -73,7 +78,13 @@ public class QuizForm extends Activity
 		        setPercentage( mNumCorrectlyAnswered, mNumTotalAnswered );
 		    }
 	    }
-	};	
+	};
+	
+	private void showGuessingButton( boolean show )
+	{
+		mRevealButton.setVisibility( show ? View.VISIBLE : View.GONE );
+		mAnswerButtonsPanel.setVisibility( show ? View.GONE : View.VISIBLE );
+	}
 
 	private void setPercentage(int nCorrectlyAnswered, int nTotalAnswered)
 	{
@@ -95,34 +106,37 @@ public class QuizForm extends Activity
         mRevealButton = (Button)findViewById(R.id.bttRevealAnswer);
         mRevealButton.setOnClickListener( mButtonsListener );
         
+        mGuessingOn = true;
+        
         InitCategoriesSpinner();
         InitLanguageSpinner();
-        
-        // Create answer buttons and attach a click listener to them
-        mAnswerButtonsPanel = (ViewGroup)findViewById(R.id.panelAnswerButtons);
-        for ( int i = 0; i < mNumAnswers; i++ )
-        {
-        	Button b = null;
-        	try {
-        		View v = this.getLayoutInflater().inflate( R.layout.quiz_answer_button, mAnswerButtonsPanel, false );
-        		b = (Button)v;
-        		mAnswerButtonsPanel.addView( b );
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-        	
-    		b.setOnClickListener( mButtonsListener );
-    		mAnswerButtons.add( b );	// Add to buttons array
-        }
+        InitAnswerButtons();        
         
         ResetQuestions();
     }
 
-    private void DrawQuestion()
+    private void InitAnswerButtons()
     {
-		mRevealButton.setVisibility( View.VISIBLE );
-		mAnswerButtonsPanel.setVisibility( View.GONE );
+        // Create answer buttons and attach a click listener to them
+        mAnswerButtonsPanel = (ViewGroup)findViewById(R.id.panelAnswerButtons);
+        mAnswerButtonsPanel.removeAllViews();
+        mAnswerButtons.clear();
+        for ( int i = 0; i < mNumAnswers; i++ )
+        {
+        	Button b = (Button)this.getLayoutInflater().inflate( R.layout.quiz_answer_button, mAnswerButtonsPanel, false );
+       		mAnswerButtonsPanel.addView( b );
+        	
+    		b.setOnClickListener( mButtonsListener );
+    		mAnswerButtons.add( b );	// Add to buttons array
+        }
+	}
+
+	private void DrawQuestion()
+    {
+		if ( mGuessingOn )
+		{
+			showGuessingButton( true );
+		}
 		
 		boolean bQuestionIsInLang1;
 		
@@ -343,11 +357,10 @@ public class QuizForm extends Activity
 	                android.R.layout.simple_spinner_item
                 );
 
-        // TODO Get the strings from strings.xml
         mQuestionLanguage = QuizForm.LANG_ANY; // Save default upon first time
-        adapter.add( new SpinnerData( "Both", QuizForm.LANG_ANY ) );
-        adapter.add( new SpinnerData( "English", MyPhrasebookDB.TblPhrasebook.LANG1 ) );
-        adapter.add( new SpinnerData( "Finnish", MyPhrasebookDB.TblPhrasebook.LANG2 ) );
+        adapter.add( new SpinnerData( getString(R.string.LangBoth), QuizForm.LANG_ANY ) );
+        adapter.add( new SpinnerData( getString(R.string.Lang1), MyPhrasebookDB.TblPhrasebook.LANG1 ) );
+        adapter.add( new SpinnerData( getString(R.string.Lang2), MyPhrasebookDB.TblPhrasebook.LANG2 ) );
         
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
@@ -385,6 +398,55 @@ public class QuizForm extends Activity
     	
         DrawQuestion();
 	}
+    
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        menu.add(0, MI_0, 0, R.string.Level1);
+        menu.add(0, MI_1, 0, R.string.Level2);
+        menu.add(0, MI_2, 0, R.string.Level3);
+        menu.add(0, MI_3, 0, mGuessingOn ? R.string.GuessingOff : R.string.GuessingOn );
+        return true;
+    }
+    
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        MenuItem mi = menu.findItem( MI_3 );
+        mi.setTitle( mGuessingOn ? R.string.GuessingOff : R.string.GuessingOn );
+        return true;
+    }
+
+    @Override
+    public boolean onMenuItemSelected(int featureId, MenuItem item) {
+        switch(item.getItemId()) {
+        case MI_0:
+	        mNumAnswers = 3;
+	        InitAnswerButtons();
+	        ResetQuestions();
+            return true;
+            
+        case MI_1:
+	        mNumAnswers = 4;
+	        InitAnswerButtons();
+	        ResetQuestions();
+            return true;
+            
+        case MI_2:
+	        mNumAnswers = 5;
+	        InitAnswerButtons();
+	        ResetQuestions();
+            return true;
+            
+        case MI_3:
+        	mGuessingOn = ! mGuessingOn;
+        	
+        	showGuessingButton( mGuessingOn );
+            return true;            
+        }
+       
+        return super.onMenuItemSelected(featureId, item);
+    }
     
     class SpinnerData implements Comparable {
         public SpinnerData( String spinnerText, String value ) {

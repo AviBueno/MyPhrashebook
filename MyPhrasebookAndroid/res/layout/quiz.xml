@@ -52,6 +52,8 @@ android:orientation="vertical"
 		android:text="Question"
 		android:gravity="center"
 		android:layout_weight="0"
+		android:paddingTop="5px"
+		android:paddingBottom="5px"
 		/>
 
 		<LinearLayout
@@ -60,10 +62,8 @@ android:orientation="vertical"
 		android:layout_height="wrap_content"
 		android:orientation="vertical"
 		android:layout_weight="1"
-		>	
-			<include android:id="@+id/bttAnswer0" layout="@layout/quiz_answer_button" />
-			<include android:id="@+id/bttAnswer1" layout="@layout/quiz_answer_button" />
-			<include android:id="@+id/bttAnswer2" layout="@layout/quiz_answer_button" />
+		>
+			<!-- Dynamic button resources will be embedded here -->	
 		</LinearLayout>
 		
 		<Button

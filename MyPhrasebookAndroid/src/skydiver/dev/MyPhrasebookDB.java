@@ -129,7 +129,9 @@ public class MyPhrasebookDB
 					queryString = TblCat2Phrase.CATEGORY_ID + " <> " + id;					
 					mCategoryToQueryMap.put( m_context.getString( R.string.catWords ), queryString );  // TODO Get the string from strings.xml
 				}
-	        } while (cursor.moveToNext());		
+	        } while (cursor.moveToNext());
+	        
+	        cursor.close();
 	    }
 	}
 	
