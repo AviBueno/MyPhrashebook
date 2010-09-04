@@ -61,4 +61,14 @@ android:orientation="vertical"
 		
 	</LinearLayout>
 
+		<TextView
+		android:id="@+id/txtQuestionsCounter"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:textSize="20sp"
+		android:text="X / Y"
+		android:gravity="left"
+		android:layout_weight="0"
+		/>
+
 </LinearLayout>

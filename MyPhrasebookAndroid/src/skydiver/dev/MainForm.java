@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.Toast;
 
 public class MainForm extends Activity {
 
@@ -16,7 +17,7 @@ public class MainForm extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         
-		launchQuizActivity();
+//		launchQuizActivity();
         
         try {
 			MyPhrasebookDB.CreateInstance( this.getApplicationContext() );
@@ -46,6 +47,7 @@ public class MainForm extends Activity {
 	protected void onDestroy() {
 		super.onDestroy();
         MyPhrasebookDB.DestroyInstance();
+        Toast.makeText(this.getApplicationContext(), "Thank you for using MPB", Toast.LENGTH_SHORT).show();
 	}
     
     private void launchDictionaryActivity()

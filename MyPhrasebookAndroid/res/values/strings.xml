@@ -4,6 +4,6 @@
     <string name="app_name">MPB</string>
 	<string name="Button">Button</string>
 	<string name="CategorySpinTitle">Category:</string>
-	<string name="LanguageSpinTitle">Language:</string>
+	<string name="LanguageSpinTitle">Ask in:</string>
 	<string name="MyPhrasebookTitle">My Phrasebook</string>	
 </resources>

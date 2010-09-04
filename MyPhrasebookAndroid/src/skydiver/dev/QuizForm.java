@@ -33,6 +33,7 @@ public class QuizForm extends Activity
 	private Cursor mCat2PhraseRows = null;
 	private HashSet<Integer> mAlreadyUsedQuestionRows = new HashSet<Integer>();
 	private TextView mTxtQuestion;
+	private TextView mTxtQuestionsCounter;
 	private ArrayList<Button> mAnswerButtons = new ArrayList<Button>();
 	String[] mTheOptionalAnswers = new String[ 4 ];
 	
@@ -48,7 +49,7 @@ public class QuizForm extends Activity
 	        else
 	        {
 		        String toastMsg = "Try Again";	// TODO Get string from strings.xml
-		        Toast.makeText(QuizForm.this, toastMsg, Toast.LENGTH_SHORT).show();
+		        Toast.makeText(QuizForm.this.getApplicationContext(), toastMsg, Toast.LENGTH_SHORT).show();
 		    }
 	    }
 	};	
@@ -61,6 +62,7 @@ public class QuizForm extends Activity
 
         // Save a pointer to the question text
         mTxtQuestion = (TextView)findViewById(R.id.txtQuestion);
+        mTxtQuestionsCounter = (TextView)findViewById(R.id.txtQuestionsCounter);
         
         InitCategoriesSpinner();
         InitLanguageSpinner();
@@ -223,7 +225,7 @@ public class QuizForm extends Activity
 			mTheOptionalAnswers[ i ] = sAnswer;		// Save the answer's text for later (see timer1_Tick)
 		}
 
-//		questionsCountLabel.Text = string.Format( "{0} / {1}", m_AlreadyUsedQuestionRows.Count, quizRows.Length );
+		mTxtQuestionsCounter.setText( String.format( "%d / %d", mAlreadyUsedQuestionRows.size(), mCat2PhraseRows.getCount() ) );
     }
     
     private String getQuestion( boolean bQuestionIsInLang1, Cursor row )
