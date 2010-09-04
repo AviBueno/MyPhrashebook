@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hello">Hello World, MainForm!</string>
+    <string name="app_name">MPB</string>
+	<string name="Button">Button</string>
+	<string name="CategorySpinTitle">Category:</string>
+	<string name="LanguageSpinTitle">Language:</string>
+</resources>
