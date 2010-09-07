@@ -2,6 +2,7 @@ package skydiver.dev;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Set;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -25,6 +26,9 @@ public class MyPhrasebookDB
 		public static final String TABLE_NAME = "Categories";
 		public static final String ID = "_id";
 		public static final String NAME = "_name";
+		
+		public static final String VAL_PHRASE = "Phrases";
+		public static final Object VAL_ALL = "All";
 	}
 	
 	public static final class TblCat2Phrase
@@ -40,8 +44,10 @@ public class MyPhrasebookDB
 	private MySQLiteOpenHelper m_dataHelper;
 	private Context m_context;
 	private QueryMethod m_queryMethod = QueryMethod.Contains;
-	private HashMap<String,String> mCategoryToQueryMap = new HashMap<String,String>();
+	private HashMap<String,Integer> mCatNameToCatIdMap = new HashMap<String,Integer>();
 	private HashMap<Integer, String> mCatIdToStringMap;
+	private final String mStrCatNameWords;
+	private final String mStrCatNameUncategorized;
 
 	
 	private static MyPhrasebookDB mInstance = null;	
@@ -78,6 +84,9 @@ public class MyPhrasebookDB
 	{ 
 		m_context = context; 
 
+		mStrCatNameWords = context.getString( R.string.catWords );
+		mStrCatNameUncategorized = context.getString( R.string.catUncategorized );
+		
 		// Attempt to create (upon first time) or open (in consecutive launches) the database 
 		Package pack = this.getClass().getPackage();
 		m_dbPath = "/data/data/" + pack.getName() + "/databases/";
@@ -110,32 +119,31 @@ public class MyPhrasebookDB
 	    if (cursor.moveToFirst())
 	    {
 	        String name; 
-	        String id; 
+	        Integer id; 
 	        int nameColumn = cursor.getColumnIndex(TblCategories.NAME); 
 	        int idColumn = cursor.getColumnIndex(TblCategories.ID);
 	    
 	        do {
 	            name = cursor.getString(nameColumn);
-	            id = cursor.getString(idColumn);
+	            id = cursor.getInt(idColumn);
 
+	            mCatNameToCatIdMap.put( name, id );
+	            
 				// Compose the query that will be execute on the Cat2Phrase table
 				// in order to select lines of a certain category
-	            String queryString = TblCat2Phrase.CATEGORY_ID + " = " + id;  
-	            mCategoryToQueryMap.put( name, queryString );  
-
-				if ( name.equals("Phrase") )
-				{
-					// Artificial query for single words.
-					queryString = TblCat2Phrase.CATEGORY_ID + " <> " + id;					
-					mCategoryToQueryMap.put( m_context.getString( R.string.catWords ), queryString );  // TODO Get the string from strings.xml
-				}
+//	            String queryString = TblCat2Phrase.CATEGORY_ID + " = " + id;  
+//	            mCategoryToQueryMap.put( name, queryString );  
 	        } while (cursor.moveToNext());
+
+	        // Add special cases
+	        mCatNameToCatIdMap.put( mStrCatNameWords, -1 );
+	        mCatNameToCatIdMap.put( mStrCatNameUncategorized, -1 );
 	        
 	        cursor.close();
 	    }
 	}
 	
-	HashMap<String,String> getCategoryToQueryMap() { return mCategoryToQueryMap; }
+	Set<String> getCategoryToQueryMap() { return mCatNameToCatIdMap.keySet(); }
 	
 	public void setQueryMethod( QueryMethod queryMethod )
 	{
@@ -171,9 +179,31 @@ public class MyPhrasebookDB
         return cursor;
 	}
 	
-	public Cursor SelectCat2PhraseRowsByFilter( String categoryQuery )
+	public Cursor selectCat2PhraseRowsByCatName( String catName )
 	{
-        Cursor cursor = this.TheDB().rawQuery( "SELECT * FROM " + TblCat2Phrase.TABLE_NAME + " WHERE " + categoryQuery, null );
+		String query = null;
+		
+		if ( catName.equals( mStrCatNameUncategorized ) )
+		{
+			// Select all phrases which have exactly one category --> i.e. the "All" category.
+			// These ones were never categorized and live in their own "uncategorized" category.
+			query = "SELECT * FROM " + TblCat2Phrase.TABLE_NAME + " GROUP BY _phraseID HAVING COUNT(_phraseID) = 1";
+		}
+		else if ( catName.equals( mStrCatNameWords ) )
+		{
+			// A "word" is any entry that was not categorized as a "phrase"
+			Integer catPhraseID = mCatNameToCatIdMap.get( TblCategories.VAL_PHRASE );
+			query = "SELECT * FROM " + TblCat2Phrase.TABLE_NAME + " WHERE _catID <> " + catPhraseID.toString();
+		}
+		else
+		{
+			// If we got so far, catName represents a database-value category name
+			Integer catPhraseID = mCatNameToCatIdMap.get( catName );
+			query = "SELECT * FROM " + TblCat2Phrase.TABLE_NAME + " WHERE _catID = " + catPhraseID;
+		}
+		
+		// Select the values based on the query
+        Cursor cursor = this.TheDB().rawQuery( query, null );
         return cursor;
 	}
 
@@ -209,5 +239,9 @@ public class MyPhrasebookDB
 		} while ( c.moveToNext() );
 		
 		return s;
+	}
+
+	public static String getUncategorizedQuery() {
+		return "_id = _id group by _phraseID having count(_phraseID) = 1";
 	}
 }

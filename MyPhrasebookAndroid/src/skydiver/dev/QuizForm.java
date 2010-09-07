@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 
 import skydiver.dev.MyPhrasebookDB.TblCat2Phrase;
 import skydiver.dev.MyPhrasebookDB.TblPhrasebook;
@@ -306,16 +307,14 @@ public class QuizForm extends Activity
 	                android.R.layout.simple_spinner_item
                 );
 
-        HashMap<String,String> categoryToQueryMap = MyPhrasebookDB.Instance().getCategoryToQueryMap();
+        Set<String> categoryNames = MyPhrasebookDB.Instance().getCategoryToQueryMap();
         
-        for (HashMap.Entry<String, String> entry : categoryToQueryMap.entrySet())
+        for (String catName : categoryNames)
         {
-            String name = entry.getKey();
-            String query = entry.getValue();
-            SpinnerData sd = new SpinnerData( name, query );
+            SpinnerData sd = new SpinnerData( catName, catName );
             adapter.add( sd );
             			
-            if ( name.equals("All") ) // TODO Get the string from strings.xml
+            if ( catName.equals( MyPhrasebookDB.TblCategories.VAL_ALL ) )
             {
             	mSDCategory = sd; // Default upon first time
             }
@@ -388,8 +387,8 @@ public class QuizForm extends Activity
     
     private void ResetQuestions()
     {
-    	mCat2PhraseRows = MyPhrasebookDB.Instance().SelectCat2PhraseRowsByFilter( mSDCategory.getValue() );
-    	
+    	String catName = mSDCategory.getValue();
+    	mCat2PhraseRows = MyPhrasebookDB.Instance().selectCat2PhraseRowsByCatName( catName );    	
     	mAlreadyUsedQuestionRows.clear();
     	
     	mNumCorrectlyAnswered = 0;
@@ -448,6 +447,9 @@ public class QuizForm extends Activity
         return super.onMenuItemSelected(featureId, item);
     }
     
+    /*
+     * Spinner Data: Data structure for spinner controls 
+     */    
     class SpinnerData implements Comparable {
         public SpinnerData( String spinnerText, String value ) {
             this.mSpinnerText = spinnerText;
