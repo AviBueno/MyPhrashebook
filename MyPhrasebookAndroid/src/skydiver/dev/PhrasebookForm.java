@@ -3,7 +3,6 @@ package skydiver.dev;
 import java.util.HashMap;
 import java.util.List;
 
-import skydiver.dev.MyPhrasebookDB.QueryMethod;
 import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -54,8 +53,6 @@ public class PhrasebookForm extends Activity {
 			}
 			catch ( Exception e )
 			{
-				String m = e.getMessage();
-				m = m;
 			}
 		}
 }

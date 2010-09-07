@@ -450,7 +450,7 @@ public class QuizForm extends Activity
     /*
      * Spinner Data: Data structure for spinner controls 
      */    
-    class SpinnerData implements Comparable {
+    class SpinnerData implements Comparable<SpinnerData> {
         public SpinnerData( String spinnerText, String value ) {
             this.mSpinnerText = spinnerText;
             this.mValue = value;
@@ -468,9 +468,8 @@ public class QuizForm extends Activity
             return mSpinnerText;
         }
 
-        public int compareTo( Object o )
+        public int compareTo( SpinnerData other )
         {
-        	SpinnerData other = (SpinnerData)o;
         	return this.mSpinnerText.compareTo(other.mSpinnerText);
         }
         

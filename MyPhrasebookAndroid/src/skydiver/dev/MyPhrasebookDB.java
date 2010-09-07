@@ -45,7 +45,6 @@ public class MyPhrasebookDB
 	private Context m_context;
 	private QueryMethod m_queryMethod = QueryMethod.Contains;
 	private HashMap<String,Integer> mCatNameToCatIdMap = new HashMap<String,Integer>();
-	private HashMap<Integer, String> mCatIdToStringMap;
 	private final String mStrCatNameWords;
 	private final String mStrCatNameUncategorized;
 
