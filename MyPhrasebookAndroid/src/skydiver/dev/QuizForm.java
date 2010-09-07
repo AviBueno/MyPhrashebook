@@ -260,7 +260,7 @@ public class QuizForm extends Activity
 		}
 
 		// Select the random location of the correct answer
-		int nCorrectAnswerIdx = mRandom.nextInt( nFalseAnswers );
+		int nCorrectAnswerIdx = mRandom.nextInt( nAnswers );
 
 		// Fill the answers
 		mTheOptionalAnswers = new HashMap<Integer, String>();
