@@ -16,11 +16,12 @@
 		android:gravity="center"
 		android:layout_gravity="center_horizontal"
 		/>
-	<Button
+		
+<Button
 		android:id="@+id/DictionaryButton"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:text="Dictionary"
+		android:text="@string/Dictionary"
 		android:layout_weight="1"
 		/>
 	
@@ -28,7 +29,14 @@
 		android:id="@+id/QuizButton"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:text="Quiz"
+		android:text="@string/Quiz"
+		android:layout_weight="1"
+		/>
+	<Button
+		android:id="@+id/MaintenanceButton"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:text="@string/Maintenance"
 		android:layout_weight="1"
 		/>
 </LinearLayout>
