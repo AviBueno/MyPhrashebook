@@ -51,34 +51,57 @@ public class QuizForm extends Activity
 	private int mNumAnswers = 4;
 	private boolean mGuessingOn;
 	
+	/** Called when the activity is first created. */
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.quiz);
+
+		// Get a reference to certain views
+		mTxtQuestion = (TextView)findViewById(R.id.txtQuestion);
+		mTxtQuestionsCounter = (TextView)findViewById(R.id.txtQuestionsCounter);
+		mTxtSuccessPercentage = (TextView)findViewById(R.id.txtSuccessPercentage);
+		
+		mRevealButton = (Button)findViewById(R.id.bttRevealAnswer);
+		mRevealButton.setOnClickListener( mButtonsListener );
+		
+		mGuessingOn = true;
+		
+		InitCategoriesSpinner();
+		InitLanguageSpinner();
+		InitAnswerButtons();		
+		
+		ResetQuestions();
+	}
+
 	private OnClickListener mButtonsListener = new OnClickListener() {
-	    public void onClick(View v) {
-	    	if ( mRevealButton.getVisibility() != View.GONE )
-	    	{
-	    		showGuessingButton( false );
-	    	}
-	    	else
-	    	{
-		        // Perform action on clicks
-		        Button b = (Button) v;
-		        String sUserAnswer = b.getText().toString();
+		public void onClick(View v) {
+			if ( mRevealButton.getVisibility() != View.GONE )
+			{
+				showGuessingButton( false );
+			}
+			else
+			{
+				// Perform action on clicks
+				Button b = (Button) v;
+				String sUserAnswer = b.getText().toString();
 	
-		        mNumTotalAnswered++;
-		        
-		        if ( sUserAnswer.equals(mTheAnswer) ) // Correct!
-		        {
-		        	mNumCorrectlyAnswered++;
-		        	
-		        	DrawQuestion();
-		        }
-		        else
-		        {
-			        Toast.makeText(QuizForm.this.getApplicationContext(), R.string.TryAgain, Toast.LENGTH_SHORT).show();
-			    }
-		        
-		        setPercentage( mNumCorrectlyAnswered, mNumTotalAnswered );
-		    }
-	    }
+				mNumTotalAnswered++;
+				
+				if ( sUserAnswer.equals(mTheAnswer) ) // Correct!
+				{
+					mNumCorrectlyAnswered++;
+					
+					DrawQuestion();
+				}
+				else
+				{
+					Toast.makeText(QuizForm.this.getApplicationContext(), R.string.TryAgain, Toast.LENGTH_SHORT).show();
+				}
+				
+				setPercentage( mNumCorrectlyAnswered, mNumTotalAnswered );
+			}
+		}
 	};
 	
 	private void showGuessingButton( boolean show )
@@ -89,51 +112,28 @@ public class QuizForm extends Activity
 
 	private void setPercentage(int nCorrectlyAnswered, int nTotalAnswered)
 	{
-        int nPercentage = (int)(((float)nCorrectlyAnswered / nTotalAnswered) * 100);
+		int nPercentage = (int)(((float)nCorrectlyAnswered / nTotalAnswered) * 100);
 		mTxtSuccessPercentage.setText( String.format( "%d / %d (%d%%)", nCorrectlyAnswered, nTotalAnswered, nPercentage ) );
 	}
 	
-    /** Called when the activity is first created. */
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.quiz);
-
-        // Get a reference to certain views
-        mTxtQuestion = (TextView)findViewById(R.id.txtQuestion);
-        mTxtQuestionsCounter = (TextView)findViewById(R.id.txtQuestionsCounter);
-        mTxtSuccessPercentage = (TextView)findViewById(R.id.txtSuccessPercentage);
-        
-        mRevealButton = (Button)findViewById(R.id.bttRevealAnswer);
-        mRevealButton.setOnClickListener( mButtonsListener );
-        
-        mGuessingOn = true;
-        
-        InitCategoriesSpinner();
-        InitLanguageSpinner();
-        InitAnswerButtons();        
-        
-        ResetQuestions();
-    }
-
-    private void InitAnswerButtons()
-    {
-        // Create answer buttons and attach a click listener to them
-        mAnswerButtonsPanel = (ViewGroup)findViewById(R.id.panelAnswerButtons);
-        mAnswerButtonsPanel.removeAllViews();
-        mAnswerButtons.clear();
-        for ( int i = 0; i < mNumAnswers; i++ )
-        {
-        	Button b = (Button)this.getLayoutInflater().inflate( R.layout.quiz_answer_button, mAnswerButtonsPanel, false );
-       		mAnswerButtonsPanel.addView( b );
-        	
-    		b.setOnClickListener( mButtonsListener );
-    		mAnswerButtons.add( b );	// Add to buttons array
-        }
+	private void InitAnswerButtons()
+	{
+		// Create answer buttons and attach a click listener to them
+		mAnswerButtonsPanel = (ViewGroup)findViewById(R.id.panelAnswerButtons);
+		mAnswerButtonsPanel.removeAllViews();
+		mAnswerButtons.clear();
+		for ( int i = 0; i < mNumAnswers; i++ )
+		{
+			Button b = (Button)this.getLayoutInflater().inflate( R.layout.quiz_answer_button, mAnswerButtonsPanel, false );
+	   		mAnswerButtonsPanel.addView( b );
+			
+			b.setOnClickListener( mButtonsListener );
+			mAnswerButtons.add( b );	// Add to buttons array
+		}
 	}
 
 	private void DrawQuestion()
-    {
+	{
 		if ( mGuessingOn )
 		{
 			showGuessingButton( true );
@@ -163,10 +163,11 @@ public class QuizForm extends Activity
 
 		// Find a question/answer row that was not yet used during
 		// the lifetime of this form
+		int nCat2PhraseRows = mCat2PhraseRows.getCount();
 		int nQuestionRowIdx;
 		do
 		{
-			nQuestionRowIdx = mRandom.nextInt( mCat2PhraseRows.getCount() );
+			nQuestionRowIdx = mRandom.nextInt( nCat2PhraseRows );
 		} while ( mAlreadyUsedQuestionRows.contains( nQuestionRowIdx ) );
 
 		// Add to the hash of already-used questions
@@ -174,21 +175,21 @@ public class QuizForm extends Activity
 
 		// Read the question/answer pair
 		Cursor quizRow = null;
-	    if ( mCat2PhraseRows.moveToPosition( nQuestionRowIdx ) )
-	    {
-	    	int phraseRowId = MyPhrasebookDB.getInt( mCat2PhraseRows, TblCat2Phrase.PHRASE_ID );
-            quizRow = MyPhrasebookDB.Instance().GetPhraseRowByID( phraseRowId );
-	    }
-	    
-        if ( quizRow != null )
-        {
-        	quizRow.moveToFirst();
-        }
+		if ( mCat2PhraseRows.moveToPosition( nQuestionRowIdx ) )
+		{
+			int phraseRowId = MyPhrasebookDB.getInt( mCat2PhraseRows, TblCat2Phrase.PHRASE_ID );
+			quizRow = MyPhrasebookDB.Instance().GetPhraseRowByID( phraseRowId );
+		}
+		
+		if ( quizRow != null )
+		{
+			quizRow.moveToFirst();
+		}
 
-       	// Select the question text
-   	    mTheQuestion = getQuestion( bQuestionIsInLang1, quizRow );
-	    
-	    // Set the form's question text
+	   	// Select the question text
+   		mTheQuestion = getQuestion( bQuestionIsInLang1, quizRow );
+		
+		// Set the form's question text
 		mTxtQuestion.setText( mTheQuestion );
 		
 		// Select the answer text (opposite language of the question)
@@ -223,10 +224,10 @@ public class QuizForm extends Activity
 			alreadyUsedAnswerRows.add( nRowIdx );
 
 			answerRows.moveToPosition(nRowIdx);			
-	    	int phraseRowId = MyPhrasebookDB.getInt( answerRows, TblCat2Phrase.PHRASE_ID );
+			int phraseRowId = MyPhrasebookDB.getInt( answerRows, TblCat2Phrase.PHRASE_ID );
 			Cursor optAnsRow = MyPhrasebookDB.Instance().GetPhraseRowByID( phraseRowId );
 			
-	        if ( optAnsRow != null ) { optAnsRow.moveToFirst(); }
+			if ( optAnsRow != null ) { optAnsRow.moveToFirst(); }
 
 			// First, get the optional row's question
 			String sOptionalQuestion = getQuestion( bQuestionIsInLang1, optAnsRow );
@@ -283,197 +284,200 @@ public class QuizForm extends Activity
 		}
 
 		mTxtQuestionsCounter.setText( String.format( "%d / %d", mAlreadyUsedQuestionRows.size(), mCat2PhraseRows.getCount() ) );
-    }
-    
-    private String getQuestion( boolean bQuestionIsInLang1, Cursor row )
-    {
-    	return bQuestionIsInLang1 	? MyPhrasebookDB.getString( row, TblPhrasebook.LANG1 )
-    								: MyPhrasebookDB.getString( row, TblPhrasebook.LANG2 );    	
-    }
-    
-    private String getAnswer( boolean bQuestionIsInLang1, Cursor row )
-    {
-    	return bQuestionIsInLang1 	? MyPhrasebookDB.getString( row, TblPhrasebook.LANG2 )
-    								: MyPhrasebookDB.getString( row, TblPhrasebook.LANG1 );    	
-    }
-    
-    private void InitCategoriesSpinner()
-    {
-        Spinner spinner = (Spinner)findViewById(R.id.spinCategory);
+	}
+	
+	private String getQuestion( boolean bQuestionIsInLang1, Cursor row )
+	{
+		return bQuestionIsInLang1 	? MyPhrasebookDB.getString( row, TblPhrasebook.LANG1 )
+									: MyPhrasebookDB.getString( row, TblPhrasebook.LANG2 );		
+	}
+	
+	private String getAnswer( boolean bQuestionIsInLang1, Cursor row )
+	{
+		return bQuestionIsInLang1 	? MyPhrasebookDB.getString( row, TblPhrasebook.LANG2 )
+									: MyPhrasebookDB.getString( row, TblPhrasebook.LANG1 );		
+	}
+	
+	private void InitCategoriesSpinner()
+	{
+		Spinner spinner = (Spinner)findViewById(R.id.spinCategory);
 
-        ArrayAdapter<SpinnerData> adapter = 
-            new ArrayAdapter<SpinnerData>( 
-	                this,
-	                android.R.layout.simple_spinner_item
-                );
+		ArrayAdapter<SpinnerData> adapter = 
+			new ArrayAdapter<SpinnerData>( 
+					this,
+					android.R.layout.simple_spinner_item
+				);
 
-        Set<String> categoryNames = MyPhrasebookDB.Instance().getCategoryToQueryMap();
-        
-        for (String catName : categoryNames)
-        {
-            SpinnerData sd = new SpinnerData( catName, catName );
-            adapter.add( sd );
-            			
-            if ( catName.equals( MyPhrasebookDB.TblCategories.VAL_ALL ) )
-            {
-            	mSDCategory = sd; // Default upon first time
-            }
-        }
-        
-        adapter.sort(new Comparator<SpinnerData>() {
-        	public int compare(SpinnerData object1, SpinnerData object2) {
-        		return object1.compareTo(object2);
-        	};
-        });
-        
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(
-            new AdapterView.OnItemSelectedListener()
-            {
-                public void onItemSelected(
-                        AdapterView<?> parent, 
-                        View view, 
-                        int position, 
-                        long id)
-                {
-                	mSDCategory = (SpinnerData)parent.getAdapter().getItem( position );
-                    ResetQuestions();
-                }
+		Set<String> categoryNames = MyPhrasebookDB.Instance().getQuizCategoryNames();
+		
+		for (String catName : categoryNames)
+		{
+			if ( ! catName.equals( MyPhrasebookDB.TblCategories.VAL_ALL ) )
+			{
+				SpinnerData sd = new SpinnerData( catName, catName );
+				adapter.add( sd );
+			}
+		}
+		
+		adapter.sort(new Comparator<SpinnerData>() {
+			public int compare(SpinnerData object1, SpinnerData object2) {
+				return object1.compareTo(object2);
+			};
+		});
+
+		// Add the "All" category as the first one on the list
+		SpinnerData allSD = new SpinnerData( MyPhrasebookDB.TblCategories.VAL_ALL, MyPhrasebookDB.TblCategories.VAL_ALL );
+		mSDCategory = allSD; // Make the "All" categories as the default one
+		adapter.insert(allSD, 0);
+		
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		spinner.setAdapter(adapter);
+		spinner.setOnItemSelectedListener(
+			new AdapterView.OnItemSelectedListener()
+			{
+				public void onItemSelected(
+						AdapterView<?> parent, 
+						View view, 
+						int position, 
+						long id)
+				{
+					mSDCategory = (SpinnerData)parent.getAdapter().getItem( position );
+					ResetQuestions();
+				}
 
 				public void onNothingSelected(AdapterView<?> parent) {
-                }
-            }
-        );
-    }
-
-    private void InitLanguageSpinner()
-    {
-        Spinner spinner = (Spinner)findViewById(R.id.spinLanguage);
-        ArrayAdapter<SpinnerData> adapter = 
-            new ArrayAdapter<SpinnerData>( 
-	                this,
-	                android.R.layout.simple_spinner_item
-                );
-
-        mQuestionLanguage = QuizForm.LANG_ANY; // Save default upon first time
-        adapter.add( new SpinnerData( getString(R.string.LangBoth), QuizForm.LANG_ANY ) );
-        adapter.add( new SpinnerData( getString(R.string.Lang1), MyPhrasebookDB.TblPhrasebook.LANG1 ) );
-        adapter.add( new SpinnerData( getString(R.string.Lang2), MyPhrasebookDB.TblPhrasebook.LANG2 ) );
-        
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(
-            new AdapterView.OnItemSelectedListener()
-            {
-                public void onItemSelected(
-                        AdapterView<?> parent, 
-                        View view, 
-                        int position, 
-                        long id)
-                {
-                    SpinnerData sd = (SpinnerData)parent.getAdapter().getItem( position );
-                    mQuestionLanguage = sd.getValue();
-                   	ResetQuestions();
-                }
-
-                public void onNothingSelected(AdapterView<?> parent) {
-                }
-            }
-        );
-        
-        spinner.setSelection(0);
-    }
-    
-    private void ResetQuestions()
-    {
-    	String catName = mSDCategory.getValue();
-    	mCat2PhraseRows = MyPhrasebookDB.Instance().selectCat2PhraseRowsByCatName( catName );    	
-    	mAlreadyUsedQuestionRows.clear();
-    	
-    	mNumCorrectlyAnswered = 0;
-    	mNumTotalAnswered = 0;
-        setPercentage( mNumCorrectlyAnswered, mNumTotalAnswered );
-    	
-        DrawQuestion();
+				}
+			}
+		);
 	}
-    
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        menu.add(0, MI_0, 0, R.string.Level1);
-        menu.add(0, MI_1, 0, R.string.Level2);
-        menu.add(0, MI_2, 0, R.string.Level3);
-        menu.add(0, MI_3, 0, mGuessingOn ? R.string.GuessingOff : R.string.GuessingOn );
-        return true;
-    }
-    
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-        MenuItem mi = menu.findItem( MI_3 );
-        mi.setTitle( mGuessingOn ? R.string.GuessingOff : R.string.GuessingOn );
-        return true;
-    }
 
-    @Override
-    public boolean onMenuItemSelected(int featureId, MenuItem item) {
-        switch(item.getItemId()) {
-        case MI_0:
-	        mNumAnswers = 3;
-	        InitAnswerButtons();
-	        ResetQuestions();
-            return true;
-            
-        case MI_1:
-	        mNumAnswers = 4;
-	        InitAnswerButtons();
-	        ResetQuestions();
-            return true;
-            
-        case MI_2:
-	        mNumAnswers = 5;
-	        InitAnswerButtons();
-	        ResetQuestions();
-            return true;
-            
-        case MI_3:
-        	mGuessingOn = ! mGuessingOn;
-        	
-        	showGuessingButton( mGuessingOn );
-            return true;            
-        }
-       
-        return super.onMenuItemSelected(featureId, item);
-    }
-    
-    /*
-     * Spinner Data: Data structure for spinner controls 
-     */    
-    class SpinnerData implements Comparable<SpinnerData> {
-        public SpinnerData( String spinnerText, String value ) {
-            this.mSpinnerText = spinnerText;
-            this.mValue = value;
-        }
+	private void InitLanguageSpinner()
+	{
+		Spinner spinner = (Spinner)findViewById(R.id.spinLanguage);
+		ArrayAdapter<SpinnerData> adapter = 
+			new ArrayAdapter<SpinnerData>( 
+					this,
+					android.R.layout.simple_spinner_item
+				);
 
-        public String getSpinnerText() {
-            return mSpinnerText;
-        }
+		mQuestionLanguage = QuizForm.LANG_ANY; // Save default upon first time
+		adapter.add( new SpinnerData( getString(R.string.LangBoth), QuizForm.LANG_ANY ) );
+		adapter.add( new SpinnerData( getString(R.string.Lang1), MyPhrasebookDB.TblPhrasebook.LANG1 ) );
+		adapter.add( new SpinnerData( getString(R.string.Lang2), MyPhrasebookDB.TblPhrasebook.LANG2 ) );
+		
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		spinner.setAdapter(adapter);
+		spinner.setOnItemSelectedListener(
+			new AdapterView.OnItemSelectedListener()
+			{
+				public void onItemSelected(
+						AdapterView<?> parent, 
+						View view, 
+						int position, 
+						long id)
+				{
+					SpinnerData sd = (SpinnerData)parent.getAdapter().getItem( position );
+					mQuestionLanguage = sd.getValue();
+				   	ResetQuestions();
+				}
 
-        public String getValue() {
-            return mValue;
-        }
+				public void onNothingSelected(AdapterView<?> parent) {
+				}
+			}
+		);
+		
+		spinner.setSelection(0);
+	}
+	
+	private void ResetQuestions()
+	{
+		String catName = mSDCategory.getValue();
+		mCat2PhraseRows = MyPhrasebookDB.Instance().selectCat2PhraseRowsByQuizCatName( catName );		
+		mAlreadyUsedQuestionRows.clear();
+		
+		mNumCorrectlyAnswered = 0;
+		mNumTotalAnswered = 0;
+		setPercentage( mNumCorrectlyAnswered, mNumTotalAnswered );
+		
+		DrawQuestion();
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
+		menu.add(0, MI_0, 0, R.string.Level1);
+		menu.add(0, MI_1, 0, R.string.Level2);
+		menu.add(0, MI_2, 0, R.string.Level3);
+		menu.add(0, MI_3, 0, mGuessingOn ? R.string.GuessingOff : R.string.GuessingOn );
+		return true;
+	}
+	
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		super.onPrepareOptionsMenu(menu);
+		MenuItem mi = menu.findItem( MI_3 );
+		mi.setTitle( mGuessingOn ? R.string.GuessingOff : R.string.GuessingOn );
+		return true;
+	}
 
-        public String toString() {
-            return mSpinnerText;
-        }
+	@Override
+	public boolean onMenuItemSelected(int featureId, MenuItem item) {
+		switch(item.getItemId()) {
+		case MI_0:
+			mNumAnswers = 3;
+			InitAnswerButtons();
+			ResetQuestions();
+			return true;
+			
+		case MI_1:
+			mNumAnswers = 4;
+			InitAnswerButtons();
+			ResetQuestions();
+			return true;
+			
+		case MI_2:
+			mNumAnswers = 5;
+			InitAnswerButtons();
+			ResetQuestions();
+			return true;
+			
+		case MI_3:
+			mGuessingOn = ! mGuessingOn;
+			
+			showGuessingButton( mGuessingOn );
+			return true;			
+		}
+	   
+		return super.onMenuItemSelected(featureId, item);
+	}
+	
+	/*
+	 * Spinner Data: Data structure for spinner controls 
+	 */	
+	class SpinnerData implements Comparable<SpinnerData> {
+		public SpinnerData( String spinnerText, String value ) {
+			this.mSpinnerText = spinnerText;
+			this.mValue = value;
+		}
 
-        public int compareTo( SpinnerData other )
-        {
-        	return this.mSpinnerText.compareTo(other.mSpinnerText);
-        }
-        
-        String mSpinnerText;
-        String mValue;
-    }
+		public String getSpinnerText() {
+			return mSpinnerText;
+		}
+
+		public String getValue() {
+			return mValue;
+		}
+
+		public String toString() {
+			return mSpinnerText;
+		}
+
+		public int compareTo( SpinnerData other )
+		{
+			return this.mSpinnerText.compareTo(other.mSpinnerText);
+		}
+		
+		String mSpinnerText;
+		String mValue;
+	}
 }
