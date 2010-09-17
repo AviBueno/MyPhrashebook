@@ -32,7 +32,7 @@ public class MyPhrasebookDB
 		public static final String NAME = "_name";
 		public static final String TITLE = "_title";
 		
-		public static final String VAL_PHRASE = "Phrases";
+		public static final String VAL_PHRASE = "Phrase";
 		public static final String VAL_ALL = "All";
 	}
 	
@@ -200,7 +200,9 @@ public class MyPhrasebookDB
 		{
 			// A "word" is any entry that was not categorized as a "phrase"
 			Integer catPhraseID = mCatNameToCatIdMap.get( TblCategories.VAL_PHRASE );
-			query = "SELECT * FROM " + TblCat2Phrase.TABLE_NAME + " WHERE _catID <> " + catPhraseID.toString();
+			query = "SELECT * FROM " + TblCat2Phrase.TABLE_NAME + " WHERE _id NOT IN ( "
+						+ "SELECT _id FROM " + TblCat2Phrase.TABLE_NAME + " WHERE _catID = " + catPhraseID.toString()
+					+ ")";			
 		}
 		else
 		{
@@ -253,6 +255,8 @@ public class MyPhrasebookDB
 	}
 
 	public boolean AddPhrase(String lang1, String lang2, List<String> catList) {
+		boolean bAdded = false;
+		
 		SQLiteDatabase db = TheDB();
 		ContentValues values = new ContentValues();
 		values.put( TblPhrasebook.LANG1, lang1 );
@@ -278,6 +282,7 @@ public class MyPhrasebookDB
 			}
 			
 			db.setTransactionSuccessful();							// If we got so far, the transaction was successful
+			bAdded = true;
 		}
 		catch ( Exception e )
 		{	
@@ -288,7 +293,7 @@ public class MyPhrasebookDB
 			db.endTransaction();
 		}
 		
-		return true;
+		return bAdded;
 	}
 
 	public boolean UpdatePhrase(int phraseID, String lang1, String lang2, List<String> catList) {
