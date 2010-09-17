@@ -38,5 +38,6 @@
 		android:layout_height="wrap_content"
 		android:text="@string/Maintenance"
 		android:layout_weight="1"
+		android:visibility="gone"
 		/>
 </LinearLayout>
