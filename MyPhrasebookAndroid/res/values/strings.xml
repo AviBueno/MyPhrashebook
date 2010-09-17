@@ -20,4 +20,6 @@
 	<string name="Quiz">Quiz</string>
 	<string name="Maintenance">Maintenance</string>			
 	<string name="SelectCategories">Select Categories</string>			
+	<string name="Add">Add</string>
+	<string name="LangTextIsEmpty">%s text cannot be empty</string>
 </resources>
