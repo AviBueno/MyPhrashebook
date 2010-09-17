@@ -15,7 +15,8 @@
         <activity android:name=".PhrasebookForm" />
         <activity android:name=".QuizForm" />
 
-    </application>
+    <activity android:name=".AddPhraseForm"></activity>
+</application>
     <uses-sdk android:minSdkVersion="4" />
 
 </manifest> 
