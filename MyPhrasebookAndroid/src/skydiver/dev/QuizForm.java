@@ -26,7 +26,7 @@ import android.widget.Toast;
 
 public class QuizForm extends Activity
 {
-	private static final String LANG_ANY = "ANY";
+	static final String LANG_ANY = "ANY";
 	private static final int MI_0 = 0;
 	private static final int MI_1 = 1;
 	private static final int MI_2 = 2;
