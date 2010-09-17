@@ -44,7 +44,6 @@ public class AddPhraseForm extends Activity {
         
         Button bttCatSel = (Button)findViewById(R.id.BttSetCategories);
         bttCatSel.setOnClickListener( new OnClickListener() {
-
 			public void onClick(View v) {
 				showDialog( CATEGORIES_DLG_ID );
 			}

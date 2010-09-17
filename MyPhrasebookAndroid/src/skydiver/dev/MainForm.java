@@ -27,7 +27,6 @@ public class MainForm extends Activity {
         
         Button dictBtt = (Button)findViewById(R.id.DictionaryButton);
         dictBtt.setOnClickListener( new OnClickListener() {
-
 			public void onClick(View v) {
 				Intent i = new Intent(MainForm.this.getApplicationContext(), PhrasebookForm.class);
 				startActivity(i);
