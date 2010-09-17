@@ -2,7 +2,6 @@ package skydiver.dev;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -28,7 +27,7 @@ public class MainForm extends Activity {
         
         Button dictBtt = (Button)findViewById(R.id.DictionaryButton);
         dictBtt.setOnClickListener( new OnClickListener() {
-			@Override
+
 			public void onClick(View v) {
 				Intent i = new Intent(MainForm.this.getApplicationContext(), PhrasebookForm.class);
 				startActivity(i);
@@ -37,7 +36,6 @@ public class MainForm extends Activity {
         
         Button quizBtt = (Button)findViewById(R.id.QuizButton);
         quizBtt.setOnClickListener( new OnClickListener() {
-			@Override
 			public void onClick(View v) {
 				Intent i = new Intent(MainForm.this.getApplicationContext(), QuizForm.class);
 				startActivity(i);
@@ -46,7 +44,6 @@ public class MainForm extends Activity {
 
         Button maintenanceBtt = (Button)findViewById(R.id.MaintenanceButton);
         maintenanceBtt.setOnClickListener( new OnClickListener() {
-			@Override
 			public void onClick(View v) {
 				Intent i = new Intent(MainForm.this.getApplicationContext(), AddPhraseForm.class);
 				startActivity(i);

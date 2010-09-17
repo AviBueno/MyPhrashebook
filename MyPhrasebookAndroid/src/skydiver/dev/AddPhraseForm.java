@@ -44,7 +44,7 @@ public class AddPhraseForm extends Activity {
         
         Button bttCatSel = (Button)findViewById(R.id.BttSetCategories);
         bttCatSel.setOnClickListener( new OnClickListener() {
-			@Override
+
 			public void onClick(View v) {
 				showDialog( CATEGORIES_DLG_ID );
 			}
@@ -52,7 +52,6 @@ public class AddPhraseForm extends Activity {
 
         Button bttAddPhrase = (Button)findViewById(R.id.BttAddPhrase);
         bttAddPhrase.setOnClickListener( new OnClickListener() {
-			@Override
 			public void onClick(View v) {
 				AddPhrase();
 			}
