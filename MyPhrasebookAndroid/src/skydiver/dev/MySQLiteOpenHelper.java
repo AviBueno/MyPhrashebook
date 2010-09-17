@@ -132,7 +132,7 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper
 	public void openDataBase() throws SQLException
 	{ 
 		//Open the database
-		myDataBase = SQLiteDatabase.openDatabase(m_dbFullPath, null, SQLiteDatabase.OPEN_READONLY);
+		myDataBase = SQLiteDatabase.openDatabase(m_dbFullPath, null, SQLiteDatabase.OPEN_READWRITE);
 	}
  
 	public void open() throws SQLException
