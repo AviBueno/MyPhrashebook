@@ -29,7 +29,8 @@ public class MainForm extends Activity {
         dictBtt.setOnClickListener( new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				launchDictionaryActivity();
+				Intent i = new Intent(MainForm.this.getApplicationContext(), PhrasebookForm.class);
+				startActivity(i);
 			}
 		});
         
@@ -37,7 +38,17 @@ public class MainForm extends Activity {
         quizBtt.setOnClickListener( new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				launchQuizActivity();
+				Intent i = new Intent(MainForm.this.getApplicationContext(), QuizForm.class);
+				startActivity(i);
+			}
+		});
+
+        Button maintenanceBtt = (Button)findViewById(R.id.MaintenanceButton);
+        maintenanceBtt.setOnClickListener( new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent i = new Intent(MainForm.this.getApplicationContext(), AddPhraseForm.class);
+				startActivity(i);
 			}
 		});
 	}
@@ -46,24 +57,5 @@ public class MainForm extends Activity {
 	protected void onDestroy() {
 		super.onDestroy();
         MyPhrasebookDB.DestroyInstance();
-        Toast.makeText(this.getApplicationContext(), "Thank you for using MPB", Toast.LENGTH_SHORT).show();
 	}
-    
-    private void launchDictionaryActivity()
-    {
-		Intent i = new Intent(this, PhrasebookForm.class);
-		startActivity(i);
-    }
-    
-    private void launchQuizActivity()
-    {
-    	try
-    	{
-			Intent i = new Intent(this, QuizForm.class);
-			startActivity(i);
-        }
-    	catch ( Exception e )
-    	{
-    	}
-    }
 }
