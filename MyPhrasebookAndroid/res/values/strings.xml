@@ -15,5 +15,9 @@
 	<string name="Lang2">Finnish</string>	
 	<string name="LangBoth">Both</string>
 	<string name="GuessingOn">Turn Guessing On</string>
-	<string name="GuessingOff">Turn Guessing Off</string>		
+	<string name="GuessingOff">Turn Guessing Off</string>
+	<string name="Dictionary">Dictionary</string>
+	<string name="Quiz">Quiz</string>
+	<string name="Maintenance">Maintenance</string>			
+	<string name="SelectCategories">Select Categories</string>			
 </resources>
