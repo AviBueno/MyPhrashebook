@@ -2,7 +2,9 @@ package skydiver.dev;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -13,10 +15,6 @@ public class MainForm extends Activity {
 	/** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
-        
-//		launchQuizActivity();
         
         try {
 			MyPhrasebookDB.CreateInstance( this.getApplicationContext() );
@@ -24,6 +22,9 @@ public class MainForm extends Activity {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+        
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.main);
         
         Button dictBtt = (Button)findViewById(R.id.DictionaryButton);
         dictBtt.setOnClickListener( new OnClickListener() {
@@ -54,8 +55,24 @@ public class MainForm extends Activity {
 	}
 
     @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+        	// Clear application preferences
+        	((MPBApp)getApplication()).clearAllSharedSettings();
+
+	        Toast.makeText(this.getApplicationContext(), "Thank you for using MPB", Toast.LENGTH_SHORT).show();
+			
+			this.finish();
+			
+			return true;
+        }
+
+        return super.onKeyDown(keyCode, event);
+    }
+    
+    @Override
 	protected void onDestroy() {
-		super.onDestroy();
         MyPhrasebookDB.DestroyInstance();
+		super.onDestroy();
 	}
 }
