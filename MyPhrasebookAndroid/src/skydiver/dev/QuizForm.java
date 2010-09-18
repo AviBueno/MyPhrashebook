@@ -64,7 +64,7 @@ public class QuizForm extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.quiz);
 
-		mMpbApp = (MPBApp)getApplicationContext();	// Save a reference to the appl. instance
+		mMpbApp = (MPBApp)getApplicationContext();	// Save a reference of the app's instance
 		
 		// Get a reference to certain views
 		mTxtQuestion = (TextView)findViewById(R.id.txtQuestion);
@@ -80,7 +80,9 @@ public class QuizForm extends Activity
 		mNumTotalAnswered = mMpbApp.get( "mNumTotalAnswered", 0 );
 		mNumAnswers = mMpbApp.get( "mNumAnswers", 4 );
 		mGuessingOn = mMpbApp.get( "mGuessingOn", true );
-		mQuestionRowIdx = mMpbApp.get( "mQuestionRowIdx", DRAW_NEW_QUESTION );
+
+		// Load temporary persisted values
+		mQuestionRowIdx = savedInstanceState != null ? savedInstanceState.getInt("mQuestionRowIdx") : DRAW_NEW_QUESTION;
 		
 		InitCategoriesSpinner();
 		InitLanguageSpinner();
@@ -89,6 +91,14 @@ public class QuizForm extends Activity
 		ResetQuestions();
 		
 		mInitialized = true;
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState)
+	{		
+		outState.putInt("mQuestionRowIdx", mQuestionRowIdx);
+
+		super.onSaveInstanceState(outState);
 	}
 
 	private OnClickListener mButtonsListener = new OnClickListener() {
@@ -395,12 +405,9 @@ public class QuizForm extends Activity
 					{
 						return;
 					}
-					else
-					{
-						mSDCategory = sd;
-					}
 
 					// Save the category
+					mSDCategory = sd;
 					String sCategory = sd.getValue();					
 					mMpbApp.setQuizCategory(sCategory);
 					
@@ -486,16 +493,17 @@ public class QuizForm extends Activity
 		String catName = mSDCategory.getValue();
 		mCat2PhraseRows = MyPhrasebookDB.Instance().selectCat2PhraseRowsByQuizCatName( catName );
 		
-		boolean bDrawNewQuestion = (mQuestionRowIdx == DRAW_NEW_QUESTION) ? true : false;
-		
 		if ( mInitialized )
 		{
 			mAlreadyUsedQuestionRows.clear();
 			mNumCorrectlyAnswered = 0;
 			mNumTotalAnswered = 0;
+			mQuestionRowIdx = DRAW_NEW_QUESTION;
 		}
 		
 		updatePercentageUI();		
+
+		boolean bDrawNewQuestion = (mQuestionRowIdx == this.DRAW_NEW_QUESTION) ? true : false;
 		DrawQuestion( bDrawNewQuestion );
 	}
 	
