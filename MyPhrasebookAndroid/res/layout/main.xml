@@ -18,10 +18,10 @@
 		/>
 		
 <Button
-		android:id="@+id/DictionaryButton"
+		android:id="@+id/PhrasebookButton"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:text="@string/Dictionary"
+		android:text="@string/Phrasebook"
 		android:layout_weight="1"
 		/>
 	

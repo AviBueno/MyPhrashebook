@@ -57,7 +57,7 @@
 				android:id="@+id/BttSetCategories"
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
-				android:text="Set Categories"
+				android:text="@string/SelectCategories"
 				/>
 	    </TableRow>
 	
@@ -67,10 +67,10 @@
 			<TextView />
 	
 			<Button
-				android:id="@+id/BttAddPhrase"
+				android:id="@+id/BttAddOrUpdatePhrase"
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
-				android:text="Add It!"
+				android:text="Add / Update"
 				/>
 	    </TableRow>
 	

@@ -16,10 +16,16 @@
 	<string name="LangBoth">Both</string>
 	<string name="GuessingOn">Turn Guessing On</string>
 	<string name="GuessingOff">Turn Guessing Off</string>
-	<string name="Dictionary">Dictionary</string>
+	<string name="Phrasebook">Phrasebook</string>
 	<string name="Quiz">Quiz</string>
 	<string name="Maintenance">Maintenance</string>			
 	<string name="SelectCategories">Select Categories</string>			
 	<string name="Add">Add</string>
+	<string name="Update">Update</string>
 	<string name="LangTextIsEmpty">%s text cannot be empty</string>
+	<string name="OK">OK</string>
+	<string name="Yes">Yes</string>
+	<string name="No">No</string>
+	<string name="NoCatSelTitle">No category selected</string>
+	<string name="NoCatSelBody">Would you like to add an uncategorized term?</string>
 </resources>
