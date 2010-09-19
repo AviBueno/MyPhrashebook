@@ -2,7 +2,7 @@ package skydiver.dev;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 
 import android.content.ContentValues;
@@ -14,6 +14,7 @@ import android.database.sqlite.SQLiteDatabase;
 public class MyPhrasebookDB
 {
 	public enum QueryMethod { Contains, BeginsWith, EndsWith, Exact };
+	public static final long INVALID_ROW_ID = -1;
 	
 	public static final class TblPhrasebook
 	{
@@ -45,13 +46,85 @@ public class MyPhrasebookDB
 		public static final String PHRASE_ID = "_phraseID";
 	}
 	
+	public static final class PhrasebookRow
+	{
+		private long	_id = INVALID_ROW_ID;
+		private String 	_lang1 = "";
+		private String 	_lang2 = "";
+
+		PhrasebookRow() {}
+		PhrasebookRow(long id, String lang1, String lang2)
+		{
+			_id = id;
+			_lang1 = lang1;
+			_lang2 = lang2;
+		}
+		
+		public long 	_id_get() { return _id; }
+		public void 	_id_set(long id) { _id = id; }
+
+		public String 	_lang1_get() { return _lang1; }		
+		public void		_lang1_set(String lang1) { _lang1 = lang1; }		
+
+		public String 	_lang2_get() { return _lang2; }		
+		public void		_lang2_set(String lang2) { _lang2 = lang2; }		
+	}
+	
+	public static final class Cat2PhraseRow
+	{
+		private long	_id = INVALID_ROW_ID;
+		private long 	_catID = INVALID_ROW_ID;
+		private long 	_phraseID = INVALID_ROW_ID;
+
+		Cat2PhraseRow() {}
+		Cat2PhraseRow(long id, long catID, long phraseID)
+		{
+			_id = id;
+			_catID = catID;
+			_phraseID = phraseID;
+		}
+		
+		public long 	_id_get() { return _id; }
+		public void 	_id_set(long id) { _id = id; }
+
+		public long 	_catID_get() { return _catID; }		
+		public void		_catID_set(long catID) { _catID = catID; }		
+
+		public long 	_phraseID_get() { return _phraseID; }		
+		public void		_phraseID_set(long phraseID) { _phraseID = phraseID; }		
+	}
+	
+	public static final class CategoriesRow
+	{
+		private long	_id = INVALID_ROW_ID;
+		private String 	_name = "";
+		private String 	_title = "";
+
+		CategoriesRow() {}
+		CategoriesRow(long id, String name, String title)
+		{
+			_id = id;
+			_name = name;
+			_title = title;
+		}
+		
+		public long 	_id_get() { return _id; }
+		public void 	_id_set(long id) { _id = id; }
+
+		public String 	_name_get() { return _name; }		
+		public void		_name_set(String name) { _name = name; }		
+
+		public String 	_title_get() { return _title; }		
+		public void		_title_set(String title) { _title = title; }		
+	}
+	
 	private final static String m_dbFileName = "mpb.db";
 	private String m_dbPath;
 	private MySQLiteOpenHelper m_dataHelper;
 	private Context m_context;
 	private QueryMethod m_queryMethod = QueryMethod.Contains;
-	private HashMap<String,Integer> mCatNameToCatIdMap = new HashMap<String,Integer>();
-	private HashMap<String,Integer> mQuizCatNameToCatIdMap = new HashMap<String,Integer>();
+	private HashMap<String,Long> mCatNameToCatIdMap = new HashMap<String,Long>();
+	private HashMap<String,Long> mQuizCatNameToCatIdMap = new HashMap<String,Long>();
 	private final String mStrCatNameWords;
 	private final String mStrCatNameUncategorized;
 
@@ -118,8 +191,9 @@ public class MyPhrasebookDB
 		return m_dataHelper.myDataBase;
 	} 
 
-	Set<String> getCategoryNames()	 	{ return mCatNameToCatIdMap.keySet(); }
-	Set<String> getQuizCategoryNames()	{ return mQuizCatNameToCatIdMap.keySet(); }
+	HashMap<String,Long> getCategoriesMap()		{ return mCatNameToCatIdMap; }
+	Set<String> getCategoryNames()	 			{ return mCatNameToCatIdMap.keySet(); }
+	Set<String> getQuizCategoryNames()			{ return mQuizCatNameToCatIdMap.keySet(); }
 	
 	private void initObjects()
 	{
@@ -129,13 +203,13 @@ public class MyPhrasebookDB
 	    {
 	        String name;
 	        String title;
-	        Integer id; 
+	        Long id; 
 	        int nameColumn = cursor.getColumnIndex(TblCategories.NAME);
 	        int titleColumn = cursor.getColumnIndex(TblCategories.TITLE);
 	        int idColumn = cursor.getColumnIndex(TblCategories.ID);
 	    
 	        do {
-	            id = cursor.getInt(idColumn);
+	            id = cursor.getLong(idColumn);
 
 	            name = cursor.getString(nameColumn);
 	            mCatNameToCatIdMap.put( name, id );
@@ -145,8 +219,8 @@ public class MyPhrasebookDB
 	        } while (cursor.moveToNext());
 
 	        // Add special cases for quiz
-	        mQuizCatNameToCatIdMap.put( mStrCatNameWords, -1 );
-	        mQuizCatNameToCatIdMap.put( mStrCatNameUncategorized, -1 );
+	        mQuizCatNameToCatIdMap.put( mStrCatNameWords, INVALID_ROW_ID );
+	        mQuizCatNameToCatIdMap.put( mStrCatNameUncategorized, INVALID_ROW_ID );
 	        
 	        cursor.close();
 	    }
@@ -186,6 +260,42 @@ public class MyPhrasebookDB
         return cursor;
 	}
 	
+	public PhrasebookRow getPhrasebookRowByID( long phraseRowId )
+	{
+        Cursor cursor = this.TheDB().rawQuery( "SELECT * FROM " + TblPhrasebook.TABLE_NAME + " WHERE _id = " + Long.toString( phraseRowId ), null );
+        
+        PhrasebookRow row = null;
+        if ( cursor != null && cursor.moveToFirst() )
+        {
+            row = new PhrasebookRow(
+	        			getInt(cursor, TblPhrasebook.ID),
+	        			getString(cursor, TblPhrasebook.LANG1),
+	        			getString(cursor, TblPhrasebook.LANG2)
+            		);
+        }
+        
+        return row;
+	}
+	
+	public Set<Long> getPhraseCategoryIDs( long phraseRowId )
+	{
+        Set<Long> catIDsSet = new HashSet<Long>();
+        
+        if ( phraseRowId != INVALID_ROW_ID )
+        {
+        	Cursor cursor = this.TheDB().rawQuery( "SELECT * FROM " + TblCat2Phrase.TABLE_NAME + " WHERE " + TblCat2Phrase.PHRASE_ID + " = " + Long.toString( phraseRowId ), null );
+            if ( cursor != null && cursor.moveToFirst() )
+            {
+            	do {
+                    long catID = getLong(cursor, TblCat2Phrase.CATEGORY_ID);
+                    catIDsSet.add( catID );
+            	} while ( cursor.moveToNext() );
+            }
+        }
+        
+        return catIDsSet;
+	}
+	
 	public Cursor selectCat2PhraseRowsByQuizCatName( String catName )
 	{
 		String query = null;
@@ -199,7 +309,7 @@ public class MyPhrasebookDB
 		else if ( catName.equals( mStrCatNameWords ) )
 		{
 			// A "word" is any entry that was not categorized as a "phrase"
-			Integer catPhraseID = mCatNameToCatIdMap.get( TblCategories.VAL_PHRASE );
+			Long catPhraseID = mCatNameToCatIdMap.get( TblCategories.VAL_PHRASE );
 			query = "SELECT * FROM " + TblCat2Phrase.TABLE_NAME + " WHERE _id NOT IN ( "
 						+ "SELECT _id FROM " + TblCat2Phrase.TABLE_NAME + " WHERE _catID = " + catPhraseID.toString()
 					+ ")";			
@@ -207,7 +317,7 @@ public class MyPhrasebookDB
 		else
 		{
 			// If we got so far, catName represents a database-value category name
-			Integer catPhraseID = mQuizCatNameToCatIdMap.get( catName );
+			Long catPhraseID = mQuizCatNameToCatIdMap.get( catName );
 			query = "SELECT * FROM " + TblCat2Phrase.TABLE_NAME + " WHERE _catID = " + catPhraseID;
 		}
 		
@@ -226,6 +336,12 @@ public class MyPhrasebookDB
 	{
 		int nColIdx = cursor.getColumnIndex(columnName);
 		return cursor.getInt( nColIdx );
+	}
+
+	public static long getLong(Cursor cursor, String columnName)
+	{
+		int nColIdx = cursor.getColumnIndex(columnName);
+		return cursor.getLong( nColIdx );
 	}
 
 	public static String dumpCursor(Cursor c)
@@ -254,49 +370,90 @@ public class MyPhrasebookDB
 		return "_id = _id group by _phraseID having count(_phraseID) = 1";
 	}
 
-	public boolean AddPhrase(String lang1, String lang2, List<String> catList) {
-		boolean bAdded = false;
-		
+	public void AddPhrase(String lang1, String lang2, Set<Long> categoriesSet) throws Exception {
+		// Call updatePhrase with an INVALID_ROW_ID to indicate that a new row should be added
+		UpdatePhrase(INVALID_ROW_ID, lang1, lang2, categoriesSet);
+	}
+	
+	public void UpdatePhrase(long nPhrasebookRowId, String lang1, String lang2, Set<Long> categoriesSet) throws Exception {
 		SQLiteDatabase db = TheDB();
 		ContentValues values = new ContentValues();
 		values.put( TblPhrasebook.LANG1, lang1 );
 		values.put( TblPhrasebook.LANG2, lang2 );
 		
-		try {
+		try
+		{
 			db.beginTransaction();
 			
-			// Insert the new values to the Phrasebook table
-			long nRowId = db.insert(TblPhrasebook.TABLE_NAME, null, values);
-			
-			// Now add each category mapping as a row to Cat2Phrase table
-			for ( String catName : catList )
+			if ( nPhrasebookRowId == INVALID_ROW_ID )	// Adding a new row?
 			{
-				values = new ContentValues();						// Reuse the values object
-				
-				int nCatId = mCatNameToCatIdMap.get(catName);		// Get the category's id
-				
-				values.put( TblCat2Phrase.CATEGORY_ID, nCatId ); 	// Add _catID
-				values.put( TblCat2Phrase.PHRASE_ID, nRowId );		// Add _phraseID
-				
-				db.insert(TblCat2Phrase.TABLE_NAME, null, values);	// Add the table row.  
+				// Insert a new row to Phrasebook table
+				nPhrasebookRowId = db.insert(TblPhrasebook.TABLE_NAME, null, values);
+			}
+			else	// Updating an existing row?
+			{
+				// Update Phrasebook row's values
+				db.update(TblPhrasebook.TABLE_NAME, values, TblPhrasebook.ID + "=" + Long.toString(nPhrasebookRowId), null);
+
+				deleteAllPhraseCategories( nPhrasebookRowId );
 			}
 			
-			db.setTransactionSuccessful();							// If we got so far, the transaction was successful
-			bAdded = true;
+			long allCatId = mCatNameToCatIdMap.get(TblCategories.VAL_ALL);
+			categoriesSet.add(allCatId);	// Every phrase is also mapped to "All"			
+			
+			// Now add each category mapping as a row to Cat2Phrase table
+			for ( long nCatId : categoriesSet )
+			{
+				values = new ContentValues();								// Reuse the values object
+				
+				values.put( TblCat2Phrase.CATEGORY_ID, nCatId ); 			// Add _catID
+				values.put( TblCat2Phrase.PHRASE_ID, nPhrasebookRowId );	// Add _phraseID
+				
+				db.insert(TblCat2Phrase.TABLE_NAME, null, values);			// Add the table row.  
+			}
+			
+			// If we got so far, the transaction was successful
+			db.setTransactionSuccessful();
 		}
 		catch ( Exception e )
 		{	
-			String m = e.getMessage();
-			m = m;
+			throw e;
 		}
 		finally {
 			db.endTransaction();
 		}
-		
-		return bAdded;
 	}
 
-	public boolean UpdatePhrase(int phraseID, String lang1, String lang2, List<String> catList) {
-		return false;
+	private void deleteAllPhraseCategories(long nPhrasebookRowId) {
+		// Delete all categories from Cat2Phrase
+        this.TheDB().execSQL(
+        		"DELETE FROM " + TblCat2Phrase.TABLE_NAME + " WHERE " + TblCat2Phrase.PHRASE_ID + "=" + Long.toString(nPhrasebookRowId)
+        	);  
+	}
+
+	public void deletePhrase(long nPhrasebookRowId) throws Exception
+	{
+		SQLiteDatabase db = TheDB();
+		try {
+			db.beginTransaction();
+			
+			// Delete the row from Phrasebook table
+			db.execSQL(
+	        		"DELETE FROM " + TblPhrasebook.TABLE_NAME + " WHERE " + TblPhrasebook.ID + "=" + Long.toString(nPhrasebookRowId)
+				);
+			
+			// And remove all associated categories
+			deleteAllPhraseCategories(nPhrasebookRowId);
+
+			// If we got so far, the transaction was successful
+			db.setTransactionSuccessful();
+		}
+		catch ( Exception e )
+		{	
+			throw e;
+		}
+		finally {
+			db.endTransaction();
+		}
 	}
 }
