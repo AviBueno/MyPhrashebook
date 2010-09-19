@@ -25,7 +25,7 @@ public class MainForm extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         
-        Button dictBtt = (Button)findViewById(R.id.DictionaryButton);
+        Button dictBtt = (Button)findViewById(R.id.PhrasebookButton);
         dictBtt.setOnClickListener( new OnClickListener() {
 			public void onClick(View v) {
 				Intent i = new Intent(MainForm.this.getApplicationContext(), PhrasebookForm.class);
@@ -44,7 +44,7 @@ public class MainForm extends Activity {
         Button maintenanceBtt = (Button)findViewById(R.id.MaintenanceButton);
         maintenanceBtt.setOnClickListener( new OnClickListener() {
 			public void onClick(View v) {
-				Intent i = new Intent(MainForm.this.getApplicationContext(), AddPhraseForm.class);
+				Intent i = new Intent(MainForm.this.getApplicationContext(), AddEditPhraseForm.class);
 				startActivity(i);
 			}
 		});

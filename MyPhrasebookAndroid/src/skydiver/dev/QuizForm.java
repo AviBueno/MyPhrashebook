@@ -2,7 +2,6 @@ package skydiver.dev;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
@@ -13,7 +12,6 @@ import skydiver.dev.MyPhrasebookDB.TblPhrasebook;
 import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -122,6 +120,10 @@ public class QuizForm extends Activity
 					// Add to the hash of already-used questions
 					mAlreadyUsedQuestionRows.add( mQuestionRowIdx );
 
+					// TODO TBD...
+//					String answer = String.format("%s\n\n%s", mTheQuestion, mTheAnswer);
+//					Toast.makeText(QuizForm.this, answer, Toast.LENGTH_SHORT).show();
+					
 					// Draw a new question
 					DrawQuestion( true );
 				}
@@ -503,7 +505,7 @@ public class QuizForm extends Activity
 		
 		updatePercentageUI();		
 
-		boolean bDrawNewQuestion = (mQuestionRowIdx == this.DRAW_NEW_QUESTION) ? true : false;
+		boolean bDrawNewQuestion = (mQuestionRowIdx == QuizForm.DRAW_NEW_QUESTION) ? true : false;
 		DrawQuestion( bDrawNewQuestion );
 	}
 	
