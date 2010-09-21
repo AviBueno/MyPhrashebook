@@ -144,7 +144,7 @@ public class AddEditPhraseForm extends Activity {
 		}
 		catch ( Exception e )
 		{
-			MPBApp.buildMessageBox(this, "Error", "An error occured:\n" + e.getMessage()).create().show();
+			DialogBuilder.buildMessageBox(this, "Error", "An error occured:\n" + e.getMessage()).create().show();
 		}
     }
     
@@ -207,7 +207,7 @@ public class AddEditPhraseForm extends Activity {
 						}
 					};
 					
-					AlertDialog.Builder builder = MPBApp.buildYesNoDialog(
+					AlertDialog.Builder builder = DialogBuilder.buildYesNoDialog(
 									this,
 									getString(R.string.NoCatSelTitle),
 									getString(R.string.NoCatSelBody),

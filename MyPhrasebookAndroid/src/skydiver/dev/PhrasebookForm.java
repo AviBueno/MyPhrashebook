@@ -165,12 +165,12 @@ public class PhrasebookForm extends Activity {
 							}
 							catch ( Exception e )
 							{
-								MPBApp.buildMessageBox(PhrasebookForm.this, "Error", "An error occured:\n" + e.getMessage()).create().show();
+								DialogBuilder.buildMessageBox(PhrasebookForm.this, "Error", "An error occured:\n" + e.getMessage()).create().show();
 							}
 						}
 					};
 					
-					MPBApp.buildYesNoDialog(
+					DialogBuilder.buildYesNoDialog(
 							this,
 							"Delete",
 							"Are you sure you want to delete the entry?",

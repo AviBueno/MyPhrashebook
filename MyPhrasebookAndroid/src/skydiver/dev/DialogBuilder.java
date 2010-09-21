@@ -6,6 +6,40 @@ import android.content.DialogInterface;
 
 public class DialogBuilder {
 	//private static final DialogCommandWrapper DISMISS_DLG_CMD = new DialogCommandWrapper(Command.NO_OP);
+
+	public static AlertDialog.Builder buildMessageBox(
+			final Context context,
+			final String titleText,
+			final String bodyText
+		)
+	{
+		return DialogBuilder.buildMessageBox(
+				context,
+				titleText,
+				bodyText,
+				R.string.OK,
+				Command.NO_OP
+			);
+	}
+	
+	public static AlertDialog.Builder buildYesNoDialog(
+				final Context context,
+				final String titleText,
+				final String bodyText,
+				final Command yesCommand,
+				final Command noCommand
+			)
+	{
+		return DialogBuilder.buildYesNoDialog(
+				context,
+				titleText,
+				bodyText,
+				R.string.Yes,
+				yesCommand,
+				R.string.No,
+				noCommand
+			);
+	}	
 	
 	public static AlertDialog.Builder buildMessageBox(
 			final Context context,

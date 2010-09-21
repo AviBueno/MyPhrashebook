@@ -10,40 +10,6 @@ import android.util.Log;
 
 public class MPBApp extends Application {
 
-	public static AlertDialog.Builder buildMessageBox(
-			final Context context,
-			final String titleText,
-			final String bodyText
-		)
-	{
-		return DialogBuilder.buildMessageBox(
-				context,
-				titleText,
-				bodyText,
-				R.string.OK,
-				Command.NO_OP
-			);
-	}
-	
-	public static AlertDialog.Builder buildYesNoDialog(
-				final Context context,
-				final String titleText,
-				final String bodyText,
-				final Command yesCommand,
-				final Command noCommand
-			)
-	{
-		return DialogBuilder.buildYesNoDialog(
-				context,
-				titleText,
-				bodyText,
-				R.string.Yes,
-				yesCommand,
-				R.string.No,
-				noCommand
-			);
-	}
-	
 	String mCategory = null;	
 	public String getQuizCategory()
 	{
