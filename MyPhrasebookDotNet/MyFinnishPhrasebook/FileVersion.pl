@@ -37,7 +37,7 @@ sub Main()
 			if ( $year > $vYear || $mon > $vMon || $mday > $vDay )
 			{
 				print "$year > $vYear || $mon > $vMon || $mday > $vDay\n";
-				$vCounter = 0;
+				$vCounter = -1; # First build number for a new date ($vCounter + 1) will be 0
 			}
 			
 			my $version = "$vMajor.$year.$monDay." . ($vCounter + 1);

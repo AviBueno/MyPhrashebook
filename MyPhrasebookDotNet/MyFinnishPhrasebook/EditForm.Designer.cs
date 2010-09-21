@@ -33,17 +33,17 @@
 			System.Windows.Forms.Label englishLabel;
 			this.bttOK = new System.Windows.Forms.Button();
 			this.bttCancel = new System.Windows.Forms.Button();
-			this.myFinnishPhrasebookDBDataSet = new MyFinnishPhrasebookNamespace.MyFinnishPhrasebookDBDataSet();
-			this.dBTablePhrasebookBindingSource = new System.Windows.Forms.BindingSource( this.components );
-			this.dBTablePhrasebookTableAdapter = new MyFinnishPhrasebookNamespace.MyFinnishPhrasebookDBDataSetTableAdapters.DBTablePhrasebookTableAdapter();
-			this.tableAdapterManager = new MyFinnishPhrasebookNamespace.MyFinnishPhrasebookDBDataSetTableAdapters.TableAdapterManager();
 			this.textBoxFinnish1 = new MyFinnishPhrasebookNamespace.TextBoxFinnish();
 			this.txtEnglish = new System.Windows.Forms.TextBox();
 			this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+			this.mPBDataSet = new MyFinnishPhrasebookNamespace.MPBDataSet();
+			this.phrasebookBindingSource = new System.Windows.Forms.BindingSource( this.components );
+			this.phrasebookTableAdapter = new MyFinnishPhrasebookNamespace.MPBDataSetTableAdapters.PhrasebookTableAdapter();
+			this.tableAdapterManager = new MyFinnishPhrasebookNamespace.MPBDataSetTableAdapters.TableAdapterManager();
 			finnishLabel = new System.Windows.Forms.Label();
 			englishLabel = new System.Windows.Forms.Label();
-			((System.ComponentModel.ISupportInitialize)(this.myFinnishPhrasebookDBDataSet)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.dBTablePhrasebookBindingSource)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.mPBDataSet)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.phrasebookBindingSource)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// finnishLabel
@@ -88,26 +88,6 @@
 			this.bttCancel.Text = "Cancel";
 			this.bttCancel.UseVisualStyleBackColor = true;
 			// 
-			// myFinnishPhrasebookDBDataSet
-			// 
-			this.myFinnishPhrasebookDBDataSet.DataSetName = "MyFinnishPhrasebookDBDataSet";
-			this.myFinnishPhrasebookDBDataSet.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
-			// 
-			// dBTablePhrasebookBindingSource
-			// 
-			this.dBTablePhrasebookBindingSource.DataMember = "DBTablePhrasebook";
-			this.dBTablePhrasebookBindingSource.DataSource = this.myFinnishPhrasebookDBDataSet;
-			// 
-			// dBTablePhrasebookTableAdapter
-			// 
-			this.dBTablePhrasebookTableAdapter.ClearBeforeFill = true;
-			// 
-			// tableAdapterManager
-			// 
-			this.tableAdapterManager.BackupDataSetBeforeUpdate = false;
-			this.tableAdapterManager.DBTablePhrasebookTableAdapter = this.dBTablePhrasebookTableAdapter;
-			this.tableAdapterManager.UpdateOrder = MyFinnishPhrasebookNamespace.MyFinnishPhrasebookDBDataSetTableAdapters.TableAdapterManager.UpdateOrderOption.InsertUpdateDelete;
-			// 
 			// textBoxFinnish1
 			// 
 			this.textBoxFinnish1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
@@ -142,6 +122,28 @@
 			this.flowLayoutPanel1.Size = new System.Drawing.Size( 400, 159 );
 			this.flowLayoutPanel1.TabIndex = 60;
 			// 
+			// mPBDataSet
+			// 
+			this.mPBDataSet.DataSetName = "MPBDataSet";
+			this.mPBDataSet.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
+			// 
+			// phrasebookBindingSource
+			// 
+			this.phrasebookBindingSource.DataMember = "Phrasebook";
+			this.phrasebookBindingSource.DataSource = this.mPBDataSet;
+			// 
+			// phrasebookTableAdapter
+			// 
+			this.phrasebookTableAdapter.ClearBeforeFill = true;
+			// 
+			// tableAdapterManager
+			// 
+			this.tableAdapterManager.BackupDataSetBeforeUpdate = false;
+			this.tableAdapterManager.Cat2PhraseTableAdapter = null;
+			this.tableAdapterManager.CategoriesTableAdapter = null;
+			this.tableAdapterManager.PhrasebookTableAdapter = this.phrasebookTableAdapter;
+			this.tableAdapterManager.UpdateOrder = MyFinnishPhrasebookNamespace.MPBDataSetTableAdapters.TableAdapterManager.UpdateOrderOption.InsertUpdateDelete;
+			// 
 			// EditForm
 			// 
 			this.AcceptButton = this.bttOK;
@@ -160,8 +162,8 @@
 			this.MinimumSize = new System.Drawing.Size( 450, 277 );
 			this.Name = "EditForm";
 			this.Text = "Phrase Dialog";
-			((System.ComponentModel.ISupportInitialize)(this.myFinnishPhrasebookDBDataSet)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.dBTablePhrasebookBindingSource)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.mPBDataSet)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.phrasebookBindingSource)).EndInit();
 			this.ResumeLayout( false );
 			this.PerformLayout();
 
@@ -171,12 +173,12 @@
 
 		private System.Windows.Forms.Button bttOK;
 		private System.Windows.Forms.Button bttCancel;
-		private MyFinnishPhrasebookDBDataSet myFinnishPhrasebookDBDataSet;
-		private System.Windows.Forms.BindingSource dBTablePhrasebookBindingSource;
-		private MyFinnishPhrasebookNamespace.MyFinnishPhrasebookDBDataSetTableAdapters.DBTablePhrasebookTableAdapter dBTablePhrasebookTableAdapter;
-		private MyFinnishPhrasebookNamespace.MyFinnishPhrasebookDBDataSetTableAdapters.TableAdapterManager tableAdapterManager;
 		private TextBoxFinnish textBoxFinnish1;
 		private System.Windows.Forms.TextBox txtEnglish;
 		private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+		private MPBDataSet mPBDataSet;
+		private System.Windows.Forms.BindingSource phrasebookBindingSource;
+		private MyFinnishPhrasebookNamespace.MPBDataSetTableAdapters.PhrasebookTableAdapter phrasebookTableAdapter;
+		private MyFinnishPhrasebookNamespace.MPBDataSetTableAdapters.TableAdapterManager tableAdapterManager;
 	}
 }

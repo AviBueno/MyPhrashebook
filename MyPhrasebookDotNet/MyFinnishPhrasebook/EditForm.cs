@@ -11,8 +11,6 @@ namespace MyFinnishPhrasebookNamespace
 {
 	public partial class EditForm : DialogForm
 	{
-// 		MPBDataSet.PhrasebookRow m_originalRow = null;
-// 		MPBDataSet.PhrasebookRow m_editedRow = null;
 		DBWrapper.RowWithCategoryInfo m_originalRWCI = null;
 		DBWrapper.RowWithCategoryInfo m_editedRWCI = null;
 
@@ -30,9 +28,9 @@ namespace MyFinnishPhrasebookNamespace
 
 
 			// Set data source and binding 
-			dBTablePhrasebookBindingSource.DataSource = m_editedRWCI.Row;
-			textBoxFinnish1.TxtBox.DataBindings.Add( new Binding( "Text", dBTablePhrasebookBindingSource, "_language" ) );
-			txtEnglish.DataBindings.Add( new Binding( "Text", dBTablePhrasebookBindingSource, "_english" ) );
+			phrasebookBindingSource.DataSource = m_editedRWCI.Row;
+			textBoxFinnish1.TxtBox.DataBindings.Add( new Binding( "Text", phrasebookBindingSource, "_language" ) );
+			txtEnglish.DataBindings.Add( new Binding( "Text", phrasebookBindingSource, "_english" ) );
 
 			foreach ( KeyValuePair<string, long> category in DBWrapper.Instance.CategoriesMap )
 			{
@@ -52,21 +50,6 @@ namespace MyFinnishPhrasebookNamespace
 				cb.AutoSize = true;
 				flowLayoutPanel1.Controls.Add( cb );
 			}
-
-/*
-			foreach ( string categoryName in DBWrapper.Instance.CategoryNamesList )
-			{
-				DataColumn col = m_editedRow.Table.Columns[ categoryName ];
-				if ( col != null )
-				{
-					CheckBox cb = new CheckBox();
-					cb.Text = categoryName;
-					cb.DataBindings.Add( new Binding("Checked", dBTablePhrasebookBindingSource, categoryName) );
-					cb.AutoSize = true;
-					flowLayoutPanel1.Controls.Add( cb );
-				}
-			}
-*/
 		}
 
 		private void bttOK_Click( object sender, EventArgs e )
