@@ -25,31 +25,56 @@ namespace MyFinnishPhrasebookNamespace.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\Avi\\Documents\\Finnish\\MyFinnishPhrasebook")]
+        public string DefaultDBDir {
+            get {
+                return ((string)(this["DefaultDBDir"]));
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ColumnsOrderPersistence {
+            get {
+                return ((string)(this["ColumnsOrderPersistence"]));
+            }
+            set {
+                this["ColumnsOrderPersistence"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Both")]
+        public string QuizQuestionLanguage {
+            get {
+                return ((string)(this["QuizQuestionLanguage"]));
+            }
+            set {
+                this["QuizQuestionLanguage"] = value;
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Provider=Microsoft.Jet.OLEDB.4.0;Data Source=C:\\Users\\Avi\\Documents\\Finnish\\MyFin" +
-            "nishPhrasebook\\MyFinnishPhrasebookDB.mdb")]
-        public string MyPhrasebookDB {
+        [global::System.Configuration.DefaultSettingValueAttribute("Provider=Microsoft.Jet.OLEDB.4.0;Data Source=|DataDirectory|\\MyFinnishPhrasebookD" +
+            "B.mdb")]
+        public string MyFinnishPhrasebookDBConnectionString {
             get {
-                return ((string)(this["MyPhrasebookDB"]));
+                return ((string)(this["MyFinnishPhrasebookDBConnectionString"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Provider=Microsoft.Jet.OLEDB.4.0;Data Source=C:\\Users\\Avi\\Documents\\Finnish\\MyFin" +
-            "nishPhrasebook\\MyFinnishPhrasebookDB.mdb")]
-        public string MyPhrasebookDB_Global {
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute("data source=c:\\Users\\Avi\\Documents\\Programming\\WindowsForms\\MyFinnishPhrasebook\\M" +
+            "yFinnishPhrasebook\\Database\\mpb.db")]
+        public string MPBConnectionString {
             get {
-                return ((string)(this["MyPhrasebookDB_Global"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Provider=Microsoft.Jet.OLEDB.4.0;Data Source=.\\MyFinnishPhrasebookDB.mdb")]
-        public string MyPhrasebookDB_Local {
-            get {
-                return ((string)(this["MyPhrasebookDB_Local"]));
+                return ((string)(this["MPBConnectionString"]));
             }
         }
     }

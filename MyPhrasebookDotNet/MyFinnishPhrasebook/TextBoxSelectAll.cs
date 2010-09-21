@@ -13,31 +13,30 @@ namespace MyFinnishPhrasebookNamespace
 			this.Enter += new EventHandler( TextBoxSelectAll_Enter );
 			this.Click += new EventHandler( TextBoxSelectAll_Click );
 			this.Leave += new EventHandler( TextBoxSelectAll_Leave );
+			this.HideSelection = false;
 		}
 
+		#region Event Handlers
+		bool m_FirstClickAfterEnter;
 		void TextBoxSelectAll_Enter( object sender, EventArgs e )
 		{
-			TextBox tb = sender as TextBox;
-			tb.SelectAll();
-			tb.HideSelection = false;
+			m_FirstClickAfterEnter = true;
+			this.SelectAll();
 		}
 
 		void TextBoxSelectAll_Click( object sender, EventArgs e )
 		{
-			TextBox tb = sender as TextBox;
-			if ( tb.SelectionLength > 0 )
+			if ( m_FirstClickAfterEnter )
 			{
-				tb.SelectAll();
+				m_FirstClickAfterEnter = false;
+				this.SelectAll();
 			}
 		}
 
 		void TextBoxSelectAll_Leave( object sender, EventArgs e )
 		{
- 			TextBox tb = sender as TextBox;
-			if ( !tb.HideSelection )
-			{
-				tb.HideSelection = true;
-			}
+			this.DeselectAll();
 		}
+		#endregion
 	}
 }

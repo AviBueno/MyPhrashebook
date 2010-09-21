@@ -59,5 +59,76 @@ namespace MyFinnishPhrasebookNamespace.Properties {
                 resourceCulture = value;
             }
         }
+        
+        internal static System.Drawing.Icon AppIcon {
+            get {
+                object obj = ResourceManager.GetObject("AppIcon", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap Contains {
+            get {
+                object obj = ResourceManager.GetObject("Contains", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap EndsWith {
+            get {
+                object obj = ResourceManager.GetObject("EndsWith", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap ExactMatch {
+            get {
+                object obj = ResourceManager.GetObject("ExactMatch", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to (English like &apos;%{0}%&apos;) OR (Finnish like &apos;%{0}%&apos;).
+        /// </summary>
+        internal static string QFContains {
+            get {
+                return ResourceManager.GetString("QFContains", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to (English like &apos;%{0}&apos;) OR (Finnish like &apos;%{0}&apos;).
+        /// </summary>
+        internal static string QFEndsWith {
+            get {
+                return ResourceManager.GetString("QFEndsWith", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to (English like &apos;{0}&apos;) OR (Finnish like &apos;{0}&apos;).
+        /// </summary>
+        internal static string QFExactMatch {
+            get {
+                return ResourceManager.GetString("QFExactMatch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to (English like &apos;{0}%&apos;) OR (Finnish like &apos;{0}%&apos;).
+        /// </summary>
+        internal static string QFStartsWith {
+            get {
+                return ResourceManager.GetString("QFStartsWith", resourceCulture);
+            }
+        }
+        
+        internal static System.Drawing.Bitmap StartsWith {
+            get {
+                object obj = ResourceManager.GetObject("StartsWith", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
     }
 }

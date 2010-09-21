@@ -9,16 +9,17 @@ namespace MyFinnishPhrasebookNamespace
 {
 	public class BaseForm : Form
 	{
-		static Font formFont;
+		static Font m_Font;
 
 		static BaseForm()
 		{
-			formFont = new Font( FontFamily.GenericSansSerif, 12.0f );
+			m_Font = new Font( FontFamily.GenericSansSerif, 12.0f );
 		}
 
 		public BaseForm()
 		{
-			this.Font = formFont;
+			this.Font = m_Font;
+			this.Icon = Properties.Resources.AppIcon;
 		}
 	}
 }

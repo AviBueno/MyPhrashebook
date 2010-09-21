@@ -14,32 +14,76 @@ namespace MyFinnishPhrasebookNamespace
 	{
 		int nColIdxEnglish = -1;
 		int nColIdxFinnish = -1;
-		string m_sMDBFilePath;
 		Keys m_RefreshKey = Keys.F5;
+
+		private TextBox SearchTextBox { get { return txtBoxSearch.TxtBox; } }
 
 		#region Form Init
 		public MainForm()
 		{
 			InitializeComponent();
+			InitDatabaseDirectory();
+			SearchTextBox.TextChanged += new System.EventHandler( this.SearchTextBox_TextChanged );
+			txtBoxSearch.OnSearchOptionChanged += new EventHandler( OnFilterData );
 
-			string sTxt = Properties.Settings.Default.MyPhrasebookDB;
+			this.Text += string.Format( " ({0})", Application.ProductVersion );
+		}
+
+		/// <summary>
+		/// Determine where to read the database from and init the DataDirectory variable accordingly.
+		/// </summary>
+		private void InitDatabaseDirectory()
+		{
+			// The DB connectionstring contains |DataDirectory| which is retrieved at runtime from AppDomain.
+			// The following method will load the database from the current directory if one exists there,
+			// and if not - will fallback to the DefaultDBDir value from the application's settings.
+			// This is done in order to work on an external directory's database during development time,
+			// and reading one from current dir on an end-user's machine.
+			string dataDir = Properties.Settings.Default.DefaultDBDir;
+			if ( System.IO.File.Exists( Application.StartupPath + "\\MyFinnishPhrasebookDB.mdb" ) )
+			{
+				dataDir = Application.StartupPath;
+			}
+
+			AppDomain.CurrentDomain.SetData( "DataDirectory", dataDir );
+
+			// Update database path name text box
+			string sTxt = Properties.Settings.Default.MyFinnishPhrasebookDBConnectionString;
 
 			string sDS = "Data Source=";
 			int nIdx = sTxt.IndexOf( sDS );
 			nIdx += sDS.Length;
 
-			m_sMDBFilePath = sTxt.Substring( nIdx );
+			textBoxDBFilePath.Text = sTxt.Substring( nIdx ).Replace( "|DataDirectory|", AppDomain.CurrentDomain.GetData( "DataDirectory" ) as string );
 		}
-		
-		private void CombinedForm_Load( object sender, EventArgs e )
+
+		private void MainForm_Load( object sender, EventArgs e )
 		{
 			HookGlobalKeyboardKeys();
 
 			ReadDatabase();
-			OnFilterData();
+			SelectRandomWord(); //OnFilterData( this, EventArgs.Empty );
 
 			dataGridView.OnEditRow += new EventHandler( this.OnEditRow );
 			dataGridView.OnDeleteRow += new EventHandler( this.OnDeleteRow );
+
+			Application.Idle += new EventHandler( MainForm_Loaded );
+		}
+
+		private void MainForm_Loaded( object sender, EventArgs args )
+		{
+			Application.Idle -= new EventHandler( MainForm_Loaded );
+
+			// TODO: add relevant code here
+			if ( Program.StartInQuizMode )
+			{
+				LaunchQuizDialog();
+			}
+		}
+
+		private void LaunchQuizDialog()
+		{
+			new QuizForm().ShowDialog();
 		}
 		#endregion
 
@@ -50,7 +94,6 @@ namespace MyFinnishPhrasebookNamespace
 			gkh.HookedKeys.Add( m_RefreshKey );
 			gkh.HookedKeys.Add( Keys.Enter );
 			gkh.KeyDown += new KeyEventHandler( gkh_KeyDown );
-			//gkh.KeyUp += new KeyEventHandler( gkh_KeyUp );
 		}
 
 		/// <summary>
@@ -106,7 +149,7 @@ namespace MyFinnishPhrasebookNamespace
 				}
 				else if ( key == m_RefreshKey )
 				{
-					bttRandom_Click( null, null );
+					SelectRandomWord();
 				}
 			}
 		}
@@ -118,54 +161,89 @@ namespace MyFinnishPhrasebookNamespace
 			UpdateDataGridView();
 		}
 
+		void PutFocusOnSearchText()
+		{
+			SearchTextBox.Focus();
+			txtBoxSearch.Focus();
+		}
+
 		void UpdateDataGridView()
 		{
-			OnFilterData();
-			txtSearch.Focus();
-			txtSearch.SelectAll();
+			OnFilterData( this, EventArgs.Empty );
+			PutFocusOnSearchText();
+			SearchTextBox.SelectAll();
 		}
 
 		#region Event Handlers
 		private void bttSearch_Click( object sender, EventArgs e )
 		{
-			OnFilterData();
+			OnFilterData( this, EventArgs.Empty );
 		}
 
-		private void OnFilterData()
+		private void OnFilterData( object sender, EventArgs e )
 		{
 			string filterQuery = "";
 
-			string sSearchText = txtSearch.Text.Trim();
+			string sSearchText = SearchTextBox.Text.Trim();
 			if ( !string.IsNullOrEmpty( sSearchText ) )
 			{
 				sSearchText = sSearchText.Replace( "'", "''" );	// Overcome ending apostrophe issue
-				filterQuery = string.Format( "(English like '%{0}%') OR (Finnish like '%{0}%')", sSearchText );
+				filterQuery = GetSearchQueryFilter( sSearchText );
 			}
 
 			dataGridView.DataSource = DBWrapper.Instance.FilterRows( filterQuery );
 
-			labelNumEntries.Text = string.Format( "{0} | {1} / {2}",
-															m_sMDBFilePath,
+			labelNumEntries.Text = string.Format( "{0} / {1}",
 															dataGridView.Rows.Count,
 															DBWrapper.Instance.MyDataTable.Rows.Count );
+
+			PutFocusOnSearchText();
 		}
 
-		private void txtSearch_TextChanged( object sender, EventArgs e )
+		private string GetSearchQueryFilter( string sSearchText )
+		{
+			string sFilterQuery = string.Empty;
+			switch ( txtBoxSearch.CurrentSearchOption )
+			{
+				case TextBoxFinnish.SearchOption.Exact:
+					sFilterQuery = string.Format( Properties.Resources.QFExactMatch, sSearchText );
+					break;
+
+				case TextBoxFinnish.SearchOption.Contains:
+					sFilterQuery = string.Format( Properties.Resources.QFContains, sSearchText );
+					break;
+
+				case TextBoxFinnish.SearchOption.StartsWith:
+					sFilterQuery = string.Format( Properties.Resources.QFStartsWith, sSearchText );
+					break;
+
+				case TextBoxFinnish.SearchOption.EndsWith:
+					sFilterQuery = string.Format( Properties.Resources.QFEndsWith, sSearchText );
+					break;
+			}
+
+			return sFilterQuery;
+		}
+
+		private void SearchTextBox_TextChanged( object sender, EventArgs e )
 		{
 			timerFilterText.Stop();
 			timerFilterText.Start();
 		}
 
-		private void timer1_Tick( object sender, EventArgs e )
+		private void timerFilterText_Tick( object sender, EventArgs e )
 		{
 			timerFilterText.Stop();
-			OnFilterData();
+			if ( !string.IsNullOrEmpty( txtBoxSearch.TxtBox.Text.Trim() ) )
+			{
+				OnFilterData( this, EventArgs.Empty );
+			}
 		}
 
-		private void bttRandom_Click( object sender, EventArgs e )
+		private void SelectRandomWord()
 		{
-			txtSearch.Text = "";
-			OnFilterData();
+			SearchTextBox.Text = "";
+			OnFilterData( this, EventArgs.Empty );
 
 			int nRows = dataGridView.Rows.Count;
 			if ( nRows > 0 )
@@ -197,11 +275,11 @@ namespace MyFinnishPhrasebookNamespace
 			{
 				foreach ( DataGridViewColumn col in dataGridView.Columns )
 				{
-					if ( col.DataPropertyName == "English" )
+					if ( col.DataPropertyName == "_english" )
 					{
 						nColIdxEnglish = col.Index;
 					}
-					else if ( col.DataPropertyName == "Finnish" )
+					else if ( col.DataPropertyName == "_language" )
 					{
 						nColIdxFinnish = col.Index;
 					}
@@ -210,25 +288,6 @@ namespace MyFinnishPhrasebookNamespace
 
 			BindToRow( txtEnglish, nColIdxEnglish, nRowIdx );
 			BindToRow( txtFinnish, nColIdxFinnish, nRowIdx );
-		}
-
-		private void AddSearchText( string text )
-		{
-			int i = txtSearch.SelectionStart;
-			txtSearch.SelectedText = text;
-			txtSearch.Focus();
-			txtSearch.SelectionStart = i + 1;
-			txtSearch.SelectionLength = 0;
-		}
-
-		private void bttO_Click( object sender, EventArgs e )
-		{
-			AddSearchText( bttO.Text );
-		}
-
-		private void bttA_Click( object sender, EventArgs e )
-		{
-			AddSearchText( bttA.Text );
 		}
 
 		private void bttAddWord_Click( object sender, EventArgs e )
@@ -243,11 +302,12 @@ namespace MyFinnishPhrasebookNamespace
 
 		private void OnAddWord()
 		{
-			EditForm form = new EditForm( txtSearch.Text, txtSearch.Text );
-			if ( form.ShowDialog() == DialogResult.OK
-					&& form.FinnishText.Length > 0 && form.EnglishText.Length > 0 )
+			MPBDataSet.PhrasebookRow row = DBWrapper.Instance.CreateNewDataRow();
+			row._language = row._english = SearchTextBox.Text;
+			EditForm form = new EditForm( row );
+			if ( form.ShowDialog() == DialogResult.OK )
 			{
-				bool bAdded = DBWrapper.Instance.InsertRow( form.EnglishText, form.FinnishText );
+				bool bAdded = DBWrapper.Instance.InsertRow( row );
 				if ( bAdded )
 				{
 					dataGridView.DataSource = null;
@@ -260,16 +320,18 @@ namespace MyFinnishPhrasebookNamespace
 		{
 			if ( dataGridView.SelectedRows.Count > 0 )
 			{
-				DataGridViewRow selectedRow = dataGridView.SelectedRows[ 0 ];
-				string sEnglishText = selectedRow.Cells[ dataGridView.ColIdxEnglish ].Value.ToString();
-				string sFinnishText = selectedRow.Cells[ dataGridView.ColIdxFinnish ].Value.ToString();
-				EditForm form = new EditForm( sEnglishText, sFinnishText );
+				DataGridViewRow selectedDataRow = dataGridView.SelectedRows[ 0 ];
+				MPBDataSet.PhrasebookRow selectedRow = selectedDataRow.DataBoundItem as MPBDataSet.PhrasebookRow;
+				MPBDataSet.PhrasebookRow editedRow = selectedRow;
+				EditForm form = new EditForm( editedRow );
 				if ( form.ShowDialog() == DialogResult.OK )
 				{
-					selectedRow.Cells[ dataGridView.ColIdxEnglish ].Value = form.EnglishText;
-					selectedRow.Cells[ dataGridView.ColIdxFinnish ].Value = form.FinnishText;
+					selectedRow = editedRow;
 					DBWrapper.Instance.CommitChanges();
-					UpdateDataGridView();
+					if ( SearchTextBox.Text != string.Empty )
+					{
+						UpdateDataGridView();
+					}
 				}
 			}
 		}
@@ -279,21 +341,36 @@ namespace MyFinnishPhrasebookNamespace
 			if ( dataGridView.SelectedRows.Count > 0 )
 			{
 				DataGridViewRow row = dataGridView.SelectedRows[ 0 ];
-				DialogResult res = MessageBox.Show( string.Format( 
+				DialogResult res = MessageBox.Show( string.Format(
 														"Are you sure you want to delete\n{0} | {1}"
 															, row.Cells[ dataGridView.ColIdxEnglish ].Value.ToString()
 															, row.Cells[ dataGridView.ColIdxFinnish ].Value.ToString()
 															),
 															"Delete Values?",
-															MessageBoxButtons.YesNo															
+															MessageBoxButtons.YesNo
 												);
 				if ( res == DialogResult.Yes )
 				{
 					dataGridView.DeleteRow( row );
-					OnFilterData();
+					OnFilterData( this, EventArgs.Empty );
 				}
 			}
 		}
+
+		private void MainForm_FormClosing( object sender, FormClosingEventArgs e )
+		{
+			dataGridView.SaveColumnsOrderPersistence();
+		}
 		#endregion
+
+		private void tsBttRandom_Click( object sender, EventArgs e )
+		{
+			SelectRandomWord();
+		}
+
+		private void tsBttQuiz_Click( object sender, EventArgs e )
+		{
+			LaunchQuizDialog();
+		}
 	}
 }

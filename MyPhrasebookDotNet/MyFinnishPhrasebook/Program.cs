@@ -7,12 +7,22 @@ namespace MyFinnishPhrasebookNamespace
 {
 	static class Program
 	{
+		public static bool StartInQuizMode { get; set; }
+
 		/// <summary>
 		/// The main entry point for the application.
 		/// </summary>
 		[STAThread]
-		static void Main()
+		static void Main(string[] args)
 		{
+			foreach ( string param in args )
+			{
+				if ( param.ToLower() == "-quiz" )
+				{
+					StartInQuizMode = true;
+				}
+			}
+
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault( false );
 			Application.Run( new MainForm() );

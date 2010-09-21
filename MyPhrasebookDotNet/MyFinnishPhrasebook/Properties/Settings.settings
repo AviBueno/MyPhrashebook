@@ -2,19 +2,30 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="MyFinnishPhrasebookNamespace.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="MyPhrasebookDB" Type="(Connection string)" Scope="Application">
+    <Setting Name="DefaultDBDir" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\Users\Avi\Documents\Finnish\MyFinnishPhrasebook</Value>
+    </Setting>
+    <Setting Name="ColumnsOrderPersistence" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="QuizQuestionLanguage" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Both</Value>
+    </Setting>
+    <Setting Name="MyFinnishPhrasebookDBConnectionString" Type="(Connection string)" Scope="Application">
       <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;ConnectionString&gt;Provider=Microsoft.Jet.OLEDB.4.0;Data Source=C:\Users\Avi\Documents\Finnish\MyFinnishPhrasebook\MyFinnishPhrasebookDB.mdb&lt;/ConnectionString&gt;
+  &lt;ConnectionString&gt;Provider=Microsoft.Jet.OLEDB.4.0;Data Source=|DataDirectory|\MyFinnishPhrasebookDB.mdb&lt;/ConnectionString&gt;
   &lt;ProviderName&gt;System.Data.OleDb&lt;/ProviderName&gt;
 &lt;/SerializableConnectionString&gt;</DesignTimeValue>
-      <Value Profile="(Default)">Provider=Microsoft.Jet.OLEDB.4.0;Data Source=C:\Users\Avi\Documents\Finnish\MyFinnishPhrasebook\MyFinnishPhrasebookDB.mdb</Value>
+      <Value Profile="(Default)">Provider=Microsoft.Jet.OLEDB.4.0;Data Source=|DataDirectory|\MyFinnishPhrasebookDB.mdb</Value>
     </Setting>
-    <Setting Name="MyPhrasebookDB_Global" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">Provider=Microsoft.Jet.OLEDB.4.0;Data Source=C:\Users\Avi\Documents\Finnish\MyFinnishPhrasebook\MyFinnishPhrasebookDB.mdb</Value>
-    </Setting>
-    <Setting Name="MyPhrasebookDB_Local" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">Provider=Microsoft.Jet.OLEDB.4.0;Data Source=.\MyFinnishPhrasebookDB.mdb</Value>
+    <Setting Name="MPBConnectionString" Type="(Connection string)" Scope="Application">
+      <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;ConnectionString&gt;data source=c:\Users\Avi\Documents\Programming\WindowsForms\MyFinnishPhrasebook\MyFinnishPhrasebook\Database\mpb.db&lt;/ConnectionString&gt;
+  &lt;ProviderName&gt;System.Data.SQLite&lt;/ProviderName&gt;
+&lt;/SerializableConnectionString&gt;</DesignTimeValue>
+      <Value Profile="(Default)">data source=c:\Users\Avi\Documents\Programming\WindowsForms\MyFinnishPhrasebook\MyFinnishPhrasebook\Database\mpb.db</Value>
     </Setting>
   </Settings>
 </SettingsFile>

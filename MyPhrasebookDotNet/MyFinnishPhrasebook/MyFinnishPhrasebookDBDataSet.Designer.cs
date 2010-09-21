@@ -21,16 +21,16 @@ namespace MyFinnishPhrasebookNamespace {
     [global::System.ComponentModel.DesignerCategoryAttribute("code")]
     [global::System.ComponentModel.ToolboxItem(true)]
     [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedDataSetSchema")]
-    [global::System.Xml.Serialization.XmlRootAttribute("MyPhrasebookDataSet")]
+    [global::System.Xml.Serialization.XmlRootAttribute("MyFinnishPhrasebookDBDataSet")]
     [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.DataSet")]
-    public partial class MyPhrasebookDataSet : global::System.Data.DataSet {
+    public partial class MyFinnishPhrasebookDBDataSet : global::System.Data.DataSet {
         
         private DBTablePhrasebookDataTable tableDBTablePhrasebook;
         
         private global::System.Data.SchemaSerializationMode _schemaSerializationMode = global::System.Data.SchemaSerializationMode.IncludeSchema;
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        public MyPhrasebookDataSet() {
+        public MyFinnishPhrasebookDBDataSet() {
             this.BeginInit();
             this.InitClass();
             global::System.ComponentModel.CollectionChangeEventHandler schemaChangedHandler = new global::System.ComponentModel.CollectionChangeEventHandler(this.SchemaChanged);
@@ -40,7 +40,7 @@ namespace MyFinnishPhrasebookNamespace {
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        protected MyPhrasebookDataSet(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
+        protected MyFinnishPhrasebookDBDataSet(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
                 base(info, context, false) {
             if ((this.IsBinarySerialized(info, context) == true)) {
                 this.InitVars(false);
@@ -120,7 +120,7 @@ namespace MyFinnishPhrasebookNamespace {
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         public override global::System.Data.DataSet Clone() {
-            MyPhrasebookDataSet cln = ((MyPhrasebookDataSet)(base.Clone()));
+            MyFinnishPhrasebookDBDataSet cln = ((MyFinnishPhrasebookDBDataSet)(base.Clone()));
             cln.InitVars();
             cln.SchemaSerializationMode = this.SchemaSerializationMode;
             return cln;
@@ -185,9 +185,9 @@ namespace MyFinnishPhrasebookNamespace {
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         private void InitClass() {
-            this.DataSetName = "MyPhrasebookDataSet";
+            this.DataSetName = "MyFinnishPhrasebookDBDataSet";
             this.Prefix = "";
-            this.Namespace = "http://tempuri.org/MyPhrasebookDataSet.xsd";
+            this.Namespace = "http://tempuri.org/MyFinnishPhrasebookDBDataSet.xsd";
             this.EnforceConstraints = true;
             this.SchemaSerializationMode = global::System.Data.SchemaSerializationMode.IncludeSchema;
             this.tableDBTablePhrasebook = new DBTablePhrasebookDataTable();
@@ -208,7 +208,7 @@ namespace MyFinnishPhrasebookNamespace {
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         public static global::System.Xml.Schema.XmlSchemaComplexType GetTypedDataSetSchema(global::System.Xml.Schema.XmlSchemaSet xs) {
-            MyPhrasebookDataSet ds = new MyPhrasebookDataSet();
+            MyFinnishPhrasebookDBDataSet ds = new MyFinnishPhrasebookDBDataSet();
             global::System.Xml.Schema.XmlSchemaComplexType type = new global::System.Xml.Schema.XmlSchemaComplexType();
             global::System.Xml.Schema.XmlSchemaSequence sequence = new global::System.Xml.Schema.XmlSchemaSequence();
             global::System.Xml.Schema.XmlSchemaAny any = new global::System.Xml.Schema.XmlSchemaAny();
@@ -268,6 +268,18 @@ namespace MyFinnishPhrasebookNamespace {
             
             private global::System.Data.DataColumn columnEnglish;
             
+            private global::System.Data.DataColumn columnQuestion;
+            
+            private global::System.Data.DataColumn columnPhrase;
+            
+            private global::System.Data.DataColumn columnVerb;
+            
+            private global::System.Data.DataColumn columnColor;
+            
+            private global::System.Data.DataColumn columnNumber;
+            
+            private global::System.Data.DataColumn columnFood;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             public DBTablePhrasebookDataTable() {
                 this.TableName = "DBTablePhrasebook";
@@ -320,6 +332,48 @@ namespace MyFinnishPhrasebookNamespace {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public global::System.Data.DataColumn QuestionColumn {
+                get {
+                    return this.columnQuestion;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public global::System.Data.DataColumn PhraseColumn {
+                get {
+                    return this.columnPhrase;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public global::System.Data.DataColumn VerbColumn {
+                get {
+                    return this.columnVerb;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public global::System.Data.DataColumn ColorColumn {
+                get {
+                    return this.columnColor;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public global::System.Data.DataColumn NumberColumn {
+                get {
+                    return this.columnNumber;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public global::System.Data.DataColumn FoodColumn {
+                get {
+                    return this.columnFood;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -348,12 +402,18 @@ namespace MyFinnishPhrasebookNamespace {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            public DBTablePhrasebookRow AddDBTablePhrasebookRow(string Finnish, string English) {
+            public DBTablePhrasebookRow AddDBTablePhrasebookRow(string Finnish, string English, bool Question, bool Phrase, bool Verb, bool Color, bool Number, bool Food) {
                 DBTablePhrasebookRow rowDBTablePhrasebookRow = ((DBTablePhrasebookRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         null,
                         Finnish,
-                        English};
+                        English,
+                        Question,
+                        Phrase,
+                        Verb,
+                        Color,
+                        Number,
+                        Food};
                 rowDBTablePhrasebookRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowDBTablePhrasebookRow);
                 return rowDBTablePhrasebookRow;
@@ -382,6 +442,12 @@ namespace MyFinnishPhrasebookNamespace {
                 this.columnID = base.Columns["ID"];
                 this.columnFinnish = base.Columns["Finnish"];
                 this.columnEnglish = base.Columns["English"];
+                this.columnQuestion = base.Columns["Question"];
+                this.columnPhrase = base.Columns["Phrase"];
+                this.columnVerb = base.Columns["Verb"];
+                this.columnColor = base.Columns["Color"];
+                this.columnNumber = base.Columns["Number"];
+                this.columnFood = base.Columns["Food"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -392,6 +458,18 @@ namespace MyFinnishPhrasebookNamespace {
                 base.Columns.Add(this.columnFinnish);
                 this.columnEnglish = new global::System.Data.DataColumn("English", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnEnglish);
+                this.columnQuestion = new global::System.Data.DataColumn("Question", typeof(bool), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnQuestion);
+                this.columnPhrase = new global::System.Data.DataColumn("Phrase", typeof(bool), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnPhrase);
+                this.columnVerb = new global::System.Data.DataColumn("Verb", typeof(bool), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnVerb);
+                this.columnColor = new global::System.Data.DataColumn("Color", typeof(bool), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnColor);
+                this.columnNumber = new global::System.Data.DataColumn("Number", typeof(bool), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnNumber);
+                this.columnFood = new global::System.Data.DataColumn("Food", typeof(bool), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnFood);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.columnID}, true));
                 this.columnID.AutoIncrement = true;
@@ -459,7 +537,7 @@ namespace MyFinnishPhrasebookNamespace {
             public static global::System.Xml.Schema.XmlSchemaComplexType GetTypedTableSchema(global::System.Xml.Schema.XmlSchemaSet xs) {
                 global::System.Xml.Schema.XmlSchemaComplexType type = new global::System.Xml.Schema.XmlSchemaComplexType();
                 global::System.Xml.Schema.XmlSchemaSequence sequence = new global::System.Xml.Schema.XmlSchemaSequence();
-                MyPhrasebookDataSet ds = new MyPhrasebookDataSet();
+                MyFinnishPhrasebookDBDataSet ds = new MyFinnishPhrasebookDBDataSet();
                 global::System.Xml.Schema.XmlSchemaAny any1 = new global::System.Xml.Schema.XmlSchemaAny();
                 any1.Namespace = "http://www.w3.org/2001/XMLSchema";
                 any1.MinOccurs = new decimal(0);
@@ -573,6 +651,96 @@ namespace MyFinnishPhrasebookNamespace {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public bool Question {
+                get {
+                    try {
+                        return ((bool)(this[this.tableDBTablePhrasebook.QuestionColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'Question\' in table \'DBTablePhrasebook\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableDBTablePhrasebook.QuestionColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public bool Phrase {
+                get {
+                    try {
+                        return ((bool)(this[this.tableDBTablePhrasebook.PhraseColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'Phrase\' in table \'DBTablePhrasebook\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableDBTablePhrasebook.PhraseColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public bool Verb {
+                get {
+                    try {
+                        return ((bool)(this[this.tableDBTablePhrasebook.VerbColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'Verb\' in table \'DBTablePhrasebook\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableDBTablePhrasebook.VerbColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public bool Color {
+                get {
+                    try {
+                        return ((bool)(this[this.tableDBTablePhrasebook.ColorColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'Color\' in table \'DBTablePhrasebook\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableDBTablePhrasebook.ColorColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public bool Number {
+                get {
+                    try {
+                        return ((bool)(this[this.tableDBTablePhrasebook.NumberColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'Number\' in table \'DBTablePhrasebook\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableDBTablePhrasebook.NumberColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public bool Food {
+                get {
+                    try {
+                        return ((bool)(this[this.tableDBTablePhrasebook.FoodColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'Food\' in table \'DBTablePhrasebook\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableDBTablePhrasebook.FoodColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             public bool IsFinnishNull() {
                 return this.IsNull(this.tableDBTablePhrasebook.FinnishColumn);
             }
@@ -590,6 +758,66 @@ namespace MyFinnishPhrasebookNamespace {
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             public void SetEnglishNull() {
                 this[this.tableDBTablePhrasebook.EnglishColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public bool IsQuestionNull() {
+                return this.IsNull(this.tableDBTablePhrasebook.QuestionColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public void SetQuestionNull() {
+                this[this.tableDBTablePhrasebook.QuestionColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public bool IsPhraseNull() {
+                return this.IsNull(this.tableDBTablePhrasebook.PhraseColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public void SetPhraseNull() {
+                this[this.tableDBTablePhrasebook.PhraseColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public bool IsVerbNull() {
+                return this.IsNull(this.tableDBTablePhrasebook.VerbColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public void SetVerbNull() {
+                this[this.tableDBTablePhrasebook.VerbColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public bool IsColorNull() {
+                return this.IsNull(this.tableDBTablePhrasebook.ColorColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public void SetColorNull() {
+                this[this.tableDBTablePhrasebook.ColorColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public bool IsNumberNull() {
+                return this.IsNull(this.tableDBTablePhrasebook.NumberColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public void SetNumberNull() {
+                this[this.tableDBTablePhrasebook.NumberColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public bool IsFoodNull() {
+                return this.IsNull(this.tableDBTablePhrasebook.FoodColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public void SetFoodNull() {
+                this[this.tableDBTablePhrasebook.FoodColumn] = global::System.Convert.DBNull;
             }
         }
         
@@ -625,7 +853,7 @@ namespace MyFinnishPhrasebookNamespace {
         }
     }
 }
-namespace MyFinnishPhrasebookNamespace.MyPhrasebookDataSetTableAdapters {
+namespace MyFinnishPhrasebookNamespace.MyFinnishPhrasebookDBDataSetTableAdapters {
     
     
     /// <summary>
@@ -746,42 +974,82 @@ namespace MyFinnishPhrasebookNamespace.MyPhrasebookDataSetTableAdapters {
             tableMapping.ColumnMappings.Add("ID", "ID");
             tableMapping.ColumnMappings.Add("Finnish", "Finnish");
             tableMapping.ColumnMappings.Add("English", "English");
+            tableMapping.ColumnMappings.Add("Question", "Question");
+            tableMapping.ColumnMappings.Add("Phrase", "Phrase");
+            tableMapping.ColumnMappings.Add("Verb", "Verb");
+            tableMapping.ColumnMappings.Add("Color", "Color");
+            tableMapping.ColumnMappings.Add("Number", "Number");
+            tableMapping.ColumnMappings.Add("Food", "Food");
             this._adapter.TableMappings.Add(tableMapping);
             this._adapter.DeleteCommand = new global::System.Data.OleDb.OleDbCommand();
             this._adapter.DeleteCommand.Connection = this.Connection;
-            this._adapter.DeleteCommand.CommandText = "DELETE FROM `DBTablePhrasebook` WHERE ((`ID` = ?) AND ((? = 1 AND `Finnish` IS NU" +
-                "LL) OR (`Finnish` = ?)) AND ((? = 1 AND `English` IS NULL) OR (`English` = ?)))";
+            this._adapter.DeleteCommand.CommandText = @"DELETE FROM `DBTablePhrasebook` WHERE ((`ID` = ?) AND ((? = 1 AND `Finnish` IS NULL) OR (`Finnish` = ?)) AND ((? = 1 AND `English` IS NULL) OR (`English` = ?)) AND ((? = 1 AND `Question` IS NULL) OR (`Question` = ?)) AND ((? = 1 AND `Phrase` IS NULL) OR (`Phrase` = ?)) AND ((? = 1 AND `Verb` IS NULL) OR (`Verb` = ?)) AND ((? = 1 AND `Color` IS NULL) OR (`Color` = ?)) AND ((? = 1 AND `Number` IS NULL) OR (`Number` = ?)) AND ((? = 1 AND `Food` IS NULL) OR (`Food` = ?)))";
             this._adapter.DeleteCommand.CommandType = global::System.Data.CommandType.Text;
             this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.OleDb.OleDbParameter("Original_ID", global::System.Data.OleDb.OleDbType.Integer, 0, global::System.Data.ParameterDirection.Input, ((byte)(0)), ((byte)(0)), "ID", global::System.Data.DataRowVersion.Original, false, null));
             this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.OleDb.OleDbParameter("IsNull_Finnish", global::System.Data.OleDb.OleDbType.Integer, 0, global::System.Data.ParameterDirection.Input, ((byte)(0)), ((byte)(0)), "Finnish", global::System.Data.DataRowVersion.Original, true, null));
             this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.OleDb.OleDbParameter("Original_Finnish", global::System.Data.OleDb.OleDbType.VarWChar, 0, global::System.Data.ParameterDirection.Input, ((byte)(0)), ((byte)(0)), "Finnish", global::System.Data.DataRowVersion.Original, false, null));
             this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.OleDb.OleDbParameter("IsNull_English", global::System.Data.OleDb.OleDbType.Integer, 0, global::System.Data.ParameterDirection.Input, ((byte)(0)), ((byte)(0)), "English", global::System.Data.DataRowVersion.Original, true, null));
             this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.OleDb.OleDbParameter("Original_English", global::System.Data.OleDb.OleDbType.VarWChar, 0, global::System.Data.ParameterDirection.Input, ((byte)(0)), ((byte)(0)), "English", global::System.Data.DataRowVersion.Original, false, null));
+            this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.OleDb.OleDbParameter("IsNull_Question", global::System.Data.OleDb.OleDbType.Integer, 0, global::System.Data.ParameterDirection.Input, ((byte)(0)), ((byte)(0)), "Question", global::System.Data.DataRowVersion.Original, true, null));
+            this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.OleDb.OleDbParameter("Original_Question", global::System.Data.OleDb.OleDbType.Boolean, 0, global::System.Data.ParameterDirection.Input, ((byte)(0)), ((byte)(0)), "Question", global::System.Data.DataRowVersion.Original, false, null));
+            this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.OleDb.OleDbParameter("IsNull_Phrase", global::System.Data.OleDb.OleDbType.Integer, 0, global::System.Data.ParameterDirection.Input, ((byte)(0)), ((byte)(0)), "Phrase", global::System.Data.DataRowVersion.Original, true, null));
+            this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.OleDb.OleDbParameter("Original_Phrase", global::System.Data.OleDb.OleDbType.Boolean, 0, global::System.Data.ParameterDirection.Input, ((byte)(0)), ((byte)(0)), "Phrase", global::System.Data.DataRowVersion.Original, false, null));
+            this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.OleDb.OleDbParameter("IsNull_Verb", global::System.Data.OleDb.OleDbType.Integer, 0, global::System.Data.ParameterDirection.Input, ((byte)(0)), ((byte)(0)), "Verb", global::System.Data.DataRowVersion.Original, true, null));
+            this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.OleDb.OleDbParameter("Original_Verb", global::System.Data.OleDb.OleDbType.Boolean, 0, global::System.Data.ParameterDirection.Input, ((byte)(0)), ((byte)(0)), "Verb", global::System.Data.DataRowVersion.Original, false, null));
+            this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.OleDb.OleDbParameter("IsNull_Color", global::System.Data.OleDb.OleDbType.Integer, 0, global::System.Data.ParameterDirection.Input, ((byte)(0)), ((byte)(0)), "Color", global::System.Data.DataRowVersion.Original, true, null));
+            this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.OleDb.OleDbParameter("Original_Color", global::System.Data.OleDb.OleDbType.Boolean, 0, global::System.Data.ParameterDirection.Input, ((byte)(0)), ((byte)(0)), "Color", global::System.Data.DataRowVersion.Original, false, null));
+            this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.OleDb.OleDbParameter("IsNull_Number", global::System.Data.OleDb.OleDbType.Integer, 0, global::System.Data.ParameterDirection.Input, ((byte)(0)), ((byte)(0)), "Number", global::System.Data.DataRowVersion.Original, true, null));
+            this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.OleDb.OleDbParameter("Original_Number", global::System.Data.OleDb.OleDbType.Boolean, 0, global::System.Data.ParameterDirection.Input, ((byte)(0)), ((byte)(0)), "Number", global::System.Data.DataRowVersion.Original, false, null));
+            this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.OleDb.OleDbParameter("IsNull_Food", global::System.Data.OleDb.OleDbType.Integer, 0, global::System.Data.ParameterDirection.Input, ((byte)(0)), ((byte)(0)), "Food", global::System.Data.DataRowVersion.Original, true, null));
+            this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.OleDb.OleDbParameter("Original_Food", global::System.Data.OleDb.OleDbType.Boolean, 0, global::System.Data.ParameterDirection.Input, ((byte)(0)), ((byte)(0)), "Food", global::System.Data.DataRowVersion.Original, false, null));
             this._adapter.InsertCommand = new global::System.Data.OleDb.OleDbCommand();
             this._adapter.InsertCommand.Connection = this.Connection;
-            this._adapter.InsertCommand.CommandText = "INSERT INTO `DBTablePhrasebook` (`Finnish`, `English`) VALUES (?, ?)";
+            this._adapter.InsertCommand.CommandText = "INSERT INTO `DBTablePhrasebook` (`Finnish`, `English`, `Question`, `Phrase`, `Ver" +
+                "b`, `Color`, `Number`, `Food`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             this._adapter.InsertCommand.CommandType = global::System.Data.CommandType.Text;
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.OleDb.OleDbParameter("Finnish", global::System.Data.OleDb.OleDbType.VarWChar, 0, global::System.Data.ParameterDirection.Input, ((byte)(0)), ((byte)(0)), "Finnish", global::System.Data.DataRowVersion.Current, false, null));
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.OleDb.OleDbParameter("English", global::System.Data.OleDb.OleDbType.VarWChar, 0, global::System.Data.ParameterDirection.Input, ((byte)(0)), ((byte)(0)), "English", global::System.Data.DataRowVersion.Current, false, null));
+            this._adapter.InsertCommand.Parameters.Add(new global::System.Data.OleDb.OleDbParameter("Question", global::System.Data.OleDb.OleDbType.Boolean, 0, global::System.Data.ParameterDirection.Input, ((byte)(0)), ((byte)(0)), "Question", global::System.Data.DataRowVersion.Current, false, null));
+            this._adapter.InsertCommand.Parameters.Add(new global::System.Data.OleDb.OleDbParameter("Phrase", global::System.Data.OleDb.OleDbType.Boolean, 0, global::System.Data.ParameterDirection.Input, ((byte)(0)), ((byte)(0)), "Phrase", global::System.Data.DataRowVersion.Current, false, null));
+            this._adapter.InsertCommand.Parameters.Add(new global::System.Data.OleDb.OleDbParameter("Verb", global::System.Data.OleDb.OleDbType.Boolean, 0, global::System.Data.ParameterDirection.Input, ((byte)(0)), ((byte)(0)), "Verb", global::System.Data.DataRowVersion.Current, false, null));
+            this._adapter.InsertCommand.Parameters.Add(new global::System.Data.OleDb.OleDbParameter("Color", global::System.Data.OleDb.OleDbType.Boolean, 0, global::System.Data.ParameterDirection.Input, ((byte)(0)), ((byte)(0)), "Color", global::System.Data.DataRowVersion.Current, false, null));
+            this._adapter.InsertCommand.Parameters.Add(new global::System.Data.OleDb.OleDbParameter("Number", global::System.Data.OleDb.OleDbType.Boolean, 0, global::System.Data.ParameterDirection.Input, ((byte)(0)), ((byte)(0)), "Number", global::System.Data.DataRowVersion.Current, false, null));
+            this._adapter.InsertCommand.Parameters.Add(new global::System.Data.OleDb.OleDbParameter("Food", global::System.Data.OleDb.OleDbType.Boolean, 0, global::System.Data.ParameterDirection.Input, ((byte)(0)), ((byte)(0)), "Food", global::System.Data.DataRowVersion.Current, false, null));
             this._adapter.UpdateCommand = new global::System.Data.OleDb.OleDbCommand();
             this._adapter.UpdateCommand.Connection = this.Connection;
-            this._adapter.UpdateCommand.CommandText = "UPDATE `DBTablePhrasebook` SET `Finnish` = ?, `English` = ? WHERE ((`ID` = ?) AND" +
-                " ((? = 1 AND `Finnish` IS NULL) OR (`Finnish` = ?)) AND ((? = 1 AND `English` IS" +
-                " NULL) OR (`English` = ?)))";
+            this._adapter.UpdateCommand.CommandText = @"UPDATE `DBTablePhrasebook` SET `Finnish` = ?, `English` = ?, `Question` = ?, `Phrase` = ?, `Verb` = ?, `Color` = ?, `Number` = ?, `Food` = ? WHERE ((`ID` = ?) AND ((? = 1 AND `Finnish` IS NULL) OR (`Finnish` = ?)) AND ((? = 1 AND `English` IS NULL) OR (`English` = ?)) AND ((? = 1 AND `Question` IS NULL) OR (`Question` = ?)) AND ((? = 1 AND `Phrase` IS NULL) OR (`Phrase` = ?)) AND ((? = 1 AND `Verb` IS NULL) OR (`Verb` = ?)) AND ((? = 1 AND `Color` IS NULL) OR (`Color` = ?)) AND ((? = 1 AND `Number` IS NULL) OR (`Number` = ?)) AND ((? = 1 AND `Food` IS NULL) OR (`Food` = ?)))";
             this._adapter.UpdateCommand.CommandType = global::System.Data.CommandType.Text;
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.OleDb.OleDbParameter("Finnish", global::System.Data.OleDb.OleDbType.VarWChar, 0, global::System.Data.ParameterDirection.Input, ((byte)(0)), ((byte)(0)), "Finnish", global::System.Data.DataRowVersion.Current, false, null));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.OleDb.OleDbParameter("English", global::System.Data.OleDb.OleDbType.VarWChar, 0, global::System.Data.ParameterDirection.Input, ((byte)(0)), ((byte)(0)), "English", global::System.Data.DataRowVersion.Current, false, null));
+            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.OleDb.OleDbParameter("Question", global::System.Data.OleDb.OleDbType.Boolean, 0, global::System.Data.ParameterDirection.Input, ((byte)(0)), ((byte)(0)), "Question", global::System.Data.DataRowVersion.Current, false, null));
+            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.OleDb.OleDbParameter("Phrase", global::System.Data.OleDb.OleDbType.Boolean, 0, global::System.Data.ParameterDirection.Input, ((byte)(0)), ((byte)(0)), "Phrase", global::System.Data.DataRowVersion.Current, false, null));
+            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.OleDb.OleDbParameter("Verb", global::System.Data.OleDb.OleDbType.Boolean, 0, global::System.Data.ParameterDirection.Input, ((byte)(0)), ((byte)(0)), "Verb", global::System.Data.DataRowVersion.Current, false, null));
+            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.OleDb.OleDbParameter("Color", global::System.Data.OleDb.OleDbType.Boolean, 0, global::System.Data.ParameterDirection.Input, ((byte)(0)), ((byte)(0)), "Color", global::System.Data.DataRowVersion.Current, false, null));
+            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.OleDb.OleDbParameter("Number", global::System.Data.OleDb.OleDbType.Boolean, 0, global::System.Data.ParameterDirection.Input, ((byte)(0)), ((byte)(0)), "Number", global::System.Data.DataRowVersion.Current, false, null));
+            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.OleDb.OleDbParameter("Food", global::System.Data.OleDb.OleDbType.Boolean, 0, global::System.Data.ParameterDirection.Input, ((byte)(0)), ((byte)(0)), "Food", global::System.Data.DataRowVersion.Current, false, null));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.OleDb.OleDbParameter("Original_ID", global::System.Data.OleDb.OleDbType.Integer, 0, global::System.Data.ParameterDirection.Input, ((byte)(0)), ((byte)(0)), "ID", global::System.Data.DataRowVersion.Original, false, null));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.OleDb.OleDbParameter("IsNull_Finnish", global::System.Data.OleDb.OleDbType.Integer, 0, global::System.Data.ParameterDirection.Input, ((byte)(0)), ((byte)(0)), "Finnish", global::System.Data.DataRowVersion.Original, true, null));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.OleDb.OleDbParameter("Original_Finnish", global::System.Data.OleDb.OleDbType.VarWChar, 0, global::System.Data.ParameterDirection.Input, ((byte)(0)), ((byte)(0)), "Finnish", global::System.Data.DataRowVersion.Original, false, null));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.OleDb.OleDbParameter("IsNull_English", global::System.Data.OleDb.OleDbType.Integer, 0, global::System.Data.ParameterDirection.Input, ((byte)(0)), ((byte)(0)), "English", global::System.Data.DataRowVersion.Original, true, null));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.OleDb.OleDbParameter("Original_English", global::System.Data.OleDb.OleDbType.VarWChar, 0, global::System.Data.ParameterDirection.Input, ((byte)(0)), ((byte)(0)), "English", global::System.Data.DataRowVersion.Original, false, null));
+            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.OleDb.OleDbParameter("IsNull_Question", global::System.Data.OleDb.OleDbType.Integer, 0, global::System.Data.ParameterDirection.Input, ((byte)(0)), ((byte)(0)), "Question", global::System.Data.DataRowVersion.Original, true, null));
+            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.OleDb.OleDbParameter("Original_Question", global::System.Data.OleDb.OleDbType.Boolean, 0, global::System.Data.ParameterDirection.Input, ((byte)(0)), ((byte)(0)), "Question", global::System.Data.DataRowVersion.Original, false, null));
+            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.OleDb.OleDbParameter("IsNull_Phrase", global::System.Data.OleDb.OleDbType.Integer, 0, global::System.Data.ParameterDirection.Input, ((byte)(0)), ((byte)(0)), "Phrase", global::System.Data.DataRowVersion.Original, true, null));
+            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.OleDb.OleDbParameter("Original_Phrase", global::System.Data.OleDb.OleDbType.Boolean, 0, global::System.Data.ParameterDirection.Input, ((byte)(0)), ((byte)(0)), "Phrase", global::System.Data.DataRowVersion.Original, false, null));
+            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.OleDb.OleDbParameter("IsNull_Verb", global::System.Data.OleDb.OleDbType.Integer, 0, global::System.Data.ParameterDirection.Input, ((byte)(0)), ((byte)(0)), "Verb", global::System.Data.DataRowVersion.Original, true, null));
+            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.OleDb.OleDbParameter("Original_Verb", global::System.Data.OleDb.OleDbType.Boolean, 0, global::System.Data.ParameterDirection.Input, ((byte)(0)), ((byte)(0)), "Verb", global::System.Data.DataRowVersion.Original, false, null));
+            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.OleDb.OleDbParameter("IsNull_Color", global::System.Data.OleDb.OleDbType.Integer, 0, global::System.Data.ParameterDirection.Input, ((byte)(0)), ((byte)(0)), "Color", global::System.Data.DataRowVersion.Original, true, null));
+            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.OleDb.OleDbParameter("Original_Color", global::System.Data.OleDb.OleDbType.Boolean, 0, global::System.Data.ParameterDirection.Input, ((byte)(0)), ((byte)(0)), "Color", global::System.Data.DataRowVersion.Original, false, null));
+            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.OleDb.OleDbParameter("IsNull_Number", global::System.Data.OleDb.OleDbType.Integer, 0, global::System.Data.ParameterDirection.Input, ((byte)(0)), ((byte)(0)), "Number", global::System.Data.DataRowVersion.Original, true, null));
+            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.OleDb.OleDbParameter("Original_Number", global::System.Data.OleDb.OleDbType.Boolean, 0, global::System.Data.ParameterDirection.Input, ((byte)(0)), ((byte)(0)), "Number", global::System.Data.DataRowVersion.Original, false, null));
+            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.OleDb.OleDbParameter("IsNull_Food", global::System.Data.OleDb.OleDbType.Integer, 0, global::System.Data.ParameterDirection.Input, ((byte)(0)), ((byte)(0)), "Food", global::System.Data.DataRowVersion.Original, true, null));
+            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.OleDb.OleDbParameter("Original_Food", global::System.Data.OleDb.OleDbType.Boolean, 0, global::System.Data.ParameterDirection.Input, ((byte)(0)), ((byte)(0)), "Food", global::System.Data.DataRowVersion.Original, false, null));
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         private void InitConnection() {
             this._connection = new global::System.Data.OleDb.OleDbConnection();
-            this._connection.ConnectionString = global::MyFinnishPhrasebookNamespace.Properties.Settings.Default.MyPhrasebookDB;
+            this._connection.ConnectionString = global::MyFinnishPhrasebookNamespace.Properties.Settings.Default.MyFinnishPhrasebookDBConnectionString;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -789,14 +1057,15 @@ namespace MyFinnishPhrasebookNamespace.MyPhrasebookDataSetTableAdapters {
             this._commandCollection = new global::System.Data.OleDb.OleDbCommand[1];
             this._commandCollection[0] = new global::System.Data.OleDb.OleDbCommand();
             this._commandCollection[0].Connection = this.Connection;
-            this._commandCollection[0].CommandText = "SELECT ID, Finnish, English FROM DBTablePhrasebook";
+            this._commandCollection[0].CommandText = "SELECT ID, Finnish, English, Question, Phrase, Verb, Color, [Number], Food FROM D" +
+                "BTablePhrasebook";
             this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Fill, true)]
-        public virtual int Fill(MyPhrasebookDataSet.DBTablePhrasebookDataTable dataTable) {
+        public virtual int Fill(MyFinnishPhrasebookDBDataSet.DBTablePhrasebookDataTable dataTable) {
             this.Adapter.SelectCommand = this.CommandCollection[0];
             if ((this.ClearBeforeFill == true)) {
                 dataTable.Clear();
@@ -808,22 +1077,22 @@ namespace MyFinnishPhrasebookNamespace.MyPhrasebookDataSetTableAdapters {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, true)]
-        public virtual MyPhrasebookDataSet.DBTablePhrasebookDataTable GetData() {
+        public virtual MyFinnishPhrasebookDBDataSet.DBTablePhrasebookDataTable GetData() {
             this.Adapter.SelectCommand = this.CommandCollection[0];
-            MyPhrasebookDataSet.DBTablePhrasebookDataTable dataTable = new MyPhrasebookDataSet.DBTablePhrasebookDataTable();
+            MyFinnishPhrasebookDBDataSet.DBTablePhrasebookDataTable dataTable = new MyFinnishPhrasebookDBDataSet.DBTablePhrasebookDataTable();
             this.Adapter.Fill(dataTable);
             return dataTable;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
-        public virtual int Update(MyPhrasebookDataSet.DBTablePhrasebookDataTable dataTable) {
+        public virtual int Update(MyFinnishPhrasebookDBDataSet.DBTablePhrasebookDataTable dataTable) {
             return this.Adapter.Update(dataTable);
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
-        public virtual int Update(MyPhrasebookDataSet dataSet) {
+        public virtual int Update(MyFinnishPhrasebookDBDataSet dataSet) {
             return this.Adapter.Update(dataSet, "DBTablePhrasebook");
         }
         
@@ -843,7 +1112,7 @@ namespace MyFinnishPhrasebookNamespace.MyPhrasebookDataSetTableAdapters {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Delete, true)]
-        public virtual int Delete(int Original_ID, string Original_Finnish, string Original_English) {
+        public virtual int Delete(int Original_ID, string Original_Finnish, string Original_English, bool Original_Question, bool Original_Phrase, bool Original_Verb, bool Original_Color, bool Original_Number, bool Original_Food) {
             this.Adapter.DeleteCommand.Parameters[0].Value = ((int)(Original_ID));
             if ((Original_Finnish == null)) {
                 this.Adapter.DeleteCommand.Parameters[1].Value = ((object)(1));
@@ -861,6 +1130,18 @@ namespace MyFinnishPhrasebookNamespace.MyPhrasebookDataSetTableAdapters {
                 this.Adapter.DeleteCommand.Parameters[3].Value = ((object)(0));
                 this.Adapter.DeleteCommand.Parameters[4].Value = ((string)(Original_English));
             }
+            this.Adapter.DeleteCommand.Parameters[5].Value = ((object)(0));
+            this.Adapter.DeleteCommand.Parameters[6].Value = ((bool)(Original_Question));
+            this.Adapter.DeleteCommand.Parameters[7].Value = ((object)(0));
+            this.Adapter.DeleteCommand.Parameters[8].Value = ((bool)(Original_Phrase));
+            this.Adapter.DeleteCommand.Parameters[9].Value = ((object)(0));
+            this.Adapter.DeleteCommand.Parameters[10].Value = ((bool)(Original_Verb));
+            this.Adapter.DeleteCommand.Parameters[11].Value = ((object)(0));
+            this.Adapter.DeleteCommand.Parameters[12].Value = ((bool)(Original_Color));
+            this.Adapter.DeleteCommand.Parameters[13].Value = ((object)(0));
+            this.Adapter.DeleteCommand.Parameters[14].Value = ((bool)(Original_Number));
+            this.Adapter.DeleteCommand.Parameters[15].Value = ((object)(0));
+            this.Adapter.DeleteCommand.Parameters[16].Value = ((bool)(Original_Food));
             global::System.Data.ConnectionState previousConnectionState = this.Adapter.DeleteCommand.Connection.State;
             if (((this.Adapter.DeleteCommand.Connection.State & global::System.Data.ConnectionState.Open) 
                         != global::System.Data.ConnectionState.Open)) {
@@ -880,7 +1161,7 @@ namespace MyFinnishPhrasebookNamespace.MyPhrasebookDataSetTableAdapters {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Insert, true)]
-        public virtual int Insert(string Finnish, string English) {
+        public virtual int Insert(string Finnish, string English, bool Question, bool Phrase, bool Verb, bool Color, bool Number, bool Food) {
             if ((Finnish == null)) {
                 this.Adapter.InsertCommand.Parameters[0].Value = global::System.DBNull.Value;
             }
@@ -893,6 +1174,12 @@ namespace MyFinnishPhrasebookNamespace.MyPhrasebookDataSetTableAdapters {
             else {
                 this.Adapter.InsertCommand.Parameters[1].Value = ((string)(English));
             }
+            this.Adapter.InsertCommand.Parameters[2].Value = ((bool)(Question));
+            this.Adapter.InsertCommand.Parameters[3].Value = ((bool)(Phrase));
+            this.Adapter.InsertCommand.Parameters[4].Value = ((bool)(Verb));
+            this.Adapter.InsertCommand.Parameters[5].Value = ((bool)(Color));
+            this.Adapter.InsertCommand.Parameters[6].Value = ((bool)(Number));
+            this.Adapter.InsertCommand.Parameters[7].Value = ((bool)(Food));
             global::System.Data.ConnectionState previousConnectionState = this.Adapter.InsertCommand.Connection.State;
             if (((this.Adapter.InsertCommand.Connection.State & global::System.Data.ConnectionState.Open) 
                         != global::System.Data.ConnectionState.Open)) {
@@ -912,7 +1199,24 @@ namespace MyFinnishPhrasebookNamespace.MyPhrasebookDataSetTableAdapters {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Update, true)]
-        public virtual int Update(string Finnish, string English, int Original_ID, string Original_Finnish, string Original_English) {
+        public virtual int Update(
+                    string Finnish, 
+                    string English, 
+                    bool Question, 
+                    bool Phrase, 
+                    bool Verb, 
+                    bool Color, 
+                    bool Number, 
+                    bool Food, 
+                    int Original_ID, 
+                    string Original_Finnish, 
+                    string Original_English, 
+                    bool Original_Question, 
+                    bool Original_Phrase, 
+                    bool Original_Verb, 
+                    bool Original_Color, 
+                    bool Original_Number, 
+                    bool Original_Food) {
             if ((Finnish == null)) {
                 this.Adapter.UpdateCommand.Parameters[0].Value = global::System.DBNull.Value;
             }
@@ -925,23 +1229,41 @@ namespace MyFinnishPhrasebookNamespace.MyPhrasebookDataSetTableAdapters {
             else {
                 this.Adapter.UpdateCommand.Parameters[1].Value = ((string)(English));
             }
-            this.Adapter.UpdateCommand.Parameters[2].Value = ((int)(Original_ID));
+            this.Adapter.UpdateCommand.Parameters[2].Value = ((bool)(Question));
+            this.Adapter.UpdateCommand.Parameters[3].Value = ((bool)(Phrase));
+            this.Adapter.UpdateCommand.Parameters[4].Value = ((bool)(Verb));
+            this.Adapter.UpdateCommand.Parameters[5].Value = ((bool)(Color));
+            this.Adapter.UpdateCommand.Parameters[6].Value = ((bool)(Number));
+            this.Adapter.UpdateCommand.Parameters[7].Value = ((bool)(Food));
+            this.Adapter.UpdateCommand.Parameters[8].Value = ((int)(Original_ID));
             if ((Original_Finnish == null)) {
-                this.Adapter.UpdateCommand.Parameters[3].Value = ((object)(1));
-                this.Adapter.UpdateCommand.Parameters[4].Value = global::System.DBNull.Value;
+                this.Adapter.UpdateCommand.Parameters[9].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[10].Value = global::System.DBNull.Value;
             }
             else {
-                this.Adapter.UpdateCommand.Parameters[3].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[4].Value = ((string)(Original_Finnish));
+                this.Adapter.UpdateCommand.Parameters[9].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[10].Value = ((string)(Original_Finnish));
             }
             if ((Original_English == null)) {
-                this.Adapter.UpdateCommand.Parameters[5].Value = ((object)(1));
-                this.Adapter.UpdateCommand.Parameters[6].Value = global::System.DBNull.Value;
+                this.Adapter.UpdateCommand.Parameters[11].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[12].Value = global::System.DBNull.Value;
             }
             else {
-                this.Adapter.UpdateCommand.Parameters[5].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[6].Value = ((string)(Original_English));
+                this.Adapter.UpdateCommand.Parameters[11].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[12].Value = ((string)(Original_English));
             }
+            this.Adapter.UpdateCommand.Parameters[13].Value = ((object)(0));
+            this.Adapter.UpdateCommand.Parameters[14].Value = ((bool)(Original_Question));
+            this.Adapter.UpdateCommand.Parameters[15].Value = ((object)(0));
+            this.Adapter.UpdateCommand.Parameters[16].Value = ((bool)(Original_Phrase));
+            this.Adapter.UpdateCommand.Parameters[17].Value = ((object)(0));
+            this.Adapter.UpdateCommand.Parameters[18].Value = ((bool)(Original_Verb));
+            this.Adapter.UpdateCommand.Parameters[19].Value = ((object)(0));
+            this.Adapter.UpdateCommand.Parameters[20].Value = ((bool)(Original_Color));
+            this.Adapter.UpdateCommand.Parameters[21].Value = ((object)(0));
+            this.Adapter.UpdateCommand.Parameters[22].Value = ((bool)(Original_Number));
+            this.Adapter.UpdateCommand.Parameters[23].Value = ((object)(0));
+            this.Adapter.UpdateCommand.Parameters[24].Value = ((bool)(Original_Food));
             global::System.Data.ConnectionState previousConnectionState = this.Adapter.UpdateCommand.Connection.State;
             if (((this.Adapter.UpdateCommand.Connection.State & global::System.Data.ConnectionState.Open) 
                         != global::System.Data.ConnectionState.Open)) {
@@ -1045,7 +1367,7 @@ namespace MyFinnishPhrasebookNamespace.MyPhrasebookDataSetTableAdapters {
         ///Update rows in top-down order.
         ///</summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        private int UpdateUpdatedRows(MyPhrasebookDataSet dataSet, global::System.Collections.Generic.List<global::System.Data.DataRow> allChangedRows, global::System.Collections.Generic.List<global::System.Data.DataRow> allAddedRows) {
+        private int UpdateUpdatedRows(MyFinnishPhrasebookDBDataSet dataSet, global::System.Collections.Generic.List<global::System.Data.DataRow> allChangedRows, global::System.Collections.Generic.List<global::System.Data.DataRow> allAddedRows) {
             int result = 0;
             if ((this._dBTablePhrasebookTableAdapter != null)) {
                 global::System.Data.DataRow[] updatedRows = dataSet.DBTablePhrasebook.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
@@ -1063,7 +1385,7 @@ namespace MyFinnishPhrasebookNamespace.MyPhrasebookDataSetTableAdapters {
         ///Insert rows in top-down order.
         ///</summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        private int UpdateInsertedRows(MyPhrasebookDataSet dataSet, global::System.Collections.Generic.List<global::System.Data.DataRow> allAddedRows) {
+        private int UpdateInsertedRows(MyFinnishPhrasebookDBDataSet dataSet, global::System.Collections.Generic.List<global::System.Data.DataRow> allAddedRows) {
             int result = 0;
             if ((this._dBTablePhrasebookTableAdapter != null)) {
                 global::System.Data.DataRow[] addedRows = dataSet.DBTablePhrasebook.Select(null, null, global::System.Data.DataViewRowState.Added);
@@ -1080,7 +1402,7 @@ namespace MyFinnishPhrasebookNamespace.MyPhrasebookDataSetTableAdapters {
         ///Delete rows in bottom-up order.
         ///</summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        private int UpdateDeletedRows(MyPhrasebookDataSet dataSet, global::System.Collections.Generic.List<global::System.Data.DataRow> allChangedRows) {
+        private int UpdateDeletedRows(MyFinnishPhrasebookDBDataSet dataSet, global::System.Collections.Generic.List<global::System.Data.DataRow> allChangedRows) {
             int result = 0;
             if ((this._dBTablePhrasebookTableAdapter != null)) {
                 global::System.Data.DataRow[] deletedRows = dataSet.DBTablePhrasebook.Select(null, null, global::System.Data.DataViewRowState.Deleted);
@@ -1120,7 +1442,7 @@ namespace MyFinnishPhrasebookNamespace.MyPhrasebookDataSetTableAdapters {
         ///Update all changes to the dataset.
         ///</summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        public virtual int UpdateAll(MyPhrasebookDataSet dataSet) {
+        public virtual int UpdateAll(MyFinnishPhrasebookDBDataSet dataSet) {
             if ((dataSet == null)) {
                 throw new global::System.ArgumentNullException("dataSet");
             }

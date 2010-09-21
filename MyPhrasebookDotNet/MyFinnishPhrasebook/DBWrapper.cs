@@ -7,16 +7,52 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Collections;
+using System.Reflection;
 
 namespace MyFinnishPhrasebookNamespace
 {
 	public partial class DBWrapper : UserControl
 	{
+		Dictionary<string, string> m_FilterFieldNameToQueryString = new Dictionary<string, string>();
+		public Dictionary<string, string> FilterFieldNameToQueryString { get { return m_FilterFieldNameToQueryString; } }
+
 		#region Singleton
 		private DBWrapper()
 		{
 			InitializeComponent();
 			PopulateDatabase();
+
+			SetDefaultColumnValues();
+
+			Type boolType = typeof( bool );
+			Type rowType = typeof( MPBDataSet.PhrasebookRow );
+			foreach ( PropertyInfo pi in rowType.GetProperties() )
+			{
+				if ( pi.CanWrite && pi.PropertyType == boolType )
+				{
+					m_FilterFieldNameToQueryString[ pi.Name ] = string.Format( "{0} <> 0", pi.Name );
+				}
+			}
+
+			m_FilterFieldNameToQueryString[ "Word" ] = "Phrase = 0";
+		}
+
+		private void SetDefaultColumnValues()
+		{
+			foreach ( DataColumn col in MyDataTable.Columns )
+			{
+				if ( !col.AutoIncrement )
+				{
+					Type type = col.DataType;
+					object defaultValue = null;
+					if ( type.IsValueType )
+					{
+						defaultValue = Activator.CreateInstance( type );
+					}
+
+					col.DefaultValue = defaultValue;
+				}
+			}
 		}
 
 		static DBWrapper m_Instance;
@@ -33,35 +69,45 @@ namespace MyFinnishPhrasebookNamespace
 		}
 		#endregion
 
-		public MyPhrasebookDataSet MyDataSet
+		public MPBDataSet MyDataSet
 		{
-			get { return this.MyPhrasebookDataSet1; }
+			get { return this.MPBDataSet1; }
 		}
 
-		public MyPhrasebookDataSet.DBTablePhrasebookDataTable MyDataTable
+		public MPBDataSet.PhrasebookDataTable MyDataTable
 		{
-			get { return MyDataSet.DBTablePhrasebook; }
+			get { return MyDataSet.Phrasebook; }
 		}
 
-		public MyPhrasebookDataSetTableAdapters.DBTablePhrasebookTableAdapter MyTableAdapter
+		public MPBDataSetTableAdapters.PhrasebookTableAdapter MyTableAdapter
 		{
-			get { return this.DBTablePhrasebookTableAdapter1; }
+			get { return this.PhrasebookTableAdapter1; }
 		}
 
-		public bool InsertRow( string txtEnglish, string txtFinnish )
+		public MPBDataSet.PhrasebookRow CreateNewDataRow()
 		{
-			bool bAdded = false;
-			if ( txtEnglish.Length > 0 && txtFinnish.Length > 0 )
+			MPBDataSet.PhrasebookRow row = MyDataTable.NewPhrasebookRow();
+
+			// Set defaults
+			foreach ( DataColumn col in row.Table.Columns )
 			{
-				MyTableAdapter.Insert( txtFinnish, txtEnglish );
-				CommitChanges();
-				bAdded = true;
+				if ( !col.AutoIncrement)
+				{
+					row[ col ] = col.DefaultValue;
+				}
 			}
 
-			return bAdded;
+			return row;
 		}
 
-		public void DeleteRowAt( MyPhrasebookDataSet.DBTablePhrasebookRow dataRow )
+		public bool InsertRow( MPBDataSet.PhrasebookRow dataRow )
+		{
+			MyDataTable.AddPhrasebookRow( dataRow );
+			CommitChanges();
+			return true;
+		}
+
+		public void DeleteRowAt( MPBDataSet.PhrasebookRow dataRow )
 		{
 			dataRow.Delete();
 			CommitChanges();
@@ -75,6 +121,21 @@ namespace MyFinnishPhrasebookNamespace
 		public IEnumerable FilterRows( string filterQuery )
 		{
 			return MyDataTable.Select( filterQuery );
+		}
+
+		List<string> m_CategoryNamesList;
+		public List<string> CategoryNamesList
+		{
+			get
+			{
+				if ( m_CategoryNamesList == null )
+				{
+					m_CategoryNamesList = DBWrapper.Instance.FilterFieldNameToQueryString.Keys.ToList();
+					m_CategoryNamesList.Sort();
+				}
+
+				return m_CategoryNamesList;
+			}
 		}
 
 		public void PopulateDatabase()
