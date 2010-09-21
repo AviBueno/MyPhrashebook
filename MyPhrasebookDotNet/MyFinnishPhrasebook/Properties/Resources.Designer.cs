@@ -89,7 +89,7 @@ namespace MyFinnishPhrasebookNamespace.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to (English like &apos;%{0}%&apos;) OR (Finnish like &apos;%{0}%&apos;).
+        ///   Looks up a localized string similar to (_english like &apos;%{0}%&apos;) OR (_language like &apos;%{0}%&apos;).
         /// </summary>
         internal static string QFContains {
             get {
@@ -98,7 +98,7 @@ namespace MyFinnishPhrasebookNamespace.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to (English like &apos;%{0}&apos;) OR (Finnish like &apos;%{0}&apos;).
+        ///   Looks up a localized string similar to (_english like &apos;%{0}&apos;) OR (_language like &apos;%{0}&apos;).
         /// </summary>
         internal static string QFEndsWith {
             get {
@@ -107,7 +107,7 @@ namespace MyFinnishPhrasebookNamespace.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to (English like &apos;{0}&apos;) OR (Finnish like &apos;{0}&apos;).
+        ///   Looks up a localized string similar to (_english like &apos;{0}&apos;) OR (_language like &apos;{0}&apos;).
         /// </summary>
         internal static string QFExactMatch {
             get {
@@ -116,7 +116,7 @@ namespace MyFinnishPhrasebookNamespace.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to (English like &apos;{0}%&apos;) OR (Finnish like &apos;{0}%&apos;).
+        ///   Looks up a localized string similar to (_english like &apos;{0}%&apos;) OR (_language like &apos;{0}%&apos;).
         /// </summary>
         internal static string QFStartsWith {
             get {

@@ -11,25 +11,49 @@ namespace MyFinnishPhrasebookNamespace
 {
 	public partial class EditForm : DialogForm
 	{
-		MPBDataSet.PhrasebookRow m_originalRow = null;
-		MPBDataSet.PhrasebookRow m_editedRow = null;
+// 		MPBDataSet.PhrasebookRow m_originalRow = null;
+// 		MPBDataSet.PhrasebookRow m_editedRow = null;
+		DBWrapper.RowWithCategoryInfo m_originalRWCI = null;
+		DBWrapper.RowWithCategoryInfo m_editedRWCI = null;
 
-		public EditForm( MPBDataSet.PhrasebookRow row )
+		public EditForm( DBWrapper.RowWithCategoryInfo rwci )
 		{
 			InitializeComponent();
 
 			// Save the original row
-			m_originalRow = row;
+			m_originalRWCI = rwci;
 
 			// Clone it to a new row
-			m_editedRow = DBWrapper.Instance.CreateNewDataRow();
-			m_editedRow.ItemArray = m_originalRow.ItemArray;
+			MPBDataSet.PhrasebookRow newRow = DBWrapper.Instance.CreateNewDataRow();
+			m_editedRWCI = new DBWrapper.RowWithCategoryInfo( newRow );
+			m_editedRWCI.Row.ItemArray = m_originalRWCI.Row.ItemArray;
+
 
 			// Set data source and binding 
-			dBTablePhrasebookBindingSource.DataSource = m_editedRow;
+			dBTablePhrasebookBindingSource.DataSource = m_editedRWCI.Row;
 			textBoxFinnish1.TxtBox.DataBindings.Add( new Binding( "Text", dBTablePhrasebookBindingSource, "_language" ) );
 			txtEnglish.DataBindings.Add( new Binding( "Text", dBTablePhrasebookBindingSource, "_english" ) );
 
+			foreach ( KeyValuePair<string, long> category in DBWrapper.Instance.CategoriesMap )
+			{
+				if ( category.Key == "All" )
+				{
+					continue;
+				}
+
+				CheckBox cb = new CheckBox();
+				cb.Text = category.Key;
+
+				if ( rwci.CatID2CheckboxMap.ContainsKey( category.Value ) )
+				{
+					cb.Checked = true;
+				}
+
+				cb.AutoSize = true;
+				flowLayoutPanel1.Controls.Add( cb );
+			}
+
+/*
 			foreach ( string categoryName in DBWrapper.Instance.CategoryNamesList )
 			{
 				DataColumn col = m_editedRow.Table.Columns[ categoryName ];
@@ -42,13 +66,26 @@ namespace MyFinnishPhrasebookNamespace
 					flowLayoutPanel1.Controls.Add( cb );
 				}
 			}
+*/
 		}
 
 		private void bttOK_Click( object sender, EventArgs e )
 		{
+			m_originalRWCI.CatID2CheckboxMap.Clear();
+			foreach ( Control ctrl in flowLayoutPanel1.Controls )
+			{
+				CheckBox cb = ctrl as CheckBox;
+				if ( cb != null && cb.Checked )
+				{
+					long catId = DBWrapper.Instance.CategoriesMap[ cb.Text ];
+					m_originalRWCI.CatID2CheckboxMap[ catId ] = true;
+				}
+			}
+
 			// Copy data back from edited row to the original one
 			// (*) In case the edit was cancelled, the original row will remain unmodified.
-			m_originalRow.ItemArray = m_editedRow.ItemArray;
+			m_originalRWCI.Row.ItemArray = m_editedRWCI.Row.ItemArray;
+
 			OnOK();
 		}
 	}

@@ -128,16 +128,16 @@
     <value>..\Resources\ExactMatch.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="QFContains" xml:space="preserve">
-    <value>(English like '%{0}%') OR (Finnish like '%{0}%')</value>
+    <value>(_english like '%{0}%') OR (_language like '%{0}%')</value>
   </data>
   <data name="QFEndsWith" xml:space="preserve">
-    <value>(English like '%{0}') OR (Finnish like '%{0}')</value>
+    <value>(_english like '%{0}') OR (_language like '%{0}')</value>
   </data>
   <data name="QFExactMatch" xml:space="preserve">
-    <value>(English like '{0}') OR (Finnish like '{0}')</value>
+    <value>(_english like '{0}') OR (_language like '{0}')</value>
   </data>
   <data name="QFStartsWith" xml:space="preserve">
-    <value>(English like '{0}%') OR (Finnish like '{0}%')</value>
+    <value>(_english like '{0}%') OR (_language like '{0}%')</value>
   </data>
   <data name="StartsWith" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\StartsWith.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

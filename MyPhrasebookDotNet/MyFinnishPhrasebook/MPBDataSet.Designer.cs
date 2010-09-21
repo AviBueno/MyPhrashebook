@@ -412,10 +412,10 @@ namespace MyFinnishPhrasebookNamespace {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            public Cat2PhraseRow AddCat2PhraseRow(long _id, long _catID, long _phraseID) {
+            public Cat2PhraseRow AddCat2PhraseRow(long _catID, long _phraseID) {
                 Cat2PhraseRow rowCat2PhraseRow = ((Cat2PhraseRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
-                        _id,
+                        null,
                         _catID,
                         _phraseID};
                 rowCat2PhraseRow.ItemArray = columnValuesArray;
@@ -458,6 +458,9 @@ namespace MyFinnishPhrasebookNamespace {
                 base.Columns.Add(this.column_phraseID);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.column_id}, true));
+                this.column_id.AutoIncrement = true;
+                this.column_id.AutoIncrementSeed = -1;
+                this.column_id.AutoIncrementStep = -1;
                 this.column_id.AllowDBNull = false;
                 this.column_id.Unique = true;
             }
@@ -589,6 +592,8 @@ namespace MyFinnishPhrasebookNamespace {
             
             private global::System.Data.DataColumn column_name;
             
+            private global::System.Data.DataColumn column_title;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             public CategoriesDataTable() {
                 this.TableName = "Categories";
@@ -634,6 +639,13 @@ namespace MyFinnishPhrasebookNamespace {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            public global::System.Data.DataColumn _titleColumn {
+                get {
+                    return this.column_title;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -662,11 +674,12 @@ namespace MyFinnishPhrasebookNamespace {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            public CategoriesRow AddCategoriesRow(long _id, string _name) {
+            public CategoriesRow AddCategoriesRow(long _id, string _name, string _title) {
                 CategoriesRow rowCategoriesRow = ((CategoriesRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         _id,
-                        _name};
+                        _name,
+                        _title};
                 rowCategoriesRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowCategoriesRow);
                 return rowCategoriesRow;
@@ -694,6 +707,7 @@ namespace MyFinnishPhrasebookNamespace {
             internal void InitVars() {
                 this.column_id = base.Columns["_id"];
                 this.column_name = base.Columns["_name"];
+                this.column_title = base.Columns["_title"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -702,11 +716,16 @@ namespace MyFinnishPhrasebookNamespace {
                 base.Columns.Add(this.column_id);
                 this.column_name = new global::System.Data.DataColumn("_name", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.column_name);
+                this.column_title = new global::System.Data.DataColumn("_title", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.column_title);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.column_id}, true));
                 this.column_id.AllowDBNull = false;
                 this.column_id.Unique = true;
+                this.column_name.AllowDBNull = false;
                 this.column_name.MaxLength = 2147483647;
+                this.column_title.AllowDBNull = false;
+                this.column_title.MaxLength = 2147483647;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -918,10 +937,10 @@ namespace MyFinnishPhrasebookNamespace {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            public PhrasebookRow AddPhrasebookRow(long _id, string _english, string _language) {
+            public PhrasebookRow AddPhrasebookRow(string _english, string _language) {
                 PhrasebookRow rowPhrasebookRow = ((PhrasebookRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
-                        _id,
+                        null,
                         _english,
                         _language};
                 rowPhrasebookRow.ItemArray = columnValuesArray;
@@ -964,9 +983,14 @@ namespace MyFinnishPhrasebookNamespace {
                 base.Columns.Add(this.column_language);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.column_id}, true));
+                this.column_id.AutoIncrement = true;
+                this.column_id.AutoIncrementSeed = -1;
+                this.column_id.AutoIncrementStep = -1;
                 this.column_id.AllowDBNull = false;
                 this.column_id.Unique = true;
+                this.column_english.AllowDBNull = false;
                 this.column_english.MaxLength = 2147483647;
+                this.column_language.AllowDBNull = false;
                 this.column_language.MaxLength = 2147483647;
             }
             
@@ -1187,12 +1211,7 @@ namespace MyFinnishPhrasebookNamespace {
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             public string _name {
                 get {
-                    try {
-                        return ((string)(this[this.tableCategories._nameColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'_name\' in table \'Categories\' is DBNull.", e);
-                    }
+                    return ((string)(this[this.tableCategories._nameColumn]));
                 }
                 set {
                     this[this.tableCategories._nameColumn] = value;
@@ -1200,13 +1219,13 @@ namespace MyFinnishPhrasebookNamespace {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            public bool Is_nameNull() {
-                return this.IsNull(this.tableCategories._nameColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            public void Set_nameNull() {
-                this[this.tableCategories._nameColumn] = global::System.Convert.DBNull;
+            public string _title {
+                get {
+                    return ((string)(this[this.tableCategories._titleColumn]));
+                }
+                set {
+                    this[this.tableCategories._titleColumn] = value;
+                }
             }
         }
         
@@ -1237,12 +1256,7 @@ namespace MyFinnishPhrasebookNamespace {
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             public string _english {
                 get {
-                    try {
-                        return ((string)(this[this.tablePhrasebook._englishColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'_english\' in table \'Phrasebook\' is DBNull.", e);
-                    }
+                    return ((string)(this[this.tablePhrasebook._englishColumn]));
                 }
                 set {
                     this[this.tablePhrasebook._englishColumn] = value;
@@ -1252,36 +1266,11 @@ namespace MyFinnishPhrasebookNamespace {
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             public string _language {
                 get {
-                    try {
-                        return ((string)(this[this.tablePhrasebook._languageColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'_language\' in table \'Phrasebook\' is DBNull.", e);
-                    }
+                    return ((string)(this[this.tablePhrasebook._languageColumn]));
                 }
                 set {
                     this[this.tablePhrasebook._languageColumn] = value;
                 }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            public bool Is_englishNull() {
-                return this.IsNull(this.tablePhrasebook._englishColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            public void Set_englishNull() {
-                this[this.tablePhrasebook._englishColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            public bool Is_languageNull() {
-                return this.IsNull(this.tablePhrasebook._languageColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            public void Set_languageNull() {
-                this[this.tablePhrasebook._languageColumn] = global::System.Convert.DBNull;
             }
         }
         
@@ -1546,15 +1535,8 @@ namespace MyFinnishPhrasebookNamespace.MPBDataSetTableAdapters {
             this._adapter.DeleteCommand.Parameters.Add(param);
             this._adapter.InsertCommand = new global::System.Data.SQLite.SQLiteCommand();
             this._adapter.InsertCommand.Connection = this.Connection;
-            this._adapter.InsertCommand.CommandText = "INSERT INTO [Cat2Phrase] ([_id], [_catID], [_phraseID]) VALUES (@_id, @_catID, @_" +
-                "phraseID)";
+            this._adapter.InsertCommand.CommandText = "INSERT INTO [Cat2Phrase] ([_catID], [_phraseID]) VALUES (@_catID, @_phraseID)";
             this._adapter.InsertCommand.CommandType = global::System.Data.CommandType.Text;
-            param = new global::System.Data.SQLite.SQLiteParameter();
-            param.ParameterName = "@_id";
-            param.DbType = global::System.Data.DbType.Int64;
-            param.DbType = global::System.Data.DbType.Int64;
-            param.SourceColumn = "_id";
-            this._adapter.InsertCommand.Parameters.Add(param);
             param = new global::System.Data.SQLite.SQLiteParameter();
             param.ParameterName = "@_catID";
             param.DbType = global::System.Data.DbType.Int64;
@@ -1569,14 +1551,8 @@ namespace MyFinnishPhrasebookNamespace.MPBDataSetTableAdapters {
             this._adapter.InsertCommand.Parameters.Add(param);
             this._adapter.UpdateCommand = new global::System.Data.SQLite.SQLiteCommand();
             this._adapter.UpdateCommand.Connection = this.Connection;
-            this._adapter.UpdateCommand.CommandText = @"UPDATE [Cat2Phrase] SET [_id] = @_id, [_catID] = @_catID, [_phraseID] = @_phraseID WHERE (([_id] = @Original__id) AND ((@IsNull__catID = 1 AND [_catID] IS NULL) OR ([_catID] = @Original__catID)) AND ((@IsNull__phraseID = 1 AND [_phraseID] IS NULL) OR ([_phraseID] = @Original__phraseID)))";
+            this._adapter.UpdateCommand.CommandText = @"UPDATE [Cat2Phrase] SET [_catID] = @_catID, [_phraseID] = @_phraseID WHERE (([_id] = @Original__id) AND ((@IsNull__catID = 1 AND [_catID] IS NULL) OR ([_catID] = @Original__catID)) AND ((@IsNull__phraseID = 1 AND [_phraseID] IS NULL) OR ([_phraseID] = @Original__phraseID)))";
             this._adapter.UpdateCommand.CommandType = global::System.Data.CommandType.Text;
-            param = new global::System.Data.SQLite.SQLiteParameter();
-            param.ParameterName = "@_id";
-            param.DbType = global::System.Data.DbType.Int64;
-            param.DbType = global::System.Data.DbType.Int64;
-            param.SourceColumn = "_id";
-            this._adapter.UpdateCommand.Parameters.Add(param);
             param = new global::System.Data.SQLite.SQLiteParameter();
             param.ParameterName = "@_catID";
             param.DbType = global::System.Data.DbType.Int64;
@@ -1730,19 +1706,18 @@ namespace MyFinnishPhrasebookNamespace.MPBDataSetTableAdapters {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Insert, true)]
-        public virtual int Insert(long _id, global::System.Nullable<long> _catID, global::System.Nullable<long> _phraseID) {
-            this.Adapter.InsertCommand.Parameters[0].Value = ((long)(_id));
+        public virtual int Insert(global::System.Nullable<long> _catID, global::System.Nullable<long> _phraseID) {
             if ((_catID.HasValue == true)) {
-                this.Adapter.InsertCommand.Parameters[1].Value = ((long)(_catID.Value));
+                this.Adapter.InsertCommand.Parameters[0].Value = ((long)(_catID.Value));
+            }
+            else {
+                this.Adapter.InsertCommand.Parameters[0].Value = global::System.DBNull.Value;
+            }
+            if ((_phraseID.HasValue == true)) {
+                this.Adapter.InsertCommand.Parameters[1].Value = ((long)(_phraseID.Value));
             }
             else {
                 this.Adapter.InsertCommand.Parameters[1].Value = global::System.DBNull.Value;
-            }
-            if ((_phraseID.HasValue == true)) {
-                this.Adapter.InsertCommand.Parameters[2].Value = ((long)(_phraseID.Value));
-            }
-            else {
-                this.Adapter.InsertCommand.Parameters[2].Value = global::System.DBNull.Value;
             }
             global::System.Data.ConnectionState previousConnectionState = this.Adapter.InsertCommand.Connection.State;
             if (((this.Adapter.InsertCommand.Connection.State & global::System.Data.ConnectionState.Open) 
@@ -1763,36 +1738,35 @@ namespace MyFinnishPhrasebookNamespace.MPBDataSetTableAdapters {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Update, true)]
-        public virtual int Update(long _id, global::System.Nullable<long> _catID, global::System.Nullable<long> _phraseID, long Original__id, global::System.Nullable<long> Original__catID, global::System.Nullable<long> Original__phraseID) {
-            this.Adapter.UpdateCommand.Parameters[0].Value = ((long)(_id));
+        public virtual int Update(global::System.Nullable<long> _catID, global::System.Nullable<long> _phraseID, long Original__id, global::System.Nullable<long> Original__catID, global::System.Nullable<long> Original__phraseID) {
             if ((_catID.HasValue == true)) {
-                this.Adapter.UpdateCommand.Parameters[1].Value = ((long)(_catID.Value));
+                this.Adapter.UpdateCommand.Parameters[0].Value = ((long)(_catID.Value));
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[0].Value = global::System.DBNull.Value;
+            }
+            if ((_phraseID.HasValue == true)) {
+                this.Adapter.UpdateCommand.Parameters[1].Value = ((long)(_phraseID.Value));
             }
             else {
                 this.Adapter.UpdateCommand.Parameters[1].Value = global::System.DBNull.Value;
             }
-            if ((_phraseID.HasValue == true)) {
-                this.Adapter.UpdateCommand.Parameters[2].Value = ((long)(_phraseID.Value));
-            }
-            else {
-                this.Adapter.UpdateCommand.Parameters[2].Value = global::System.DBNull.Value;
-            }
-            this.Adapter.UpdateCommand.Parameters[3].Value = ((long)(Original__id));
+            this.Adapter.UpdateCommand.Parameters[2].Value = ((long)(Original__id));
             if ((Original__catID.HasValue == true)) {
-                this.Adapter.UpdateCommand.Parameters[4].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[5].Value = ((long)(Original__catID.Value));
+                this.Adapter.UpdateCommand.Parameters[3].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[4].Value = ((long)(Original__catID.Value));
             }
             else {
-                this.Adapter.UpdateCommand.Parameters[4].Value = ((object)(1));
-                this.Adapter.UpdateCommand.Parameters[5].Value = global::System.DBNull.Value;
+                this.Adapter.UpdateCommand.Parameters[3].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[4].Value = global::System.DBNull.Value;
             }
             if ((Original__phraseID.HasValue == true)) {
-                this.Adapter.UpdateCommand.Parameters[6].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[7].Value = ((long)(Original__phraseID.Value));
+                this.Adapter.UpdateCommand.Parameters[5].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[6].Value = ((long)(Original__phraseID.Value));
             }
             else {
-                this.Adapter.UpdateCommand.Parameters[6].Value = ((object)(1));
-                this.Adapter.UpdateCommand.Parameters[7].Value = global::System.DBNull.Value;
+                this.Adapter.UpdateCommand.Parameters[5].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[6].Value = global::System.DBNull.Value;
             }
             global::System.Data.ConnectionState previousConnectionState = this.Adapter.UpdateCommand.Connection.State;
             if (((this.Adapter.UpdateCommand.Connection.State & global::System.Data.ConnectionState.Open) 
@@ -1808,13 +1782,6 @@ namespace MyFinnishPhrasebookNamespace.MPBDataSetTableAdapters {
                     this.Adapter.UpdateCommand.Connection.Close();
                 }
             }
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
-        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Update, true)]
-        public virtual int Update(global::System.Nullable<long> _catID, global::System.Nullable<long> _phraseID, long Original__id, global::System.Nullable<long> Original__catID, global::System.Nullable<long> Original__phraseID) {
-            return this.Update(Original__id, _catID, _phraseID, Original__id, Original__catID, Original__phraseID);
         }
     }
     
@@ -1935,11 +1902,12 @@ namespace MyFinnishPhrasebookNamespace.MPBDataSetTableAdapters {
             tableMapping.DataSetTable = "Categories";
             tableMapping.ColumnMappings.Add("_id", "_id");
             tableMapping.ColumnMappings.Add("_name", "_name");
+            tableMapping.ColumnMappings.Add("_title", "_title");
             this._adapter.TableMappings.Add(tableMapping);
             this._adapter.DeleteCommand = new global::System.Data.SQLite.SQLiteCommand();
             this._adapter.DeleteCommand.Connection = this.Connection;
-            this._adapter.DeleteCommand.CommandText = "DELETE FROM [Categories] WHERE (([_id] = @Original__id) AND ((@IsNull__name = 1 A" +
-                "ND [_name] IS NULL) OR ([_name] = @Original__name)))";
+            this._adapter.DeleteCommand.CommandText = "DELETE FROM [Categories] WHERE (([_id] = @Original__id) AND ([_name] = @Original_" +
+                "_name) AND ([_title] = @Original__title))";
             this._adapter.DeleteCommand.CommandType = global::System.Data.CommandType.Text;
             global::System.Data.SQLite.SQLiteParameter param = new global::System.Data.SQLite.SQLiteParameter();
             param.ParameterName = "@Original__id";
@@ -1949,22 +1917,21 @@ namespace MyFinnishPhrasebookNamespace.MPBDataSetTableAdapters {
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
             this._adapter.DeleteCommand.Parameters.Add(param);
             param = new global::System.Data.SQLite.SQLiteParameter();
-            param.ParameterName = "@IsNull__name";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.DbType = global::System.Data.DbType.Int32;
-            param.SourceColumn = "_name";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            param.SourceColumnNullMapping = true;
-            this._adapter.DeleteCommand.Parameters.Add(param);
-            param = new global::System.Data.SQLite.SQLiteParameter();
             param.ParameterName = "@Original__name";
             param.DbType = global::System.Data.DbType.String;
             param.SourceColumn = "_name";
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
             this._adapter.DeleteCommand.Parameters.Add(param);
+            param = new global::System.Data.SQLite.SQLiteParameter();
+            param.ParameterName = "@Original__title";
+            param.DbType = global::System.Data.DbType.String;
+            param.SourceColumn = "_title";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.DeleteCommand.Parameters.Add(param);
             this._adapter.InsertCommand = new global::System.Data.SQLite.SQLiteCommand();
             this._adapter.InsertCommand.Connection = this.Connection;
-            this._adapter.InsertCommand.CommandText = "INSERT INTO [Categories] ([_id], [_name]) VALUES (@_id, @_name)";
+            this._adapter.InsertCommand.CommandText = "INSERT INTO [Categories] ([_id], [_name], [_title]) VALUES (@_id, @_name, @_title" +
+                ")";
             this._adapter.InsertCommand.CommandType = global::System.Data.CommandType.Text;
             param = new global::System.Data.SQLite.SQLiteParameter();
             param.ParameterName = "@_id";
@@ -1977,11 +1944,16 @@ namespace MyFinnishPhrasebookNamespace.MPBDataSetTableAdapters {
             param.DbType = global::System.Data.DbType.String;
             param.SourceColumn = "_name";
             this._adapter.InsertCommand.Parameters.Add(param);
+            param = new global::System.Data.SQLite.SQLiteParameter();
+            param.ParameterName = "@_title";
+            param.DbType = global::System.Data.DbType.String;
+            param.SourceColumn = "_title";
+            this._adapter.InsertCommand.Parameters.Add(param);
             this._adapter.UpdateCommand = new global::System.Data.SQLite.SQLiteCommand();
             this._adapter.UpdateCommand.Connection = this.Connection;
-            this._adapter.UpdateCommand.CommandText = "UPDATE [Categories] SET [_id] = @_id, [_name] = @_name WHERE (([_id] = @Original_" +
-                "_id) AND ((@IsNull__name = 1 AND [_name] IS NULL) OR ([_name] = @Original__name)" +
-                "))";
+            this._adapter.UpdateCommand.CommandText = "UPDATE [Categories] SET [_id] = @_id, [_name] = @_name, [_title] = @_title WHERE " +
+                "(([_id] = @Original__id) AND ([_name] = @Original__name) AND ([_title] = @Origin" +
+                "al__title))";
             this._adapter.UpdateCommand.CommandType = global::System.Data.CommandType.Text;
             param = new global::System.Data.SQLite.SQLiteParameter();
             param.ParameterName = "@_id";
@@ -1995,6 +1967,11 @@ namespace MyFinnishPhrasebookNamespace.MPBDataSetTableAdapters {
             param.SourceColumn = "_name";
             this._adapter.UpdateCommand.Parameters.Add(param);
             param = new global::System.Data.SQLite.SQLiteParameter();
+            param.ParameterName = "@_title";
+            param.DbType = global::System.Data.DbType.String;
+            param.SourceColumn = "_title";
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::System.Data.SQLite.SQLiteParameter();
             param.ParameterName = "@Original__id";
             param.DbType = global::System.Data.DbType.Int64;
             param.DbType = global::System.Data.DbType.Int64;
@@ -2002,17 +1979,15 @@ namespace MyFinnishPhrasebookNamespace.MPBDataSetTableAdapters {
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
             this._adapter.UpdateCommand.Parameters.Add(param);
             param = new global::System.Data.SQLite.SQLiteParameter();
-            param.ParameterName = "@IsNull__name";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.DbType = global::System.Data.DbType.Int32;
-            param.SourceColumn = "_name";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            param.SourceColumnNullMapping = true;
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::System.Data.SQLite.SQLiteParameter();
             param.ParameterName = "@Original__name";
             param.DbType = global::System.Data.DbType.String;
             param.SourceColumn = "_name";
+            param.SourceVersion = global::System.Data.DataRowVersion.Original;
+            this._adapter.UpdateCommand.Parameters.Add(param);
+            param = new global::System.Data.SQLite.SQLiteParameter();
+            param.ParameterName = "@Original__title";
+            param.DbType = global::System.Data.DbType.String;
+            param.SourceColumn = "_title";
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
             this._adapter.UpdateCommand.Parameters.Add(param);
         }
@@ -2028,7 +2003,7 @@ namespace MyFinnishPhrasebookNamespace.MPBDataSetTableAdapters {
             this._commandCollection = new global::System.Data.SQLite.SQLiteCommand[1];
             this._commandCollection[0] = new global::System.Data.SQLite.SQLiteCommand();
             this._commandCollection[0].Connection = this.Connection;
-            this._commandCollection[0].CommandText = "SELECT [_id], [_name] FROM [Categories]";
+            this._commandCollection[0].CommandText = "SELECT [_id], [_name], [_title] FROM [Categories]";
             this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
         }
         
@@ -2082,15 +2057,19 @@ namespace MyFinnishPhrasebookNamespace.MPBDataSetTableAdapters {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Delete, true)]
-        public virtual int Delete(long Original__id, string Original__name) {
+        public virtual int Delete(long Original__id, string Original__name, string Original__title) {
             this.Adapter.DeleteCommand.Parameters[0].Value = ((long)(Original__id));
             if ((Original__name == null)) {
-                this.Adapter.DeleteCommand.Parameters[1].Value = ((object)(1));
-                this.Adapter.DeleteCommand.Parameters[2].Value = global::System.DBNull.Value;
+                throw new global::System.ArgumentNullException("Original__name");
             }
             else {
-                this.Adapter.DeleteCommand.Parameters[1].Value = ((object)(0));
-                this.Adapter.DeleteCommand.Parameters[2].Value = ((string)(Original__name));
+                this.Adapter.DeleteCommand.Parameters[1].Value = ((string)(Original__name));
+            }
+            if ((Original__title == null)) {
+                throw new global::System.ArgumentNullException("Original__title");
+            }
+            else {
+                this.Adapter.DeleteCommand.Parameters[2].Value = ((string)(Original__title));
             }
             global::System.Data.ConnectionState previousConnectionState = this.Adapter.DeleteCommand.Connection.State;
             if (((this.Adapter.DeleteCommand.Connection.State & global::System.Data.ConnectionState.Open) 
@@ -2111,13 +2090,19 @@ namespace MyFinnishPhrasebookNamespace.MPBDataSetTableAdapters {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Insert, true)]
-        public virtual int Insert(long _id, string _name) {
+        public virtual int Insert(long _id, string _name, string _title) {
             this.Adapter.InsertCommand.Parameters[0].Value = ((long)(_id));
             if ((_name == null)) {
-                this.Adapter.InsertCommand.Parameters[1].Value = global::System.DBNull.Value;
+                throw new global::System.ArgumentNullException("_name");
             }
             else {
                 this.Adapter.InsertCommand.Parameters[1].Value = ((string)(_name));
+            }
+            if ((_title == null)) {
+                throw new global::System.ArgumentNullException("_title");
+            }
+            else {
+                this.Adapter.InsertCommand.Parameters[2].Value = ((string)(_title));
             }
             global::System.Data.ConnectionState previousConnectionState = this.Adapter.InsertCommand.Connection.State;
             if (((this.Adapter.InsertCommand.Connection.State & global::System.Data.ConnectionState.Open) 
@@ -2138,22 +2123,32 @@ namespace MyFinnishPhrasebookNamespace.MPBDataSetTableAdapters {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Update, true)]
-        public virtual int Update(long _id, string _name, long Original__id, string Original__name) {
+        public virtual int Update(long _id, string _name, string _title, long Original__id, string Original__name, string Original__title) {
             this.Adapter.UpdateCommand.Parameters[0].Value = ((long)(_id));
             if ((_name == null)) {
-                this.Adapter.UpdateCommand.Parameters[1].Value = global::System.DBNull.Value;
+                throw new global::System.ArgumentNullException("_name");
             }
             else {
                 this.Adapter.UpdateCommand.Parameters[1].Value = ((string)(_name));
             }
-            this.Adapter.UpdateCommand.Parameters[2].Value = ((long)(Original__id));
-            if ((Original__name == null)) {
-                this.Adapter.UpdateCommand.Parameters[3].Value = ((object)(1));
-                this.Adapter.UpdateCommand.Parameters[4].Value = global::System.DBNull.Value;
+            if ((_title == null)) {
+                throw new global::System.ArgumentNullException("_title");
             }
             else {
-                this.Adapter.UpdateCommand.Parameters[3].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[2].Value = ((string)(_title));
+            }
+            this.Adapter.UpdateCommand.Parameters[3].Value = ((long)(Original__id));
+            if ((Original__name == null)) {
+                throw new global::System.ArgumentNullException("Original__name");
+            }
+            else {
                 this.Adapter.UpdateCommand.Parameters[4].Value = ((string)(Original__name));
+            }
+            if ((Original__title == null)) {
+                throw new global::System.ArgumentNullException("Original__title");
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[5].Value = ((string)(Original__title));
             }
             global::System.Data.ConnectionState previousConnectionState = this.Adapter.UpdateCommand.Connection.State;
             if (((this.Adapter.UpdateCommand.Connection.State & global::System.Data.ConnectionState.Open) 
@@ -2174,8 +2169,8 @@ namespace MyFinnishPhrasebookNamespace.MPBDataSetTableAdapters {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Update, true)]
-        public virtual int Update(string _name, long Original__id, string Original__name) {
-            return this.Update(Original__id, _name, Original__id, Original__name);
+        public virtual int Update(string _name, string _title, long Original__id, string Original__name, string Original__title) {
+            return this.Update(Original__id, _name, _title, Original__id, Original__name, Original__title);
         }
     }
     
@@ -2300,9 +2295,8 @@ namespace MyFinnishPhrasebookNamespace.MPBDataSetTableAdapters {
             this._adapter.TableMappings.Add(tableMapping);
             this._adapter.DeleteCommand = new global::System.Data.SQLite.SQLiteCommand();
             this._adapter.DeleteCommand.Connection = this.Connection;
-            this._adapter.DeleteCommand.CommandText = "DELETE FROM [Phrasebook] WHERE (([_id] = @Original__id) AND ((@IsNull__english = " +
-                "1 AND [_english] IS NULL) OR ([_english] = @Original__english)) AND ((@IsNull__l" +
-                "anguage = 1 AND [_language] IS NULL) OR ([_language] = @Original__language)))";
+            this._adapter.DeleteCommand.CommandText = "DELETE FROM [Phrasebook] WHERE (([_id] = @Original__id) AND ([_english] = @Origin" +
+                "al__english) AND ([_language] = @Original__language))";
             this._adapter.DeleteCommand.CommandType = global::System.Data.CommandType.Text;
             global::System.Data.SQLite.SQLiteParameter param = new global::System.Data.SQLite.SQLiteParameter();
             param.ParameterName = "@Original__id";
@@ -2312,26 +2306,10 @@ namespace MyFinnishPhrasebookNamespace.MPBDataSetTableAdapters {
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
             this._adapter.DeleteCommand.Parameters.Add(param);
             param = new global::System.Data.SQLite.SQLiteParameter();
-            param.ParameterName = "@IsNull__english";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.DbType = global::System.Data.DbType.Int32;
-            param.SourceColumn = "_english";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            param.SourceColumnNullMapping = true;
-            this._adapter.DeleteCommand.Parameters.Add(param);
-            param = new global::System.Data.SQLite.SQLiteParameter();
             param.ParameterName = "@Original__english";
             param.DbType = global::System.Data.DbType.String;
             param.SourceColumn = "_english";
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            this._adapter.DeleteCommand.Parameters.Add(param);
-            param = new global::System.Data.SQLite.SQLiteParameter();
-            param.ParameterName = "@IsNull__language";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.DbType = global::System.Data.DbType.Int32;
-            param.SourceColumn = "_language";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            param.SourceColumnNullMapping = true;
             this._adapter.DeleteCommand.Parameters.Add(param);
             param = new global::System.Data.SQLite.SQLiteParameter();
             param.ParameterName = "@Original__language";
@@ -2341,15 +2319,9 @@ namespace MyFinnishPhrasebookNamespace.MPBDataSetTableAdapters {
             this._adapter.DeleteCommand.Parameters.Add(param);
             this._adapter.InsertCommand = new global::System.Data.SQLite.SQLiteCommand();
             this._adapter.InsertCommand.Connection = this.Connection;
-            this._adapter.InsertCommand.CommandText = "INSERT INTO [Phrasebook] ([_id], [_english], [_language]) VALUES (@_id, @_english" +
-                ", @_language)";
+            this._adapter.InsertCommand.CommandText = "INSERT INTO [Phrasebook] ([_english], [_language]) VALUES (@_english, @_language)" +
+                "";
             this._adapter.InsertCommand.CommandType = global::System.Data.CommandType.Text;
-            param = new global::System.Data.SQLite.SQLiteParameter();
-            param.ParameterName = "@_id";
-            param.DbType = global::System.Data.DbType.Int64;
-            param.DbType = global::System.Data.DbType.Int64;
-            param.SourceColumn = "_id";
-            this._adapter.InsertCommand.Parameters.Add(param);
             param = new global::System.Data.SQLite.SQLiteParameter();
             param.ParameterName = "@_english";
             param.DbType = global::System.Data.DbType.String;
@@ -2362,14 +2334,10 @@ namespace MyFinnishPhrasebookNamespace.MPBDataSetTableAdapters {
             this._adapter.InsertCommand.Parameters.Add(param);
             this._adapter.UpdateCommand = new global::System.Data.SQLite.SQLiteCommand();
             this._adapter.UpdateCommand.Connection = this.Connection;
-            this._adapter.UpdateCommand.CommandText = @"UPDATE [Phrasebook] SET [_id] = @_id, [_english] = @_english, [_language] = @_language WHERE (([_id] = @Original__id) AND ((@IsNull__english = 1 AND [_english] IS NULL) OR ([_english] = @Original__english)) AND ((@IsNull__language = 1 AND [_language] IS NULL) OR ([_language] = @Original__language)))";
+            this._adapter.UpdateCommand.CommandText = "UPDATE [Phrasebook] SET [_english] = @_english, [_language] = @_language WHERE ((" +
+                "[_id] = @Original__id) AND ([_english] = @Original__english) AND ([_language] = " +
+                "@Original__language))";
             this._adapter.UpdateCommand.CommandType = global::System.Data.CommandType.Text;
-            param = new global::System.Data.SQLite.SQLiteParameter();
-            param.ParameterName = "@_id";
-            param.DbType = global::System.Data.DbType.Int64;
-            param.DbType = global::System.Data.DbType.Int64;
-            param.SourceColumn = "_id";
-            this._adapter.UpdateCommand.Parameters.Add(param);
             param = new global::System.Data.SQLite.SQLiteParameter();
             param.ParameterName = "@_english";
             param.DbType = global::System.Data.DbType.String;
@@ -2388,26 +2356,10 @@ namespace MyFinnishPhrasebookNamespace.MPBDataSetTableAdapters {
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
             this._adapter.UpdateCommand.Parameters.Add(param);
             param = new global::System.Data.SQLite.SQLiteParameter();
-            param.ParameterName = "@IsNull__english";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.DbType = global::System.Data.DbType.Int32;
-            param.SourceColumn = "_english";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            param.SourceColumnNullMapping = true;
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::System.Data.SQLite.SQLiteParameter();
             param.ParameterName = "@Original__english";
             param.DbType = global::System.Data.DbType.String;
             param.SourceColumn = "_english";
             param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            this._adapter.UpdateCommand.Parameters.Add(param);
-            param = new global::System.Data.SQLite.SQLiteParameter();
-            param.ParameterName = "@IsNull__language";
-            param.DbType = global::System.Data.DbType.Int32;
-            param.DbType = global::System.Data.DbType.Int32;
-            param.SourceColumn = "_language";
-            param.SourceVersion = global::System.Data.DataRowVersion.Original;
-            param.SourceColumnNullMapping = true;
             this._adapter.UpdateCommand.Parameters.Add(param);
             param = new global::System.Data.SQLite.SQLiteParameter();
             param.ParameterName = "@Original__language";
@@ -2485,20 +2437,16 @@ namespace MyFinnishPhrasebookNamespace.MPBDataSetTableAdapters {
         public virtual int Delete(long Original__id, string Original__english, string Original__language) {
             this.Adapter.DeleteCommand.Parameters[0].Value = ((long)(Original__id));
             if ((Original__english == null)) {
-                this.Adapter.DeleteCommand.Parameters[1].Value = ((object)(1));
-                this.Adapter.DeleteCommand.Parameters[2].Value = global::System.DBNull.Value;
+                throw new global::System.ArgumentNullException("Original__english");
             }
             else {
-                this.Adapter.DeleteCommand.Parameters[1].Value = ((object)(0));
-                this.Adapter.DeleteCommand.Parameters[2].Value = ((string)(Original__english));
+                this.Adapter.DeleteCommand.Parameters[1].Value = ((string)(Original__english));
             }
             if ((Original__language == null)) {
-                this.Adapter.DeleteCommand.Parameters[3].Value = ((object)(1));
-                this.Adapter.DeleteCommand.Parameters[4].Value = global::System.DBNull.Value;
+                throw new global::System.ArgumentNullException("Original__language");
             }
             else {
-                this.Adapter.DeleteCommand.Parameters[3].Value = ((object)(0));
-                this.Adapter.DeleteCommand.Parameters[4].Value = ((string)(Original__language));
+                this.Adapter.DeleteCommand.Parameters[2].Value = ((string)(Original__language));
             }
             global::System.Data.ConnectionState previousConnectionState = this.Adapter.DeleteCommand.Connection.State;
             if (((this.Adapter.DeleteCommand.Connection.State & global::System.Data.ConnectionState.Open) 
@@ -2519,19 +2467,18 @@ namespace MyFinnishPhrasebookNamespace.MPBDataSetTableAdapters {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Insert, true)]
-        public virtual int Insert(long _id, string _english, string _language) {
-            this.Adapter.InsertCommand.Parameters[0].Value = ((long)(_id));
+        public virtual int Insert(string _english, string _language) {
             if ((_english == null)) {
-                this.Adapter.InsertCommand.Parameters[1].Value = global::System.DBNull.Value;
+                throw new global::System.ArgumentNullException("_english");
             }
             else {
-                this.Adapter.InsertCommand.Parameters[1].Value = ((string)(_english));
+                this.Adapter.InsertCommand.Parameters[0].Value = ((string)(_english));
             }
             if ((_language == null)) {
-                this.Adapter.InsertCommand.Parameters[2].Value = global::System.DBNull.Value;
+                throw new global::System.ArgumentNullException("_language");
             }
             else {
-                this.Adapter.InsertCommand.Parameters[2].Value = ((string)(_language));
+                this.Adapter.InsertCommand.Parameters[1].Value = ((string)(_language));
             }
             global::System.Data.ConnectionState previousConnectionState = this.Adapter.InsertCommand.Connection.State;
             if (((this.Adapter.InsertCommand.Connection.State & global::System.Data.ConnectionState.Open) 
@@ -2552,36 +2499,31 @@ namespace MyFinnishPhrasebookNamespace.MPBDataSetTableAdapters {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Update, true)]
-        public virtual int Update(long _id, string _english, string _language, long Original__id, string Original__english, string Original__language) {
-            this.Adapter.UpdateCommand.Parameters[0].Value = ((long)(_id));
+        public virtual int Update(string _english, string _language, long Original__id, string Original__english, string Original__language) {
             if ((_english == null)) {
-                this.Adapter.UpdateCommand.Parameters[1].Value = global::System.DBNull.Value;
+                throw new global::System.ArgumentNullException("_english");
             }
             else {
-                this.Adapter.UpdateCommand.Parameters[1].Value = ((string)(_english));
+                this.Adapter.UpdateCommand.Parameters[0].Value = ((string)(_english));
             }
             if ((_language == null)) {
-                this.Adapter.UpdateCommand.Parameters[2].Value = global::System.DBNull.Value;
+                throw new global::System.ArgumentNullException("_language");
             }
             else {
-                this.Adapter.UpdateCommand.Parameters[2].Value = ((string)(_language));
+                this.Adapter.UpdateCommand.Parameters[1].Value = ((string)(_language));
             }
-            this.Adapter.UpdateCommand.Parameters[3].Value = ((long)(Original__id));
+            this.Adapter.UpdateCommand.Parameters[2].Value = ((long)(Original__id));
             if ((Original__english == null)) {
-                this.Adapter.UpdateCommand.Parameters[4].Value = ((object)(1));
-                this.Adapter.UpdateCommand.Parameters[5].Value = global::System.DBNull.Value;
+                throw new global::System.ArgumentNullException("Original__english");
             }
             else {
-                this.Adapter.UpdateCommand.Parameters[4].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[5].Value = ((string)(Original__english));
+                this.Adapter.UpdateCommand.Parameters[3].Value = ((string)(Original__english));
             }
             if ((Original__language == null)) {
-                this.Adapter.UpdateCommand.Parameters[6].Value = ((object)(1));
-                this.Adapter.UpdateCommand.Parameters[7].Value = global::System.DBNull.Value;
+                throw new global::System.ArgumentNullException("Original__language");
             }
             else {
-                this.Adapter.UpdateCommand.Parameters[6].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[7].Value = ((string)(Original__language));
+                this.Adapter.UpdateCommand.Parameters[4].Value = ((string)(Original__language));
             }
             global::System.Data.ConnectionState previousConnectionState = this.Adapter.UpdateCommand.Connection.State;
             if (((this.Adapter.UpdateCommand.Connection.State & global::System.Data.ConnectionState.Open) 
@@ -2597,13 +2539,6 @@ namespace MyFinnishPhrasebookNamespace.MPBDataSetTableAdapters {
                     this.Adapter.UpdateCommand.Connection.Close();
                 }
             }
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
-        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Update, true)]
-        public virtual int Update(string _english, string _language, long Original__id, string Original__english, string Original__language) {
-            return this.Update(Original__id, _english, _language, Original__id, Original__english, Original__language);
         }
     }
     

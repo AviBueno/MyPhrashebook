@@ -38,7 +38,10 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Data.SQLite, Version=1.0.66.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139" />
+    <Reference Include="System.Data.SQLite, Version=1.0.66.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Transactions" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -55,6 +58,12 @@
   <ItemGroup>
     <Compile Include="BaseForm.cs">
       <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CategoryForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CategoryForm.Designer.cs">
+      <DependentUpon>CategoryForm.cs</DependentUpon>
     </Compile>
     <Compile Include="FileVersion.cs" />
     <Compile Include="MPBDataSet.Designer.cs">
@@ -109,6 +118,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="CategoryForm.resx">
+      <DependentUpon>CategoryForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -165,10 +177,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Contains.png" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="Resources\EndsWith.png" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="Resources\ExactMatch.png" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="Resources\StartsWith.png" />
-    <None Include="Resources\AppIcon.ico" />
   </ItemGroup>
   <ItemGroup>
     <None Include="MPBDataSet.xsc">
@@ -182,6 +199,7 @@
     <None Include="MPBDataSet.xss">
       <DependentUpon>MPBDataSet.xsd</DependentUpon>
     </None>
+    <None Include="Resources\AppIcon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -27,6 +27,49 @@ namespace MyFinnishPhrasebookNamespace
 			txtBoxSearch.OnSearchOptionChanged += new EventHandler( OnFilterData );
 
 			this.Text += string.Format( " ({0})", Application.ProductVersion );
+
+			InitCategoriesDropDown();
+		}
+
+		private void InitCategoriesDropDown()
+		{
+			foreach ( string categoryId in DBWrapper.Instance.FilterFieldNameToQueryString.Keys )
+			{
+				string sFilterText = DBWrapper.Instance.FilterFieldNameToQueryString[ categoryId ];
+				AddCategoryDropMenu( tsDDCategory, categoryId, sFilterText );
+			}
+		}
+
+		private void AddCategoryDropMenu( ToolStripDropDownButton ddButton, string categoryText, string sFilterText )
+		{
+			ToolStripDropDownItem tsddi = new ToolStripMenuItem();
+			tsddi.DisplayStyle = ToolStripItemDisplayStyle.Text;
+			tsddi.Text = categoryText;
+			tsddi.Tag = sFilterText;
+			tsddi.Click += new EventHandler( OnCategoryItemClick );
+			ddButton.DropDownItems.Add( tsddi );
+		}
+
+		string m_CategoryFilter = "_catID = 0";
+		void OnCategoryItemClick( object sender, EventArgs e )
+		{
+			string sCategoryText = "All";
+			string sCategoryFilter = "";
+
+			ToolStripDropDownItem tsddi = sender as ToolStripDropDownItem;
+			if ( tsddi != null )
+			{
+				sCategoryFilter = tsddi.Tag.ToString();
+				if ( sCategoryFilter != m_CategoryFilter )
+				{
+					m_CategoryFilter = sCategoryFilter;
+					sCategoryText = tsddi.Text;
+					OnFilterData( this, null );
+				}
+			}
+
+			// Update the drop down button's text
+			tsDDCategory.Text = sCategoryText;
 		}
 
 		/// <summary>
@@ -40,7 +83,7 @@ namespace MyFinnishPhrasebookNamespace
 			// This is done in order to work on an external directory's database during development time,
 			// and reading one from current dir on an end-user's machine.
 			string dataDir = Properties.Settings.Default.DefaultDBDir;
-			if ( System.IO.File.Exists( Application.StartupPath + "\\MyFinnishPhrasebookDB.mdb" ) )
+			if ( System.IO.File.Exists( Application.StartupPath + "\\mpb.db" ) )
 			{
 				dataDir = Application.StartupPath;
 			}
@@ -48,7 +91,7 @@ namespace MyFinnishPhrasebookNamespace
 			AppDomain.CurrentDomain.SetData( "DataDirectory", dataDir );
 
 			// Update database path name text box
-			string sTxt = Properties.Settings.Default.MyFinnishPhrasebookDBConnectionString;
+			string sTxt = Properties.Settings.Default.MPBConnectionString;
 
 			string sDS = "Data Source=";
 			int nIdx = sTxt.IndexOf( sDS );
@@ -191,11 +234,23 @@ namespace MyFinnishPhrasebookNamespace
 				filterQuery = GetSearchQueryFilter( sSearchText );
 			}
 
+/*
+			if ( string.IsNullOrEmpty( filterQuery ) )
+			{
+				filterQuery = m_CategoryFilter;
+			}
+			else
+			{
+				// Append category filter to the query
+				filterQuery = string.Format( "({0}) AND {1}", filterQuery, m_CategoryFilter );
+			}
+*/
+
 			dataGridView.DataSource = DBWrapper.Instance.FilterRows( filterQuery );
 
 			labelNumEntries.Text = string.Format( "{0} / {1}",
 															dataGridView.Rows.Count,
-															DBWrapper.Instance.MyDataTable.Rows.Count );
+															DBWrapper.Instance.PhrasebookDataTable.Rows.Count );
 
 			PutFocusOnSearchText();
 		}
@@ -234,7 +289,7 @@ namespace MyFinnishPhrasebookNamespace
 		private void timerFilterText_Tick( object sender, EventArgs e )
 		{
 			timerFilterText.Stop();
-			if ( !string.IsNullOrEmpty( txtBoxSearch.TxtBox.Text.Trim() ) )
+			//if ( !string.IsNullOrEmpty( txtBoxSearch.TxtBox.Text.Trim() ) )
 			{
 				OnFilterData( this, EventArgs.Empty );
 			}
@@ -304,10 +359,11 @@ namespace MyFinnishPhrasebookNamespace
 		{
 			MPBDataSet.PhrasebookRow row = DBWrapper.Instance.CreateNewDataRow();
 			row._language = row._english = SearchTextBox.Text;
-			EditForm form = new EditForm( row );
+			DBWrapper.RowWithCategoryInfo rwci = new DBWrapper.RowWithCategoryInfo( row );
+			EditForm form = new EditForm( rwci );
 			if ( form.ShowDialog() == DialogResult.OK )
 			{
-				bool bAdded = DBWrapper.Instance.InsertRow( row );
+				bool bAdded = DBWrapper.Instance.InsertRow( rwci );
 				if ( bAdded )
 				{
 					dataGridView.DataSource = null;
@@ -323,11 +379,12 @@ namespace MyFinnishPhrasebookNamespace
 				DataGridViewRow selectedDataRow = dataGridView.SelectedRows[ 0 ];
 				MPBDataSet.PhrasebookRow selectedRow = selectedDataRow.DataBoundItem as MPBDataSet.PhrasebookRow;
 				MPBDataSet.PhrasebookRow editedRow = selectedRow;
-				EditForm form = new EditForm( editedRow );
+				DBWrapper.RowWithCategoryInfo rwci = new DBWrapper.RowWithCategoryInfo( editedRow );
+				EditForm form = new EditForm( rwci );
 				if ( form.ShowDialog() == DialogResult.OK )
 				{
-					selectedRow = editedRow;
-					DBWrapper.Instance.CommitChanges();
+					selectedRow = rwci.Row;
+					DBWrapper.Instance.UpdateRow( rwci );
 					if ( SearchTextBox.Text != string.Empty )
 					{
 						UpdateDataGridView();
@@ -349,6 +406,7 @@ namespace MyFinnishPhrasebookNamespace
 															"Delete Values?",
 															MessageBoxButtons.YesNo
 												);
+
 				if ( res == DialogResult.Yes )
 				{
 					dataGridView.DeleteRow( row );
@@ -371,6 +429,11 @@ namespace MyFinnishPhrasebookNamespace
 		private void tsBttQuiz_Click( object sender, EventArgs e )
 		{
 			LaunchQuizDialog();
+		}
+
+		private void addCategoryToolStripMenuItem_Click( object sender, EventArgs e )
+		{
+			new CategoryForm().ShowDialog(this);
 		}
 	}
 }

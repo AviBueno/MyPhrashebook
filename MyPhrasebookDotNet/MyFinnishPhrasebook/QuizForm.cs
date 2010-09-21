@@ -39,11 +39,6 @@ namespace MyFinnishPhrasebookNamespace
 
 			foreach ( string categoryId in DBWrapper.Instance.FilterFieldNameToQueryString.Keys )
 			{
-				if ( categoryId == "Phrase" )
-				{
-					AddCategoryDropMenu( ddBttCategory, "Word", "Phrase = 0" );
-				}
-
 				string sFilterText = DBWrapper.Instance.FilterFieldNameToQueryString[ categoryId ];
 				AddCategoryDropMenu( ddBttCategory, categoryId, sFilterText );
 			}
@@ -81,7 +76,7 @@ namespace MyFinnishPhrasebookNamespace
 			}
 		}
 
-		string m_CategoryFilter = "";
+		string m_CategoryFilter = "_catID = 0";
 		void OnCategoryItemClick( object sender, EventArgs e )
 		{
 			string sCategoryText = "All";
@@ -139,7 +134,7 @@ namespace MyFinnishPhrasebookNamespace
 				bFinnishQuestion = (r.Next( 2 ) == 0) ? false : true;
 			}
 
-			MPBDataSet.PhrasebookDataTable dt = DBWrapper.Instance.MyDataTable;
+			MPBDataSet.Cat2PhraseDataTable dt = DBWrapper.Instance.Cat2PhraseDataTable;
 			DataRow[] quizRows = dt.Select( m_CategoryFilter );
 
 			if ( m_AlreadyUsedQuestionRows.Count >= quizRows.Length )
@@ -160,7 +155,8 @@ namespace MyFinnishPhrasebookNamespace
 			m_AlreadyUsedQuestionRows.Add( nQuestionRowIdx );
 
 			// Read the question/answer pair
-			MPBDataSet.PhrasebookRow questionRow = quizRows[ nQuestionRowIdx ] as MPBDataSet.PhrasebookRow;
+			MPBDataSet.PhrasebookRow questionRow = DBWrapper.Instance.GetPhraseRowByC2PRow( quizRows[ nQuestionRowIdx ] );
+
 			m_TheQuestion = bFinnishQuestion ? questionRow._language : questionRow._english;
 			labelQuestion.Text = m_TheQuestion;
 			m_TheAnswer = bFinnishQuestion ? questionRow._english : questionRow._language;
@@ -182,7 +178,7 @@ namespace MyFinnishPhrasebookNamespace
 			int numOptionalAnswersInArray = 0;
 
 			// Draw (NUM_OPTIONS - 1) random answers
-			while ( numOptionalAnswersInArray < (NUM_OPTIONS - 1) )
+			while ( numOptionalAnswersInArray < nAnswers )
 			{
 				// Find a row that was not already used
 				int nRowIdx;
@@ -194,8 +190,7 @@ namespace MyFinnishPhrasebookNamespace
 				// Add the idx to the list of already used ones
 				alreadyUsedAnswerRows.Add( nRowIdx );
 
-				MPBDataSet.PhrasebookRow optAnsRow =
-										answerRows[ nRowIdx ] as MPBDataSet.PhrasebookRow;
+				MPBDataSet.PhrasebookRow optAnsRow = DBWrapper.Instance.GetPhraseRowByC2PRow( answerRows[ nRowIdx ] );
 
 				// First, get the optional row's question
 				string sOptionalQuestion = bFinnishQuestion ? optAnsRow._language : optAnsRow._english;
@@ -250,6 +245,8 @@ namespace MyFinnishPhrasebookNamespace
 				m_AnswerButtons[ i ].Text = string.Empty;	// Clean the button's text
 				m_TheOptionalAnswers[ i ] = sAnswer;		// Save the answer's text for later (see timer1_Tick)
 			}
+
+			questionsCountLabel.Text = string.Format( "{0} / {1}", m_AlreadyUsedQuestionRows.Count, quizRows.Length );
 		}
 
 		void AnswerButton_Click( object sender, EventArgs e )

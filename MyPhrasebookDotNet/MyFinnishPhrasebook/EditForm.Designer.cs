@@ -44,7 +44,6 @@
 			englishLabel = new System.Windows.Forms.Label();
 			((System.ComponentModel.ISupportInitialize)(this.myFinnishPhrasebookDBDataSet)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.dBTablePhrasebookBindingSource)).BeginInit();
-			this.flowLayoutPanel1.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// finnishLabel
@@ -70,7 +69,7 @@
 			// bttOK
 			// 
 			this.bttOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.bttOK.Location = new System.Drawing.Point( 144, 211 );
+			this.bttOK.Location = new System.Drawing.Point( 144, 282 );
 			this.bttOK.Name = "bttOK";
 			this.bttOK.Size = new System.Drawing.Size( 75, 27 );
 			this.bttOK.TabIndex = 2;
@@ -82,7 +81,7 @@
 			// 
 			this.bttCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.bttCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.bttCancel.Location = new System.Drawing.Point( 225, 211 );
+			this.bttCancel.Location = new System.Drawing.Point( 225, 282 );
 			this.bttCancel.Name = "bttCancel";
 			this.bttCancel.Size = new System.Drawing.Size( 75, 27 );
 			this.bttCancel.TabIndex = 3;
@@ -119,7 +118,7 @@
 			this.textBoxFinnish1.Margin = new System.Windows.Forms.Padding( 6, 8, 6, 8 );
 			this.textBoxFinnish1.Name = "textBoxFinnish1";
 			this.textBoxFinnish1.SearchButtonsVisible = false;
-			this.textBoxFinnish1.Size = new System.Drawing.Size( 338, 61 );
+			this.textBoxFinnish1.Size = new System.Drawing.Size( 328, 61 );
 			this.textBoxFinnish1.TabIndex = 1;
 			// 
 			// txtEnglish
@@ -129,14 +128,18 @@
 			this.txtEnglish.Location = new System.Drawing.Point( 91, 83 );
 			this.txtEnglish.Margin = new System.Windows.Forms.Padding( 4, 5, 4, 5 );
 			this.txtEnglish.Name = "txtEnglish";
-			this.txtEnglish.Size = new System.Drawing.Size( 338, 26 );
+			this.txtEnglish.Size = new System.Drawing.Size( 328, 26 );
 			this.txtEnglish.TabIndex = 0;
 			// 
 			// flowLayoutPanel1
 			// 
+			this.flowLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+						| System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this.flowLayoutPanel1.AutoScroll = true;
 			this.flowLayoutPanel1.Location = new System.Drawing.Point( 19, 117 );
 			this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-			this.flowLayoutPanel1.Size = new System.Drawing.Size( 410, 88 );
+			this.flowLayoutPanel1.Size = new System.Drawing.Size( 400, 159 );
 			this.flowLayoutPanel1.TabIndex = 60;
 			// 
 			// EditForm
@@ -145,7 +148,7 @@
 			this.AutoScaleDimensions = new System.Drawing.SizeF( 9F, 20F );
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.CancelButton = this.bttCancel;
-			this.ClientSize = new System.Drawing.Size( 444, 249 );
+			this.ClientSize = new System.Drawing.Size( 434, 320 );
 			this.Controls.Add( this.flowLayoutPanel1 );
 			this.Controls.Add( this.textBoxFinnish1 );
 			this.Controls.Add( finnishLabel );
@@ -153,14 +156,12 @@
 			this.Controls.Add( englishLabel );
 			this.Controls.Add( this.bttCancel );
 			this.Controls.Add( this.bttOK );
-			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
 			this.Margin = new System.Windows.Forms.Padding( 4, 5, 4, 5 );
+			this.MinimumSize = new System.Drawing.Size( 450, 277 );
 			this.Name = "EditForm";
 			this.Text = "Phrase Dialog";
 			((System.ComponentModel.ISupportInitialize)(this.myFinnishPhrasebookDBDataSet)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.dBTablePhrasebookBindingSource)).EndInit();
-			this.flowLayoutPanel1.ResumeLayout( false );
-			this.flowLayoutPanel1.PerformLayout();
 			this.ResumeLayout( false );
 			this.PerformLayout();
 

@@ -46,6 +46,9 @@
 			this.mainToolbar = new System.Windows.Forms.ToolStrip();
 			this.tsBttRandom = new System.Windows.Forms.ToolStripButton();
 			this.tsBttQuiz = new System.Windows.Forms.ToolStripButton();
+			this.tsDDBttMaintenance = new System.Windows.Forms.ToolStripDropDownButton();
+			this.addCategoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.tsDDCategory = new System.Windows.Forms.ToolStripDropDownButton();
 			englishLabel = new System.Windows.Forms.Label();
 			finnishLabel = new System.Windows.Forms.Label();
 			searchLabel = new System.Windows.Forms.Label();
@@ -185,6 +188,7 @@
 			this.txtBoxSearch.Location = new System.Drawing.Point( 86, 104 );
 			this.txtBoxSearch.Margin = new System.Windows.Forms.Padding( 4, 5, 4, 5 );
 			this.txtBoxSearch.Name = "txtBoxSearch";
+			this.txtBoxSearch.SearchButtonsVisible = true;
 			this.txtBoxSearch.Size = new System.Drawing.Size( 268, 55 );
 			this.txtBoxSearch.TabIndex = 0;
 			// 
@@ -192,7 +196,9 @@
 			// 
 			this.mainToolbar.Items.AddRange( new System.Windows.Forms.ToolStripItem[] {
             this.tsBttRandom,
-            this.tsBttQuiz} );
+            this.tsBttQuiz,
+            this.tsDDBttMaintenance,
+            this.tsDDCategory} );
 			this.mainToolbar.Location = new System.Drawing.Point( 0, 0 );
 			this.mainToolbar.Name = "mainToolbar";
 			this.mainToolbar.ShowItemToolTips = false;
@@ -220,6 +226,34 @@
 			this.tsBttQuiz.Size = new System.Drawing.Size( 35, 22 );
 			this.tsBttQuiz.Text = "Quiz";
 			this.tsBttQuiz.Click += new System.EventHandler( this.tsBttQuiz_Click );
+			// 
+			// tsDDBttMaintenance
+			// 
+			this.tsDDBttMaintenance.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+			this.tsDDBttMaintenance.DropDownItems.AddRange( new System.Windows.Forms.ToolStripItem[] {
+            this.addCategoryToolStripMenuItem} );
+			this.tsDDBttMaintenance.Image = ((System.Drawing.Image)(resources.GetObject( "tsDDBttMaintenance.Image" )));
+			this.tsDDBttMaintenance.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.tsDDBttMaintenance.Name = "tsDDBttMaintenance";
+			this.tsDDBttMaintenance.Size = new System.Drawing.Size( 89, 22 );
+			this.tsDDBttMaintenance.Text = "Maintenance";
+			// 
+			// addCategoryToolStripMenuItem
+			// 
+			this.addCategoryToolStripMenuItem.Name = "addCategoryToolStripMenuItem";
+			this.addCategoryToolStripMenuItem.Size = new System.Drawing.Size( 147, 22 );
+			this.addCategoryToolStripMenuItem.Text = "Add Category";
+			this.addCategoryToolStripMenuItem.Click += new System.EventHandler( this.addCategoryToolStripMenuItem_Click );
+			// 
+			// tsDDCategory
+			// 
+			this.tsDDCategory.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+			this.tsDDCategory.Image = ((System.Drawing.Image)(resources.GetObject( "tsDDCategory.Image" )));
+			this.tsDDCategory.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.tsDDCategory.Name = "tsDDCategory";
+			this.tsDDCategory.Size = new System.Drawing.Size( 34, 22 );
+			this.tsDDCategory.Text = "All";
+			this.tsDDCategory.Visible = false;
 			// 
 			// MainForm
 			// 
@@ -267,5 +301,8 @@
 		private System.Windows.Forms.ToolStrip mainToolbar;
 		private System.Windows.Forms.ToolStripButton tsBttRandom;
 		private System.Windows.Forms.ToolStripButton tsBttQuiz;
+		private System.Windows.Forms.ToolStripDropDownButton tsDDBttMaintenance;
+		private System.Windows.Forms.ToolStripMenuItem addCategoryToolStripMenuItem;
+		private System.Windows.Forms.ToolStripDropDownButton tsDDCategory;
 	}
 }

@@ -70,8 +70,7 @@ namespace MyFinnishPhrasebookNamespace.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("data source=c:\\Users\\Avi\\Documents\\Programming\\WindowsForms\\MyFinnishPhrasebook\\M" +
-            "yFinnishPhrasebook\\Database\\mpb.db")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=|DataDirectory|\\mpb.db")]
         public string MPBConnectionString {
             get {
                 return ((string)(this["MPBConnectionString"]));

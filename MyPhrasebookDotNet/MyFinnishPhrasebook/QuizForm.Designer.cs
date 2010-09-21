@@ -39,14 +39,13 @@
 			this.quizToolbar = new System.Windows.Forms.ToolStrip();
 			this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
 			this.ddBttCategory = new System.Windows.Forms.ToolStripDropDownButton();
-			this.tsCatAll = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
 			this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
 			this.ddBttLanguage = new System.Windows.Forms.ToolStripDropDownButton();
 			this.tsLangFinnish = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsLangEnglish = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsLangBoth = new System.Windows.Forms.ToolStripMenuItem();
+			this.questionsCountLabel = new System.Windows.Forms.Label();
 			this.tableLayoutPanel1.SuspendLayout();
 			this.quizToolbar.SuspendLayout();
 			this.SuspendLayout();
@@ -161,24 +160,9 @@
 			// ddBttCategory
 			// 
 			this.ddBttCategory.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-			this.ddBttCategory.DropDownItems.AddRange( new System.Windows.Forms.ToolStripItem[] {
-            this.tsCatAll,
-            this.toolStripSeparator1} );
 			this.ddBttCategory.Name = "ddBttCategory";
 			this.ddBttCategory.Size = new System.Drawing.Size( 68, 22 );
 			this.ddBttCategory.Text = "Category";
-			// 
-			// tsCatAll
-			// 
-			this.tsCatAll.Name = "tsCatAll";
-			this.tsCatAll.Size = new System.Drawing.Size( 152, 22 );
-			this.tsCatAll.Tag = "All";
-			this.tsCatAll.Text = "All";
-			// 
-			// toolStripSeparator1
-			// 
-			this.toolStripSeparator1.Name = "toolStripSeparator1";
-			this.toolStripSeparator1.Size = new System.Drawing.Size( 149, 6 );
 			// 
 			// toolStripSeparator2
 			// 
@@ -225,11 +209,21 @@
 			this.tsLangBoth.Tag = "Both";
 			this.tsLangBoth.Text = "Both";
 			// 
+			// questionsCountLabel
+			// 
+			this.questionsCountLabel.AutoSize = true;
+			this.questionsCountLabel.Location = new System.Drawing.Point( 12, 272 );
+			this.questionsCountLabel.Name = "questionsCountLabel";
+			this.questionsCountLabel.Size = new System.Drawing.Size( 51, 20 );
+			this.questionsCountLabel.TabIndex = 3;
+			this.questionsCountLabel.Text = "label1";
+			// 
 			// QuizForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF( 9F, 20F );
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size( 394, 316 );
+			this.Controls.Add( this.questionsCountLabel );
 			this.Controls.Add( this.quizToolbar );
 			this.Controls.Add( this.bttDone );
 			this.Controls.Add( this.labelQuestion );
@@ -257,8 +251,6 @@
 		private System.Windows.Forms.Button bttDone;
 		private System.Windows.Forms.ToolStrip quizToolbar;
 		private System.Windows.Forms.ToolStripDropDownButton ddBttCategory;
-		private System.Windows.Forms.ToolStripMenuItem tsCatAll;
-		private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
 		private System.Windows.Forms.ToolStripDropDownButton ddBttLanguage;
 		private System.Windows.Forms.ToolStripMenuItem tsLangFinnish;
 		private System.Windows.Forms.ToolStripMenuItem tsLangEnglish;
@@ -266,5 +258,6 @@
 		private System.Windows.Forms.ToolStripLabel toolStripLabel1;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
 		private System.Windows.Forms.ToolStripLabel toolStripLabel2;
+		private System.Windows.Forms.Label questionsCountLabel;
 	}
 }
