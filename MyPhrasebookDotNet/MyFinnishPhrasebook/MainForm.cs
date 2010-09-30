@@ -82,11 +82,20 @@ namespace MyFinnishPhrasebookNamespace
 			// and if not - will fallback to the DefaultDBDir value from the application's settings.
 			// This is done in order to work on an external directory's database during development time,
 			// and reading one from current dir on an end-user's machine.
-			string dataDir = Properties.Settings.Default.DefaultDBDir;
+			string dataDir = string.Empty;			
 			if ( System.IO.File.Exists( Application.StartupPath + "\\mpb.db" ) )
 			{
 				dataDir = Application.StartupPath;
 			}
+			else
+			{
+				dataDir = System.IO.Path.GetFullPath( Properties.Settings.Default.DefaultDBDir );
+				if ( ! System.IO.File.Exists( dataDir + "\\mpb.db" ) )
+				{
+
+				}
+			}
+
 
 			AppDomain.CurrentDomain.SetData( "DataDirectory", dataDir );
 

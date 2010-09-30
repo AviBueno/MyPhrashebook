@@ -23,15 +23,6 @@ namespace MyFinnishPhrasebookNamespace.Properties {
             }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\Avi\\Documents\\Finnish\\MyFinnishPhrasebook")]
-        public string DefaultDBDir {
-            get {
-                return ((string)(this["DefaultDBDir"]));
-            }
-        }
-        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
@@ -74,6 +65,15 @@ namespace MyFinnishPhrasebookNamespace.Properties {
         public string MPBConnectionString {
             get {
                 return ((string)(this["MPBConnectionString"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("..\\..\\..\\..\\Database")]
+        public string DefaultDBDir {
+            get {
+                return ((string)(this["DefaultDBDir"]));
             }
         }
     }
