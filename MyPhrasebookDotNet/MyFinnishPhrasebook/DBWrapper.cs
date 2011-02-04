@@ -187,9 +187,9 @@ namespace MyFinnishPhrasebookNamespace
 		public void CommitChanges()
 		{
 			this.tableAdapterManager1.UpdateAll( MyDataSet );
-// 			this.PhrasebookTableAdapter1.Update( MyDataSet );
-// 			this.cat2PhraseTableAdapter.Update( MyDataSet );
-// 			this.categoriesTableAdapter.Update( MyDataSet );
+			this.PhrasebookTableAdapter1.Update( MyDataSet );
+			this.cat2PhraseTableAdapter.Update( MyDataSet );
+			this.categoriesTableAdapter.Update( MyDataSet );
 		}
 
 		public MPBDataSet.PhrasebookRow GetPhraseRowByID( long id )
