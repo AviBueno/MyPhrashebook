@@ -16,6 +16,8 @@ namespace MyFinnishPhrasebookNamespace
 		Dictionary<string, string> m_FilterFieldNameToQueryString = new Dictionary<string, string>();
 		public Dictionary<string, string> FilterFieldNameToQueryString { get { return m_FilterFieldNameToQueryString; } }
 
+		public static string DatabaseFileName { get { return "mpb.db"; } }
+
 		#region Singleton
 		private DBWrapper()
 		{
