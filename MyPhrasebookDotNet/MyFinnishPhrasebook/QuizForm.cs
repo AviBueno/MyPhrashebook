@@ -13,6 +13,7 @@ namespace MyFinnishPhrasebookNamespace
 	public partial class QuizForm : DialogForm
 	{
 		const int NUM_OPTIONS = 4;
+		const int MIN_RECORDS_FOR_QUIZ = NUM_OPTIONS + 1; // NUM_OPTIONS = The Answers; + 1 = The Question
 		Control[] m_AnswerButtons = new Control[ NUM_OPTIONS ];
 		HashSet<int> m_AlreadyUsedQuestionRows = new HashSet<int>();
 		string m_TheQuestion;
@@ -136,6 +137,17 @@ namespace MyFinnishPhrasebookNamespace
 
 			MPBDataSet.Cat2PhraseDataTable dt = DBWrapper.Instance.Cat2PhraseDataTable;
 			DataRow[] quizRows = dt.Select( m_CategoryFilter );
+
+
+			if ( quizRows.Length < MIN_RECORDS_FOR_QUIZ )
+			{
+				MessageBox.Show(
+								string.Format( "There are not enough db. records in the selected category!\nMinimum number of records is {0}",
+												MIN_RECORDS_FOR_QUIZ )
+							);
+
+				return;
+			}
 
 			if ( m_AlreadyUsedQuestionRows.Count >= quizRows.Length )
 			{
