@@ -1,0 +1,86 @@
+# Find english non-words (i.e. phrases which contain whitespace)
+	select _english from Phrasebook where _id in (
+		select _phraseID from Cat2Phrase where _catID = 2
+	)
+
+
+# REFINED: Find english non-words (i.e. phrases which contain whitespace)
+	select _english from Phrasebook
+	where
+		_id NOT in (
+			select _phraseID from Cat2Phrase where _catID = 1
+		)
+	AND
+		_english like '% %'
+
+
+#Find empty phrases
+	select _english,_language from Phrasebook where ((_english like '') OR (_language like ''))
+
+# Find duplicates in Cat2Phrase
+	select *, count(*) as cnt from Cat2Phrase group by _catID,_phraseID having count(*) > 2
+
+
+delete from Cat2Phrase where _id in (
+	select _id from Cat2Phrase where _catID = 7 and _phraseID = 0 and _id NOT IN (
+		select MIN(_id) from Cat2Phrase where _catID = 7 and _phraseID = 0
+	)
+)
+
+
+# Select all phrases in a certain category
+	select * from Phrasebook where _id in (
+		select _phraseID from Cat2Phrase where _catID = 4
+	)
+
+
+# Concatenat 'to ' to the beginning of the word
+	update Phrasebook set 
+	  _english = 'to ' || _english
+	where
+	  _id in (
+		select _phraseID from Cat2Phrase where _catID = 4
+	)
+
+# Find phrasebook entries that are not categorized at all
+select * from Phrasebook where _id not in (
+	select _phraseID from Cat2Phrase
+)
+
+# Add category 0 to all non-categorized phrases
+	insert into Cat2Phrase (_catID, _phraseID)
+		select 0,_id from Phrasebook where _id not in (
+			select _phraseID from Cat2Phrase
+		)
+
+select count(*) from Cat2Phrase where _id in (
+	select _id from Cat2Phrase group by _phraseID having count(_phraseID) = 1
+)
+
+
+# Select all phrases text
+	select * from Phrasebook JOIN Cat2Phrase ON Phrasebook._id = Cat2Phrase._phraseID where _catID = 1 AND _english like '% %'
+
+# Count phrases per category
+	select _catID,count(*) from Cat2Phrase group by _catID
+
+# Count phrases per category
+	select *,count(*) as CNT from Categories JOIN Cat2Phrase ON Categories._id = Cat2Phrase._catID GROUP BY _catID ORDER BY CNT ASC
+
+# REFINED Count phrases per category (do not put _title before count(*))
+	select count(*) as CNT,_title from Categories JOIN Cat2Phrase ON Categories._id = Cat2Phrase._catID GROUP BY _catID ORDER BY CNT ASC
+	
+# Search for errors
+	select * from Cat2Phrase where _phraseID < 0
+
+# Select all non-phrases (i.e. single words)
+	select * from Cat2Phrase where _id not in (
+		select _id from Cat2Phrase where _catID = 2
+	)
+
+# Phrases only (both languages have whitespace)
+	select * from Phrasebook where _english like '% %' and _language like '% %'
+
+# Words only (both languages do not have whitespace)
+	select * from Phrasebook where (not _english like '% %') and (not _language like '% %')
+
