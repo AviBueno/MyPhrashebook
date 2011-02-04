@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Collections;
+using System.IO;
 
 namespace MyFinnishPhrasebookNamespace
 {
@@ -82,20 +83,26 @@ namespace MyFinnishPhrasebookNamespace
 			// and if not - will fallback to the DefaultDBDir value from the application's settings.
 			// This is done in order to work on an external directory's database during development time,
 			// and reading one from current dir on an end-user's machine.
-			string dataDir = string.Empty;			
-			if ( System.IO.File.Exists( Application.StartupPath + "\\mpb.db" ) )
+			string dataDir = string.Empty;
+
+			if ( System.IO.File.Exists( Path.Combine( Environment.CurrentDirectory, DBWrapper.DatabaseFileName ) ) )
 			{
+				// Exists in current dir (may be different than .exe dir if pointed by a symbolic-link for example)
+				dataDir = Environment.CurrentDirectory;
+			}			
+			else if ( System.IO.File.Exists( Path.Combine( Application.StartupPath, DBWrapper.DatabaseFileName ) ) )
+			{
+				// Exists in .exe dir
 				dataDir = Application.StartupPath;
 			}
 			else
 			{
+				// This fallback is mainly for debugging purposes
 				dataDir = System.IO.Path.GetFullPath( Properties.Settings.Default.DefaultDBDir );
-				if ( ! System.IO.File.Exists( dataDir + "\\mpb.db" ) )
+				if ( ! System.IO.File.Exists( Path.Combine( dataDir, DBWrapper.DatabaseFileName ) ) )
 				{
-
 				}
 			}
-
 
 			AppDomain.CurrentDomain.SetData( "DataDirectory", dataDir );
 
