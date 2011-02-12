@@ -45,7 +45,15 @@ public class AddEditPhraseForm extends Activity {
 
         mTxtViewLang1 = (EditText)findViewById(R.id.txtLang1);
         mTxtViewLang2 = (EditText)findViewById(R.id.txtLang2);
+        
+        // 2011-02-12: When typing text that is wider than the visible text area, the text control widens up to the
+        // until it reaches the width of the whole screen. The problem is that by doing so it exceeded the screen area.
+        // setMaxWidth(  getWidth() ) is used in order to harden the width of the control such that it won't expand
+        // beyond the width of the screen anymore, rather downwards to another line. 
+        mTxtViewLang1.setMaxWidth( mTxtViewLang1.getWidth() ); 
+        mTxtViewLang2.setMaxWidth( mTxtViewLang2.getWidth() ); 
 
+        
         Bundle extras = getIntent().getExtras();
         if ( extras != null )
         {
