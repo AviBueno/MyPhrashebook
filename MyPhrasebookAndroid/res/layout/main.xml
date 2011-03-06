@@ -17,11 +17,12 @@
 		android:layout_gravity="center_horizontal"
 		/>
 		
-<Button
+	<Button
 		android:id="@+id/PhrasebookButton"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		android:text="@string/Phrasebook"
+		android:textSize="20sp"
 		android:layout_weight="1"
 		/>
 	
@@ -30,8 +31,10 @@
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		android:text="@string/Quiz"
+		android:textSize="20sp"
 		android:layout_weight="1"
 		/>
+		
 	<Button
 		android:id="@+id/MaintenanceButton"
 		android:layout_width="fill_parent"
@@ -40,4 +43,5 @@
 		android:layout_weight="1"
 		android:visibility="gone"
 		/>
+		
 </LinearLayout>
