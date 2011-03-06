@@ -2,9 +2,9 @@ package skydiver.dev;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
 
 import skydiver.dev.MyPhrasebookDB.TblCat2Phrase;
@@ -13,6 +13,7 @@ import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,20 +21,18 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class QuizForm extends Activity
 {
+	public enum QuizLevel { Easy, Medium, Hard }; 
 	static final String LANG_ANY = "ANY";
-	private static final int MI_0 = 0;
-	private static final int MI_1 = 1;
-	private static final int MI_2 = 2;
-	private static final int MI_3 = 3;
 	private static final int DRAW_NEW_QUESTION = -1;
 	
-	static Random mRandom = new Random();
+	private QuizLevel mQuizLevel;
 	private String mTheQuestion;
 	private String mTheAnswer;
 	private String mQuestionLanguage = QuizForm.LANG_ANY;
@@ -47,14 +46,14 @@ public class QuizForm extends Activity
 	private TextView mTxtSuccessPercentage;
 	private int mNumCorrectlyAnswered;
 	private int mNumTotalAnswered;
-	private Button mRevealButton;
+	private ImageButton mRevealButton;
 	private ViewGroup mAnswerButtonsPanel;
-	private int mNumAnswers = 4;
 	private boolean mGuessingOn;
 	private MPBApp mMpbApp = null;
 	private boolean mInitialized = false;
 	private int mQuestionRowIdx;
 	private boolean mQuestionIsInLang1;
+	private HashMap<QuizLevel, QuizLevelData> mQuizLevelDataMap;
 	
 	/** Called when the activity is first created. */
 	@Override
@@ -69,14 +68,13 @@ public class QuizForm extends Activity
 		mTxtQuestionsCounter = (TextView)findViewById(R.id.txtQuestionsCounter);
 		mTxtSuccessPercentage = (TextView)findViewById(R.id.txtSuccessPercentage);
 		
-		mRevealButton = (Button)findViewById(R.id.bttRevealAnswer);
+		mRevealButton = (ImageButton)findViewById(R.id.bttRevealAnswer);
 		mRevealButton.setOnClickListener( mButtonsListener );
 
 		// Load values that are persisted between application sessions
 		mAlreadyUsedQuestionRows = mMpbApp.get("mAlreadyUsedQuestionRows");
 		mNumCorrectlyAnswered = mMpbApp.get( "mNumCorrectlyAnswered", 0 );
 		mNumTotalAnswered = mMpbApp.get( "mNumTotalAnswered", 0 );
-		mNumAnswers = mMpbApp.get( "mNumAnswers", 4 );
 		mGuessingOn = mMpbApp.get( "mGuessingOn", true );
 
 		// Load temporary persisted values
@@ -84,7 +82,8 @@ public class QuizForm extends Activity
 		
 		InitCategoriesSpinner();
 		InitLanguageSpinner();
-		InitAnswerButtons();		
+		InitQuizLevels();
+		InitAnswerButtons();
 		
 		ResetQuestions();
 		
@@ -161,7 +160,8 @@ public class QuizForm extends Activity
 		mAnswerButtonsPanel = (ViewGroup)findViewById(R.id.panelAnswerButtons);
 		mAnswerButtonsPanel.removeAllViews();
 		mAnswerButtons.clear();
-		for ( int i = 0; i < mNumAnswers; i++ )
+		int nAnswers = getQuizLevelNumAnswers();
+		for ( int i = 0; i < nAnswers; i++ )
 		{
 			Button b = (Button)this.getLayoutInflater().inflate( R.layout.quiz_answer_button, mAnswerButtonsPanel, false );
 	   		mAnswerButtonsPanel.addView( b );
@@ -169,8 +169,6 @@ public class QuizForm extends Activity
 			b.setOnClickListener( mButtonsListener );
 			mAnswerButtons.add( b );	// Add to buttons array
 		}
-		
-		mMpbApp.set( "mNumAnswers", mNumAnswers );
 	}
 
 	private void DrawQuestion( boolean bDrawNewQuestion )
@@ -194,7 +192,7 @@ public class QuizForm extends Activity
 			}
 			else // ANY LANGUAGE
 			{
-				mQuestionIsInLang1 = mRandom.nextBoolean();
+				mQuestionIsInLang1 = MPBApp.RNG().nextBoolean();
 			}
 			
 			mMpbApp.set( "mQuestionIsInLang1", mQuestionIsInLang1 );
@@ -218,7 +216,7 @@ public class QuizForm extends Activity
 			int nLastQuestionRowIdx = mQuestionRowIdx; 
 			do
 			{
-				mQuestionRowIdx = mRandom.nextInt( nCat2PhraseRows );
+				mQuestionRowIdx = MPBApp.RNG().nextInt( nCat2PhraseRows );
 			} while ( mAlreadyUsedQuestionRows.contains( mQuestionRowIdx ) || (mQuestionRowIdx == nLastQuestionRowIdx) );
 			
 			mMpbApp.set( "mQuestionRowIdx", mQuestionRowIdx );	// Persist the value
@@ -244,7 +242,7 @@ public class QuizForm extends Activity
 		mTxtQuestion.setText( mTheQuestion );
 		
 		// Select the answer text (opposite language of the question)
-		mTheAnswer = getAnswer( mQuestionIsInLang1, quizRow );;
+		mTheAnswer = getAnswer( mQuestionIsInLang1, quizRow );
 
 		//////////////////////////////////////////////////////////////////////////
 		// ANSWERS
@@ -268,7 +266,7 @@ public class QuizForm extends Activity
 			int nRowIdx;
 			do 
 			{
-				nRowIdx = mRandom.nextInt( answerRows.getCount() );
+				nRowIdx = MPBApp.RNG().nextInt( answerRows.getCount() );
 			} while ( alreadyUsedAnswerRows.contains(nRowIdx) );
 
 			// Add the idx to the list of already used ones
@@ -313,7 +311,7 @@ public class QuizForm extends Activity
 		}
 
 		// Select the random location of the correct answer
-		int nCorrectAnswerIdx = mRandom.nextInt( nAnswers );
+		int nCorrectAnswerIdx = MPBApp.RNG().nextInt( nAnswers );
 
 		// Fill the answers
 		int nOptionalAnswersIdx = 0;	// We need to keep count of which answer we are using next
@@ -333,7 +331,27 @@ public class QuizForm extends Activity
 		}
 
 		// Update quiz counter
-		mTxtQuestionsCounter.setText( String.format( "%d / %d", mAlreadyUsedQuestionRows.size() + 1, mCat2PhraseRows.getCount() ) );
+		mTxtQuestionsCounter.setText( String.format( "%d / %d [%s]", mAlreadyUsedQuestionRows.size() + 1, mCat2PhraseRows.getCount(), getQuizLevelString() ) );
+	}
+	
+	private void InitQuizLevels()
+	{
+		mQuizLevelDataMap = new HashMap<QuizLevel, QuizLevelData>();
+		mQuizLevelDataMap.put( QuizLevel.Easy, 		new QuizLevelData( getString( R.string.QuizLevelEasy ), 	3 ) );
+		mQuizLevelDataMap.put( QuizLevel.Medium, 	new QuizLevelData( getString( R.string.QuizLevelMedium ), 	4 ) );
+		mQuizLevelDataMap.put( QuizLevel.Hard,		new QuizLevelData( getString( R.string.QuizLevelHard ), 	5 ) );
+		
+		mQuizLevel = MPBApp.getInstance().getQuizLevel( QuizLevel.Medium );
+	}
+
+	private String getQuizLevelString()
+	{
+		return mQuizLevelDataMap.get(mQuizLevel).getText();
+	}
+	
+	private int getQuizLevelNumAnswers()
+	{
+		return mQuizLevelDataMap.get(mQuizLevel).getNumAnswers();
 	}
 	
 	private String getQuestion( boolean bQuestionIsInLang1, Cursor row )
@@ -511,49 +529,50 @@ public class QuizForm extends Activity
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
+		/*
 		super.onCreateOptionsMenu(menu);
 		menu.add(0, MI_0, 0, R.string.Level1);
 		menu.add(0, MI_1, 0, R.string.Level2);
 		menu.add(0, MI_2, 0, R.string.Level3);
-		menu.add(0, MI_3, 0, mGuessingOn ? R.string.GuessingOff : R.string.GuessingOn );
+		menu.add(1, MI_3, 0, mGuessingOn ? R.string.GuessingOff : R.string.GuessingOn );
 		return true;
+		*/
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.quiz_menu, menu);
+        return true;
 	}
 	
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		super.onPrepareOptionsMenu(menu);
-		MenuItem mi = menu.findItem( MI_3 );
+		MenuItem mi = menu.findItem( R.id.GuessingFlag );
 		mi.setTitle( mGuessingOn ? R.string.GuessingOff : R.string.GuessingOn );
 		return true;
 	}
 
 	@Override
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {
+		QuizLevel newQuizLevel = mQuizLevel;
 		switch(item.getItemId()) {
-		case MI_0:
-			mNumAnswers = 3;
-			InitAnswerButtons();
-			DrawQuestion( false );
-			return true;
+		case R.id.QuizLevelEasy: newQuizLevel = QuizLevel.Easy; break;
+		case R.id.QuizLevelMedium: newQuizLevel = QuizLevel.Medium; break;
+		case R.id.QuizLevelHard: newQuizLevel = QuizLevel.Hard; break;
 			
-		case MI_1:
-			mNumAnswers = 4;
-			InitAnswerButtons();
-			DrawQuestion( false );
-			return true;
-			
-		case MI_2:
-			mNumAnswers = 5;
-			InitAnswerButtons();
-			DrawQuestion( false );
-			return true;
-			
-		case MI_3:
+		case R.id.GuessingFlag:
 			mGuessingOn = ! mGuessingOn;
 			mMpbApp.set( "mGuessingOn", mGuessingOn );
 			
 			showGuessingButton( mGuessingOn );
 			return true;			
+		}
+		
+		if ( newQuizLevel != mQuizLevel )
+		{
+			mQuizLevel = newQuizLevel;
+			MPBApp.getInstance().setQuizLevel( mQuizLevel );
+			InitAnswerButtons();
+			DrawQuestion( false );
+			return true;
 		}
 	   
 		return super.onMenuItemSelected(featureId, item);
@@ -585,7 +604,22 @@ public class QuizForm extends Activity
 			return this.mSpinnerText.compareTo(other.mSpinnerText);
 		}
 		
-		String mSpinnerText;
-		String mValue;
+		private String mSpinnerText;
+		private String mValue;
+	}
+	
+	class QuizLevelData
+	{
+		public QuizLevelData( String text, int nAnswers )
+		{
+			mText = text;
+			mNumAnswers = nAnswers;
+		}
+		
+		public String 		getText() { return mText; }
+		public int			getNumAnswers() { return mNumAnswers; }
+
+		private String mText;
+		private int mNumAnswers;
 	}
 }
