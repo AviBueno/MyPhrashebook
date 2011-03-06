@@ -8,9 +8,6 @@
 	<string name="catWords">Words</string>
 	<string name="catUncategorized">Uncategorized Words</string>		
 	<string name="RevealAnswer">\?</string>	
-	<string name="Level1">Level 1</string>	
-	<string name="Level2">Level 2</string>	
-	<string name="Level3">Level 3</string>	
 	<string name="Lang1">English</string>	
 	<string name="Lang2">Finnish</string>	
 	<string name="LangBoth">Both</string>
@@ -28,4 +25,8 @@
 	<string name="No">No</string>
 	<string name="NoCatSelTitle">No category selected</string>
 	<string name="NoCatSelBody">Would you like to add an uncategorized term?</string>
+	<string name="QuizLevel">Quiz Level</string>
+	<string name="QuizLevelEasy">Easy</string>
+	<string name="QuizLevelMedium">Medium</string>
+	<string name="QuizLevelHard">Hard</string>
 </resources>
