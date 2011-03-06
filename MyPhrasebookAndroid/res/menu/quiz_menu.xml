@@ -1,0 +1,13 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/QuizLevel" android:title="@string/QuizLevel" android:icon="@android:drawable/ic_menu_sort_by_size">
+        <menu>
+            <item android:title="@string/QuizLevelEasy" android:id="@+id/QuizLevelEasy"></item>
+            <item android:title="@string/QuizLevelMedium" android:id="@+id/QuizLevelMedium"></item>
+            <item android:title="@string/QuizLevelHard" android:id="@+id/QuizLevelHard"></item>
+        </menu>
+    </item>
+    <item android:id="@+id/GuessingFlag" android:icon="@drawable/ic_menu_mark"></item>
+    
+    
+    
+</menu>
