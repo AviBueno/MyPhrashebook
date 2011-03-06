@@ -1,13 +1,54 @@
 package skydiver.dev;
 
 import java.util.HashSet;
+import java.util.Random;
 
+import skydiver.dev.QuizForm.QuizLevel;
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.util.Log;
 
 public class MPBApp extends Application {
 
+	private static MPBApp mInstance = null;
+	public MPBApp()
+	{
+		if ( mInstance == null )
+		{
+			mInstance = this;
+		}
+		else
+		{
+			mInstance = mInstance;
+		}
+	}
+	
+	public static MPBApp getInstance()
+	{
+		if ( mInstance == null )
+		{
+			mInstance = mInstance;
+		}
+		
+		return mInstance;
+	}
+	
+	static private Random smRandom = new Random();
+	public static Random RNG() { return smRandom; }
+	
+	
+	public QuizLevel getQuizLevel( QuizLevel defaultQuizLevel )
+	{
+		int nQL = get( "QuizLevel", defaultQuizLevel.ordinal() );
+		QuizLevel ql = QuizLevel.values()[nQL];		
+		return ql;
+	}
+
+	public void setQuizLevel( QuizLevel ql )
+	{
+		set( "QuizLevel", ql.ordinal() );
+	}
+	
 	String mCategory = null;	
 	public String getQuizCategory()
 	{
