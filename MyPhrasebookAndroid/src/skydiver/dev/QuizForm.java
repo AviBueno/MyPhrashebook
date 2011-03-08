@@ -49,8 +49,7 @@ public class QuizForm extends Activity
 	private ImageButton mRevealButton;
 	private ViewGroup mAnswerButtonsPanel;
 	private boolean mGuessingOn;
-	private MPBApp mMpbApp = null;
-	private boolean mInitialized = false;
+	private MPBApp mMpbApp = MPBApp.getInstance();
 	private int mQuestionRowIdx;
 	private boolean mQuestionIsInLang1;
 	private HashMap<QuizLevel, QuizLevelData> mQuizLevelDataMap;
@@ -61,8 +60,6 @@ public class QuizForm extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.quiz);
 
-		mMpbApp = (MPBApp)getApplicationContext();	// Save a reference of the app's instance
-		
 		// Get a reference to certain views
 		mTxtQuestion = (TextView)findViewById(R.id.txtQuestion);
 		mTxtQuestionsCounter = (TextView)findViewById(R.id.txtQuestionsCounter);
@@ -70,32 +67,48 @@ public class QuizForm extends Activity
 		
 		mRevealButton = (ImageButton)findViewById(R.id.bttRevealAnswer);
 		mRevealButton.setOnClickListener( mButtonsListener );
+	}
 
+	private void saveState()
+	{
+		// Save relevant data
+		mMpbApp.set( "mNumCorrectlyAnswered", mNumCorrectlyAnswered );
+		mMpbApp.set( "mNumTotalAnswered", mNumTotalAnswered );					
+		mMpbApp.set( "mAlreadyUsedQuestionRows", mAlreadyUsedQuestionRows );
+
+		mMpbApp.setQuizCategory( mSDCategory.getValue() );
+		mMpbApp.setQuizLanguage( mSDLanguage.getValue() );
+		mMpbApp.set( "mQuestionRowIdx", mQuestionRowIdx );	// Persist the value
+		mMpbApp.set( "mGuessingOn", mGuessingOn );
+	}
+	
+	private void restoreState()
+	{
 		// Load values that are persisted between application sessions
 		mAlreadyUsedQuestionRows = mMpbApp.get("mAlreadyUsedQuestionRows");
 		mNumCorrectlyAnswered = mMpbApp.get( "mNumCorrectlyAnswered", 0 );
 		mNumTotalAnswered = mMpbApp.get( "mNumTotalAnswered", 0 );
 		mGuessingOn = mMpbApp.get( "mGuessingOn", true );
-
-		// Load temporary persisted values
-		mQuestionRowIdx = savedInstanceState != null ? savedInstanceState.getInt("mQuestionRowIdx") : DRAW_NEW_QUESTION;
+		mQuestionRowIdx = mMpbApp.get( "mQuestionRowIdx", DRAW_NEW_QUESTION );
 		
 		InitCategoriesSpinner();
 		InitLanguageSpinner();
 		InitQuizLevels();
 		InitAnswerButtons();
-		
-		ResetQuestions();
-		
-		mInitialized = true;
+
+		LoadQuestions( false );
+	}
+	
+	@Override
+	protected void onPause() {
+		saveState();
+		super.onPause();
 	}
 
 	@Override
-	protected void onSaveInstanceState(Bundle outState)
-	{		
-		outState.putInt("mQuestionRowIdx", mQuestionRowIdx);
-
-		super.onSaveInstanceState(outState);
+	protected void onResume() {
+		restoreState();
+		super.onResume();
 	}
 
 	private OnClickListener mButtonsListener = new OnClickListener() {
@@ -130,11 +143,6 @@ public class QuizForm extends Activity
 				{
 					Toast.makeText(QuizForm.this.getApplicationContext(), R.string.TryAgain, Toast.LENGTH_SHORT).show();
 				}
-
-				// Save relevant data
-				mMpbApp.set( "mNumCorrectlyAnswered", mNumCorrectlyAnswered );
-				mMpbApp.set( "mNumTotalAnswered", mNumTotalAnswered );					
-				mMpbApp.set( "mAlreadyUsedQuestionRows", mAlreadyUsedQuestionRows );
 
 				// Update UI
 				updatePercentageUI();					
@@ -175,27 +183,18 @@ public class QuizForm extends Activity
 	{
 		showGuessingButton( mGuessingOn );
 		
-		if ( ! mInitialized )
+		// Decide if to ask in LANG1 or LANG2
+		if ( mQuestionLanguage.equals( MyPhrasebookDB.TblPhrasebook.LANG1 ) )
 		{
-			mQuestionIsInLang1 = mMpbApp.get( "mQuestionIsInLang1", mQuestionIsInLang1 );
+			mQuestionIsInLang1 = true;
 		}
-		else
+		else if (mQuestionLanguage.equals( MyPhrasebookDB.TblPhrasebook.LANG2 ) ) 
 		{
-			// Decide if to ask in LANG1 or LANG2
-			if ( mQuestionLanguage == MyPhrasebookDB.TblPhrasebook.LANG1 )
-			{
-				mQuestionIsInLang1 = true;
-			}
-			else if (mQuestionLanguage == MyPhrasebookDB.TblPhrasebook.LANG2 ) 
-			{
-				mQuestionIsInLang1 = false;
-			}
-			else // ANY LANGUAGE
-			{
-				mQuestionIsInLang1 = MPBApp.RNG().nextBoolean();
-			}
-			
-			mMpbApp.set( "mQuestionIsInLang1", mQuestionIsInLang1 );
+			mQuestionIsInLang1 = false;
+		}
+		else // ANY LANGUAGE
+		{
+			mQuestionIsInLang1 = MPBApp.RNG().nextBoolean();
 		}
 		
 		// Reset the already used question rows in case no rows are left to choose from.
@@ -218,8 +217,6 @@ public class QuizForm extends Activity
 			{
 				mQuestionRowIdx = MPBApp.RNG().nextInt( nCat2PhraseRows );
 			} while ( mAlreadyUsedQuestionRows.contains( mQuestionRowIdx ) || (mQuestionRowIdx == nLastQuestionRowIdx) );
-			
-			mMpbApp.set( "mQuestionRowIdx", mQuestionRowIdx );	// Persist the value
 		}
 
 		// Read the question/answer pair
@@ -280,7 +277,7 @@ public class QuizForm extends Activity
 
 			// First, get the optional row's question
 			String sOptionalQuestion = getQuestion( mQuestionIsInLang1, optAnsRow );
-			if ( sOptionalQuestion == mTheQuestion) // Same as THE question?
+			if ( sOptionalQuestion.equals( mTheQuestion) ) // Same as THE question?
 			{
 				 // Skip this row because it probably is a different answer for THE SAME question
 				continue;
@@ -431,7 +428,7 @@ public class QuizForm extends Activity
 					String sCategory = sd.getValue();					
 					mMpbApp.setQuizCategory(sCategory);
 					
-					ResetQuestions();
+					LoadQuestions( true );
 				}
 
 				public void onNothingSelected(AdapterView<?> parent) {
@@ -443,7 +440,10 @@ public class QuizForm extends Activity
 		int nSelPos = adapter.getPosition(mSDCategory);
 		if ( nSelPos >= 0 )
 		{
-			spinner.setSelection(nSelPos);
+			// NOTE: For some reason, setSelection(int position) displayed the text of position=0 instead of position.
+			// Specifically: when switching off the screen are switching it on again.
+			// In order to overcome this (android bug?), we use setSelection(int position, boolean animate).
+			spinner.setSelection(nSelPos, true);
 		}
 	}
 
@@ -504,16 +504,19 @@ public class QuizForm extends Activity
 		int nSelPos = adapter.getPosition(mSDLanguage);
 		if ( nSelPos >= 0 )
 		{
-			spinner.setSelection(nSelPos);
+			// NOTE: For some reason, setSelection(int position) displayed the text of position=0 instead of position.
+			// Specifically: when switching off the screen are switching it on again.
+			// In order to overcome this (android bug?), we use setSelection(int position, boolean animate).
+			spinner.setSelection(nSelPos, true); 
 		}
 	}
 	
-	private void ResetQuestions()
+	private void LoadQuestions( boolean bReset )
 	{
 		String catName = mSDCategory.getValue();
 		mCat2PhraseRows = MyPhrasebookDB.Instance().selectCat2PhraseRowsByQuizCatName( catName );
 		
-		if ( mInitialized )
+		if ( bReset )
 		{
 			mAlreadyUsedQuestionRows.clear();
 			mNumCorrectlyAnswered = 0;
@@ -560,7 +563,6 @@ public class QuizForm extends Activity
 			
 		case R.id.GuessingFlag:
 			mGuessingOn = ! mGuessingOn;
-			mMpbApp.set( "mGuessingOn", mGuessingOn );
 			
 			showGuessingButton( mGuessingOn );
 			return true;			
