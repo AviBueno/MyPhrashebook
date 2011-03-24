@@ -84,3 +84,21 @@ select count(*) from Cat2Phrase where _id in (
 # Words only (both languages do not have whitespace)
 	select * from Phrasebook where (not _english like '% %') and (not _language like '% %')
 
+	select * from Cat2Phrase where _phraseID < 0
+	
+# All phrases with certain text under a certain category
+	select * from phrasebook where _english like '%but%' and _id in (
+		select _phraseID from Cat2Phrase where Cat2Phrase._catID in (
+			select _id from Categories where _name = 'Animal'
+		)
+	)
+	
+# All questions (category ID = 1)
+	SELECT * FROM Phrasebook WHERE (
+		((_english like '%%') OR (_language like '%%'))
+		AND _id IN (
+			SELECT _phraseID FROM Cat2Phrase WHERE (_catID = 1)
+		)
+	)
+	ORDER BY _english ASC
+
