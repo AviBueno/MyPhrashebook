@@ -7,21 +7,13 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.Toast;
 
 public class MainForm extends Activity {
 
 	/** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        
-        try {
-			MyPhrasebookDB.CreateInstance( this.getApplicationContext() );
-		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         
@@ -54,9 +46,10 @@ public class MainForm extends Activity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
         	// Clear application preferences
-        	((MPBApp)getApplication()).clearAllSharedSettings();
+        	MPBApp.getInstance().clearAllSharedSettings();
 
-	        Toast.makeText(this.getApplicationContext(), "Thank you for using MPB", Toast.LENGTH_SHORT).show();
+			MPBApp.getInstance().ShortToast( "Thank you for using MPB" );
+
 			
 			this.finish();
 			

@@ -132,14 +132,14 @@ public class MyPhrasebookDB
 
 	
 	private static MyPhrasebookDB mInstance = null;	
-	public static void CreateInstance(Context context) throws InstantiationException
+	public static MyPhrasebookDB Instance()
 	{
-		if ( mInstance != null )
+		if ( mInstance == null )
 		{
-			throw new InstantiationException("MyPhrasebookDB instance already exists");
+			mInstance = new MyPhrasebookDB( MPBApp.getInstance() );
 		}
 		
-		mInstance = new MyPhrasebookDB( context.getApplicationContext() );
+		return mInstance;
 	}
 
 	public static void DestroyInstance()
@@ -156,11 +156,6 @@ public class MyPhrasebookDB
 		}
 	}
 
-	public static MyPhrasebookDB Instance()
-	{
-		return mInstance;
-	}
-	
 	private MyPhrasebookDB(Context context)
 	{ 
 		m_context = context; 
