@@ -24,7 +24,6 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class QuizForm extends Activity
 {
@@ -134,14 +133,14 @@ public class QuizForm extends Activity
 
 					// TODO TBD...
 //					String answer = String.format("%s\n\n%s", mTheQuestion, mTheAnswer);
-//					Toast.makeText(QuizForm.this, answer, Toast.LENGTH_SHORT).show();
+//					MPBApp.getInstance().ShortToast( answer );
 					
 					// Draw a new question
 					DrawQuestion( true );
 				}
 				else
 				{
-					Toast.makeText(QuizForm.this.getApplicationContext(), R.string.TryAgain, Toast.LENGTH_SHORT).show();
+					MPBApp.getInstance().ShortToast( R.string.TryAgain );
 				}
 
 				// Update UI

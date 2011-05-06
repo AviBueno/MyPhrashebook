@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 public class AddEditPhraseForm extends Activity {
 
@@ -131,7 +130,7 @@ public class AddEditPhraseForm extends Activity {
 		
 		if ( sErrorMessage != null )
 		{
-			Toast.makeText(AddEditPhraseForm.this, sErrorMessage, Toast.LENGTH_SHORT).show();
+			MPBApp.getInstance().ShortToast( sErrorMessage );
 			return;
 		}
 		

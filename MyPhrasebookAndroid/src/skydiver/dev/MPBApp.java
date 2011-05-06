@@ -7,6 +7,7 @@ import skydiver.dev.QuizForm.QuizLevel;
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.util.Log;
+import android.widget.Toast;
 
 public class MPBApp extends Application {
 
@@ -26,7 +27,6 @@ public class MPBApp extends Application {
 	
 	static private Random smRandom = new Random();
 	public static Random RNG() { return smRandom; }
-	
 	
 	public QuizLevel getQuizLevel( QuizLevel defaultQuizLevel )
 	{
@@ -173,5 +173,25 @@ public class MPBApp extends Application {
 		SharedPreferences.Editor prefsEditor = getSharedPreferencesEditor();
 		prefsEditor.clear();
 		prefsEditor.commit();
+	}
+	
+	public void ShortToast( String text )
+	{
+        Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
+	}
+	
+	public void ShortToast( int stringResourceId )
+	{
+        Toast.makeText(this, stringResourceId, Toast.LENGTH_SHORT).show();
+	}
+	
+	public void LongToast( String text )
+	{
+        Toast.makeText(this, text, Toast.LENGTH_LONG).show();
+	}
+	
+	public void LongToast( int stringResourceId )
+	{
+        Toast.makeText(this, stringResourceId, Toast.LENGTH_LONG).show();
 	}
 }
