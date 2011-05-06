@@ -4,7 +4,9 @@ pause
 echo.
 
 move mpb.db mpb.db.bak > nul 2>&1
-%ANDROID_TOOLS%\adb pull /data/data/skydiver.dev/databases/mpb.db mpb.db
+
+REM "adb -d" will redirect the command to a single connected USB device (even if an emulator is also running)
+%ANDROID_TOOLS%\adb -d pull /data/data/skydiver.dev/databases/mpb.db mpb.db
 
 echo.
 echo Done.
