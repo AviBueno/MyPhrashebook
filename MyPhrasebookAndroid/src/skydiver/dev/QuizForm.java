@@ -373,13 +373,13 @@ public class QuizForm extends Activity
 					android.R.layout.simple_spinner_item
 				);
 
-		Set<String> categoryNames = MyPhrasebookDB.Instance().getQuizCategoryNames();
+		Set<String> categoryTitles = MyPhrasebookDB.Instance().getCategoryTitles();
 		String storedSDCategoryValue = mMpbApp.getQuizCategory();
 
 		SpinnerData allSD = null;
-		for (String catName : categoryNames)
+		for (String catTitle : categoryTitles)
 		{
-			SpinnerData sd = new SpinnerData( catName, catName );
+			SpinnerData sd = new SpinnerData( catTitle, catTitle );
 			adapter.add( sd );
 			
 			// Test if this was the prev. selected category
@@ -389,7 +389,7 @@ public class QuizForm extends Activity
 			}
 			
 			// Remember the "All" object
-			if ( catName.equals( MyPhrasebookDB.TblCategories.VAL_ALL ) )
+			if ( catTitle.equals( MyPhrasebookDB.TblCategories.VAL_ALL ) )
 			{
 				allSD = sd;
 			}
@@ -513,8 +513,8 @@ public class QuizForm extends Activity
 	
 	private void LoadQuestions( boolean bReset )
 	{
-		String catName = mSDCategory.getValue();
-		mCat2PhraseRows = MyPhrasebookDB.Instance().selectCat2PhraseRowsByQuizCatName( catName );
+		String catTitle = mSDCategory.getValue();
+		mCat2PhraseRows = MyPhrasebookDB.Instance().selectCat2PhraseRowsByCategoryTitle( catTitle );
 		
 		if ( bReset )
 		{
@@ -578,36 +578,6 @@ public class QuizForm extends Activity
 		}
 	   
 		return super.onMenuItemSelected(featureId, item);
-	}
-	
-	/*
-	 * Spinner Data: Data structure for spinner controls 
-	 */	
-	class SpinnerData implements Comparable<SpinnerData> {
-		public SpinnerData( String spinnerText, String value ) {
-			this.mSpinnerText = spinnerText;
-			this.mValue = value;
-		}
-
-		public String getSpinnerText() {
-			return mSpinnerText;
-		}
-
-		public String getValue() {
-			return mValue;
-		}
-
-		public String toString() {
-			return mSpinnerText;
-		}
-
-		public int compareTo( SpinnerData other )
-		{
-			return this.mSpinnerText.compareTo(other.mSpinnerText);
-		}
-		
-		private String mSpinnerText;
-		private String mValue;
 	}
 	
 	class QuizLevelData
