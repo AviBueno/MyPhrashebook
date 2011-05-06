@@ -28,5 +28,9 @@
 	<string name="QuizLevel">Quiz Level</string>
 	<string name="QuizLevelEasy">Easy</string>
 	<string name="QuizLevelMedium">Medium</string>
-	<string name="QuizLevelHard">Hard</string>
+	<string name="QuizLevelHard">Hard</string><string name="PBMenuEditItem">Edit</string><string name="PBMenuDeleteItem">Delete</string><string name="PBMenuAddToPractice">Add to practice</string>
+	
+	<string name="PBMenuRemoveFromPractice">Remove from practice</string>
+	
+	
 </resources>

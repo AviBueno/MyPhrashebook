@@ -82,18 +82,18 @@ public class PhrasebookForm extends Activity {
                     AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
 	                long phraseID = info.id;
                 
-                    menu.add(0, CONTEXTMENU_EDITITEM, 0, "Edit");
+                    menu.add(0, CONTEXTMENU_EDITITEM, 0, R.string.PBMenuEditItem);
                     
                     if ( ! MyPhrasebookDB.Instance().isPhraseInPracticeCategory( phraseID ) )
                     {
-                        menu.add(0, CONTEXTMENU_ADD_PRACTICE, 1, "Add to practice");
+                        menu.add(0, CONTEXTMENU_ADD_PRACTICE, 1, R.string.PBMenuAddToPractice);
                     }
                     else
                     {
-                        menu.add(0, CONTEXTMENU_REMOVE_PRACTICE, 1, "Remove from practice");
+                        menu.add(0, CONTEXTMENU_REMOVE_PRACTICE, 1, R.string.PBMenuRemoveFromPractice);
                     }
                     
-                    menu.add(0, CONTEXTMENU_DELETEITEM, 2, "Delete");
+                    menu.add(0, CONTEXTMENU_DELETEITEM, 2, R.string.PBMenuDeleteItem);
 				}
 			});
 					
