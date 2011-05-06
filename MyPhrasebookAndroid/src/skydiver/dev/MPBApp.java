@@ -10,6 +10,10 @@ import android.util.Log;
 import android.widget.Toast;
 
 public class MPBApp extends Application {
+	public static final String keyQUIZ_LEVEL = "QuizLevel";
+	public static final String keyQUIZ_CATEGORY = "QuizCategory";
+	public static final String keyPHRASEBOOK_CATEGORY = "PhrasebookCategory";
+	public static final String keyLANGUAGE = "Language";	
 
 	private static MPBApp mInstance = null;
 	public MPBApp()
@@ -30,20 +34,20 @@ public class MPBApp extends Application {
 	
 	public QuizLevel getQuizLevel( QuizLevel defaultQuizLevel )
 	{
-		int nQL = get( "QuizLevel", defaultQuizLevel.ordinal() );
+		int nQL = get( keyQUIZ_LEVEL, defaultQuizLevel.ordinal() );
 		QuizLevel ql = QuizLevel.values()[nQL];		
 		return ql;
 	}
 
 	public void setQuizLevel( QuizLevel ql )
 	{
-		set( "QuizLevel", ql.ordinal() );
+		set( keyQUIZ_LEVEL, ql.ordinal() );
 	}
 	
 	String mQuizCategory = null;	
 	public String getQuizCategory()
 	{
-		String sCategory = get( "Category", MyPhrasebookDB.TblCategories.VAL_ALL );
+		String sCategory = get( keyQUIZ_CATEGORY, MyPhrasebookDB.TblCategories.VAL_ALL );
 		if (! sCategory.equals( mQuizCategory ) )
 		{
 			Log.v( "MPBApp-Get", String.format("cat.s:%s ; cat.m:%s", sCategory, mQuizCategory ) );
@@ -57,13 +61,13 @@ public class MPBApp extends Application {
 	{
 		Log.v( "MPBApp-Get", String.format("cat.s:%s ; cat.m:%s", sCategory, mQuizCategory ) );
 		Log.v( "MPBApp-Set", sCategory ); 
-		set("Category", sCategory);
+		set(keyQUIZ_CATEGORY, sCategory);
 	}
 	
 	String mPhrasebookCategory = null;	
 	public String getPhrasebookCategory()
 	{
-		String sCategory = get( "Category", MyPhrasebookDB.TblCategories.VAL_ALL );
+		String sCategory = get( keyPHRASEBOOK_CATEGORY, MyPhrasebookDB.TblCategories.VAL_ALL );
 		if (! sCategory.equals( mPhrasebookCategory ) )
 		{
 			Log.v( "MPBApp-Get", String.format("cat.s:%s ; cat.m:%s", sCategory, mPhrasebookCategory ) );
@@ -77,18 +81,18 @@ public class MPBApp extends Application {
 	{
 		Log.v( "MPBApp-Get", String.format("cat.s:%s ; cat.m:%s", sCategory, mPhrasebookCategory ) );
 		Log.v( "MPBApp-Set", sCategory ); 
-		set("Category", sCategory);
+		set(keyPHRASEBOOK_CATEGORY, sCategory);
 	}
 	
 	public String getQuizLanguage()
 	{
-		String sLanguage = get("Language", QuizForm.LANG_ANY);
+		String sLanguage = get(keyLANGUAGE, QuizForm.LANG_ANY);
 		return sLanguage;
 	}
 	
 	public void setQuizLanguage( String sLanguage )
 	{
-		set("Language", sLanguage);
+		set(keyLANGUAGE, sLanguage);
 	}	
 
 	public void set( String fieldName, HashSet<Integer> set )
