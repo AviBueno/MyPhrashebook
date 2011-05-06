@@ -32,7 +32,7 @@ public class AddEditPhraseForm extends Activity {
 	long mCatIDs[] = null;
     boolean mSkipCategories = false;
     long mDbRowID = MyPhrasebookDB.INVALID_ROW_ID;
-	HashMap<String,Long> mCategoriesMap = MyPhrasebookDB.Instance().getCategoriesMap();
+	HashMap<String,Long> mCategoriesMap = MyPhrasebookDB.Instance().getCategoryNamesMap();
 	EditText mTxtViewLang1;
 	EditText mTxtViewLang2;
 	
