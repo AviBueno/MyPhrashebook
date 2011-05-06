@@ -1,14 +1,18 @@
 package skydiver.dev;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
+import skydiver.dev.MyPhrasebookDB.TblCategories;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.KeyEvent;
@@ -16,11 +20,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnCreateContextMenuListener;
+import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.Spinner;
 
 public class PhrasebookForm extends Activity {
 
@@ -28,12 +36,15 @@ public class PhrasebookForm extends Activity {
 	final static int ACTIVITY_EDIT_PHRASE = 1;
 	
 	final static int CONTEXTMENU_EDITITEM = 0;
-	final static int CONTEXTMENU_DELETEITEM = 1;
+	final static int CONTEXTMENU_ADD_PRACTICE = 1;
+	final static int CONTEXTMENU_REMOVE_PRACTICE = 2;
+	final static int CONTEXTMENU_DELETEITEM = 3;
 	
 	List<HashMap<String, String>> m_items;
 	SimpleCursorAdapter m_itemsAdapter;
 	EditText mThePhrase;
 	ListView mPhrasesList;
+	private SpinnerData mSDCategory;
 	
     /** Called when the activity is first created. */
     @Override
@@ -43,7 +54,9 @@ public class PhrasebookForm extends Activity {
 	        super.onCreate(savedInstanceState);
 	        setContentView(R.layout.phrasebook);
 	        
-			Cursor cursor = MyPhrasebookDB.Instance().FilterPhrasebookRows("");
+	        InitCategoriesSpinner();
+	        
+			Cursor cursor = MyPhrasebookDB.Instance().FilterPhrasebookRows("", TblCategories.VAL_ALL);
 	
 			// create the adapter and assign it to the list view
 			m_itemsAdapter = null;
@@ -65,8 +78,21 @@ public class PhrasebookForm extends Activity {
 				public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
                     menu.setHeaderTitle("ContextMenu");
 
+                    AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+	                long phraseID = info.id;
+                
                     menu.add(0, CONTEXTMENU_EDITITEM, 0, "Edit");
-                    menu.add(0, CONTEXTMENU_DELETEITEM, 1, "Delete");
+                    
+                    if ( ! MyPhrasebookDB.Instance().isPhraseInPracticeCategory( phraseID ) )
+                    {
+                        menu.add(0, CONTEXTMENU_ADD_PRACTICE, 1, "Add to practice");
+                    }
+                    else
+                    {
+                        menu.add(0, CONTEXTMENU_REMOVE_PRACTICE, 1, "Remove from practice");
+                    }
+                    
+                    menu.add(0, CONTEXTMENU_DELETEITEM, 2, "Delete");
 				}
 			});
 					
@@ -88,9 +114,16 @@ public class PhrasebookForm extends Activity {
 					launchAddEditPhraseActivity( MyPhrasebookDB.INVALID_ROW_ID );
 				}
 			});
+			
+			// Prevent the keyboard from auto-popping-up when entering the activity.
+			this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN); 
+			
+			// Refresh the list (will filter according to mSDCategory)
+			refreshList();  
 		}
 		catch ( Exception e )
 		{
+			Log.d( "EXCEPTION", e.getMessage() );
 		}
 	}
 
@@ -111,7 +144,7 @@ public class PhrasebookForm extends Activity {
 	}
     
 	private void refreshList() {
-		Cursor cursor = MyPhrasebookDB.Instance().FilterPhrasebookRows( mThePhrase.getText().toString() );
+		Cursor cursor = MyPhrasebookDB.Instance().FilterPhrasebookRows( mThePhrase.getText().toString(), mSDCategory.getValue() );
 		m_itemsAdapter.changeCursor( cursor );
 	}
     
@@ -149,11 +182,21 @@ public class PhrasebookForm extends Activity {
 	@Override
 	public boolean onContextItemSelected(MenuItem aItem) {
 		mOnContextItemSelectedMenuInfo = (AdapterContextMenuInfo) aItem.getMenuInfo();
+		long phraseID = mOnContextItemSelectedMenuInfo.id;
 		
-		// Switch on the ID of the item, to get what the user selected.
-		switch (aItem.getItemId()) {
+		try {
+			// Switch on the ID of the item, to get what the user selected.
+			switch (aItem.getItemId()) {
 			case CONTEXTMENU_EDITITEM:
 				launchAddEditPhraseActivity( mOnContextItemSelectedMenuInfo.id );
+				return true; // true means: "we handled the event".
+
+			case CONTEXTMENU_ADD_PRACTICE:
+				MyPhrasebookDB.Instance().addPhraseToPracticeCategory( phraseID );
+				return true; // true means: "we handled the event".
+
+			case CONTEXTMENU_REMOVE_PRACTICE:
+				MyPhrasebookDB.Instance().removePhraseFromPracticeCategory( phraseID );
 				return true; // true means: "we handled the event".
 
 			case CONTEXTMENU_DELETEITEM:
@@ -167,6 +210,7 @@ public class PhrasebookForm extends Activity {
 							{
 								DialogBuilder.buildMessageBox(PhrasebookForm.this, "Error", "An error occured:\n" + e.getMessage()).create().show();
 							}
+							
 						}
 					};
 					
@@ -179,9 +223,101 @@ public class PhrasebookForm extends Activity {
 						)
 						.create()
 						.show();
-				return true; // true means: "we handled the event".
+					return true; // true means: "we handled the event".
+			}
 		}
-
+		catch ( Exception e )
+		{
+			DialogBuilder.buildMessageBox(PhrasebookForm.this, "Error", "An error occured:\n" + e.getMessage()).create().show();
+		}
+		
 		return false;
+	}
+	
+	private void InitCategoriesSpinner()
+	{
+		Spinner spinner = (Spinner)findViewById(R.id.spinCategory);
+
+		ArrayAdapter<SpinnerData> adapter = 
+			new ArrayAdapter<SpinnerData>( 
+					this,
+					android.R.layout.simple_spinner_item
+				);
+
+		Set<String> categoryTitles = MyPhrasebookDB.Instance().getCategoryTitles();
+		String storedSDCategoryValue = MPBApp.getInstance().getPhrasebookCategory();
+
+		SpinnerData allSD = null;
+		for (String catTitle : categoryTitles)
+		{
+			if ( MyPhrasebookDB.Instance().isRealCategoryTitle( catTitle ) )
+			{
+				SpinnerData sd = new SpinnerData( catTitle, catTitle );
+				adapter.add( sd );
+				
+				// Test if this was the prev. selected category
+				if ( storedSDCategoryValue.equals( sd.getValue() ) )
+				{
+					mSDCategory = sd;
+				}
+				
+				// Remember the "All" object
+				if ( catTitle.equals( MyPhrasebookDB.TblCategories.VAL_ALL ) )
+				{
+					allSD = sd;
+				}
+			}
+		}
+		
+		adapter.sort(new Comparator<SpinnerData>() {
+			public int compare(SpinnerData object1, SpinnerData object2) {
+				return object1.compareTo(object2);
+			};
+		});
+
+		// Put the "All" category first one on the list
+		adapter.remove(allSD);
+		adapter.insert(allSD, 0);
+		
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		
+		spinner.setAdapter(adapter);
+		spinner.setOnItemSelectedListener(
+			new AdapterView.OnItemSelectedListener()
+			{
+				public void onItemSelected(
+						AdapterView<?> parent, 
+						View view, 
+						int position, 
+						long id)
+				{
+					SpinnerData sd = (SpinnerData)parent.getAdapter().getItem( position );
+					if ( sd == mSDCategory )
+					{
+						return;
+					}
+
+					mSDCategory = sd;	// Save the selected category
+					
+					String sCategory = sd.getValue();					
+					MPBApp.getInstance().setPhrasebookCategory( sCategory );
+					
+					refreshList();		// Refresh the list (will filter according to mSDCategory)  
+				}
+
+				public void onNothingSelected(AdapterView<?> parent) {
+				}
+			}
+		);
+		
+		// Select the prev. selected category
+		int nSelPos = adapter.getPosition(mSDCategory);
+		if ( nSelPos >= 0 )
+		{
+			// NOTE: For some reason, setSelection(int position) displayed the text of position=0 instead of position.
+			// Specifically: when switching off the screen are switching it on again.
+			// In order to overcome this (android bug?), we use setSelection(int position, boolean animate).
+			spinner.setSelection(nSelPos, true);
+		}
 	}
 }
