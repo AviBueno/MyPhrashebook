@@ -70,8 +70,9 @@ public class PhrasebookForm extends Activity {
 			
 			// get a reference to the ListView
 			mPhrasesList = (ListView)findViewById(android.R.id.list);
-			mPhrasesList.setAdapter(m_itemsAdapter);        
-            /* Add Context-Menu listener to the ListView. */
+			mPhrasesList.setAdapter(m_itemsAdapter);
+			
+            // Add Context-Menu listener to the ListView.
 			mPhrasesList.setOnCreateContextMenuListener( new OnCreateContextMenuListener() {
 				
 				@Override
