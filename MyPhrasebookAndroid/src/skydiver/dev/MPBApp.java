@@ -17,19 +17,10 @@ public class MPBApp extends Application {
 		{
 			mInstance = this;
 		}
-		else
-		{
-			mInstance = mInstance;
-		}
 	}
 	
 	public static MPBApp getInstance()
 	{
-		if ( mInstance == null )
-		{
-			mInstance = mInstance;
-		}
-		
 		return mInstance;
 	}
 	
@@ -49,14 +40,14 @@ public class MPBApp extends Application {
 		set( "QuizLevel", ql.ordinal() );
 	}
 	
-	String mCategory = null;	
+	String mQuizCategory = null;	
 	public String getQuizCategory()
 	{
 		String sCategory = get( "Category", MyPhrasebookDB.TblCategories.VAL_ALL );
-		if (! sCategory.equals( mCategory ) )
+		if (! sCategory.equals( mQuizCategory ) )
 		{
-			Log.v( "MPBApp-Get", String.format("cat.s:%s ; cat.m:%s", sCategory, mCategory ) );
-			mCategory = sCategory;
+			Log.v( "MPBApp-Get", String.format("cat.s:%s ; cat.m:%s", sCategory, mQuizCategory ) );
+			mQuizCategory = sCategory;
 		}
 		Log.v( "MPBApp-Get", sCategory ); 
 		return sCategory;
@@ -64,7 +55,27 @@ public class MPBApp extends Application {
 	
 	public void setQuizCategory( String sCategory )
 	{
-		Log.v( "MPBApp-Get", String.format("cat.s:%s ; cat.m:%s", sCategory, mCategory ) );
+		Log.v( "MPBApp-Get", String.format("cat.s:%s ; cat.m:%s", sCategory, mQuizCategory ) );
+		Log.v( "MPBApp-Set", sCategory ); 
+		set("Category", sCategory);
+	}
+	
+	String mPhrasebookCategory = null;	
+	public String getPhrasebookCategory()
+	{
+		String sCategory = get( "Category", MyPhrasebookDB.TblCategories.VAL_ALL );
+		if (! sCategory.equals( mPhrasebookCategory ) )
+		{
+			Log.v( "MPBApp-Get", String.format("cat.s:%s ; cat.m:%s", sCategory, mPhrasebookCategory ) );
+			mPhrasebookCategory = sCategory;
+		}
+		Log.v( "MPBApp-Get", sCategory ); 
+		return sCategory;
+	}
+	
+	public void setPhrasebookCategory( String sCategory )
+	{
+		Log.v( "MPBApp-Get", String.format("cat.s:%s ; cat.m:%s", sCategory, mPhrasebookCategory ) );
 		Log.v( "MPBApp-Set", sCategory ); 
 		set("Category", sCategory);
 	}
