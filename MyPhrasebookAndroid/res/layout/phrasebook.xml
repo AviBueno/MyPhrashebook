@@ -6,32 +6,42 @@ android:layout_height="fill_parent"
 android:orientation="vertical"
 xmlns:android="http://schemas.android.com/apk/res/android"
 >
-	<Spinner
+
+	<TableLayout
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:id="@+id/spinCategory"
-           />		
-	
-	<LinearLayout
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:orientation="horizontal"
+		android:stretchColumns="0"
 		>
-			<EditText
-				android:id="@+id/EditedPhrase"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_weight="1"
-				/>
+		<TableRow>
+				<Spinner
+					android:id="@+id/spinCategory"
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+			           />		
 		
-			<Button
-				android:id="@+id/BttAdd"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:text="@string/Add"
-				/>
-	</LinearLayout>
-	
+				<Button
+					android:id="@+id/BttQueryMethod"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="!"
+					/>
+		</TableRow>
+		<TableRow>
+				<EditText
+					android:id="@+id/EditedPhrase"
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					/>
+			
+				<Button
+					android:id="@+id/BttAdd"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="@string/Add"
+					/>
+		</TableRow>
+	</TableLayout>
+
 	<ListView
 		android:id="@android:id/list"
 		android:layout_width="fill_parent"

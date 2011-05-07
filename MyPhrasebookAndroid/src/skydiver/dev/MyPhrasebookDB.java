@@ -123,7 +123,6 @@ public class MyPhrasebookDB
 	private String m_dbPath;
 	private MySQLiteOpenHelper m_dataHelper;
 	private Context m_context;
-	private QueryMethod m_queryMethod = QueryMethod.Contains;
 	private HashMap<String,Long> mCatNameToCatIdMap = new HashMap<String,Long>();
 	private HashMap<String,Long> mCatTitleToCatIdMap = new HashMap<String,Long>();
 	private final String mStrCatTitleWords;
@@ -245,31 +244,16 @@ public class MyPhrasebookDB
 	    }
 	}
 	
-	public void setQueryMethod( QueryMethod queryMethod )
+	public Cursor FilterPhrasebookRows(String text, int categoryID, QueryMethod queryMethod )
 	{
-		m_queryMethod = queryMethod;
-	}
-	
-	public QueryMethod getQueryMethod()
-	{
-		return m_queryMethod;
-	}
-	
-	public Cursor FilterPhrasebookRows(String queryString, int categoryID )
-	{
-        String queryParam = "";
-        switch ( m_queryMethod )
-        {
-	        case Exact: queryParam = queryString; break;				// Exact
-	        case BeginsWith: queryParam = queryString + "%"; break;		// Begins with 
-	        case EndsWith: queryParam = "%" + queryString; break;		// Ends with 
-	        case Contains: queryParam = "%" + queryString + "%"; break;	// Contains 
-        }
-        
-        Cursor cursor = doRawQuery(
+        String queryString =
 			        		"SELECT * FROM " + TblPhrasebook.TABLE_NAME
 			        		+ " WHERE ("
-			        		+ 			"((" + MyPhrasebookDB.TblPhrasebook.LANG1 + " like '" + queryParam + "') OR (" + MyPhrasebookDB.TblPhrasebook.LANG2 + " like '" + queryParam + "'))"
+			        		+ 			"("
+			        		+ 				getQueryStringMatchQuery( MyPhrasebookDB.TblPhrasebook.LANG1, text, queryMethod )
+			        		+ 				" OR "
+			        		+ 				getQueryStringMatchQuery( MyPhrasebookDB.TblPhrasebook.LANG2, text, queryMethod )
+			        		+ 			")"
 			        		+ 			" AND " + TblPhrasebook.ID + " IN ("
 			        		+ 				"SELECT " + TblCat2Phrase.PHRASE_ID + " FROM " + TblCat2Phrase.TABLE_NAME + " WHERE ("
 			        		+ 					TblCat2Phrase.CATEGORY_ID + " = " + Integer.toString( categoryID )
@@ -277,12 +261,40 @@ public class MyPhrasebookDB
 			        		+ 			")"
 			        		+ 		")"
 			        		+ " ORDER BY " + MyPhrasebookDB.TblPhrasebook.LANG1 + " ASC"
-		        		);
+		        		;
+		
+        Cursor cursor = doRawQuery( queryString );
         
         return cursor;
 	}
 	
-	public Cursor FilterPhrasebookRows(String queryString, String categoryTitle)
+	private String getQueryStringMatchQuery( String identifier, String text, QueryMethod queryMethod )
+	{
+		String queryString = "";
+        switch ( queryMethod )
+        {
+	        case BeginsWith: queryString = identifier + " like '" + text + "%'"; break; 
+	        case EndsWith: queryString = identifier + " like '%" + text + "'"; break; 
+	        case Contains: queryString = identifier + " like '%" + text + "%'"; break;
+	        
+	        case Exact:
+	        	// Note: 	For now the way to isolate the text is by white space.
+	        	//			This is not a good solution to isolate text with special chars,
+	        	//			E.g: The string "What?" won't pass this filter: "What" because we will look for
+	        	//			either 'What' , 'What ...' , '... What' or '... What ...'
+	        	queryString =
+	        						identifier + " like '" + text + "'"			// Exact match
+   	        			+ " OR " + 	identifier + " like '" + text + " %'"		// Isolated text at the beginning of a sentence
+	        			+ " OR " + 	identifier + " like '% " + text + "'"		// Isolated text at the end of a sentence
+	        			+ " OR " + 	identifier + " like '% " + text + " %'"		// Isolated text at the middle of a sentence
+	        		;
+	        	break;
+        }
+		
+		return queryString;
+	}
+	
+	public Cursor FilterPhrasebookRows(String queryString, String categoryTitle, QueryMethod queryMethod)
 	{
         Cursor cursor = doRawQuery(
         			"SELECT " + TblCategories.ID + " FROM " + TblCategories.TABLE_NAME + " WHERE " + TblCategories.TITLE + " = '" + categoryTitle + "'"
@@ -290,7 +302,7 @@ public class MyPhrasebookDB
 
         int categoryID = getInt( cursor, TblCategories.ID );
         
-        return FilterPhrasebookRows(queryString, categoryID );
+        return FilterPhrasebookRows(queryString, categoryID, queryMethod );
 	}
 	
 	public Cursor GetPhraseRowByID( int phraseRowId )

@@ -40,11 +40,14 @@ public class PhrasebookForm extends Activity {
 	final static int CONTEXTMENU_REMOVE_PRACTICE = 2;
 	final static int CONTEXTMENU_DELETEITEM = 3;
 	
+    private static final String keyPBQueryMethod = "PBPBQueryMethod";
+	
 	List<HashMap<String, String>> m_items;
 	SimpleCursorAdapter m_itemsAdapter;
 	EditText mThePhrase;
 	ListView mPhrasesList;
 	private SpinnerData mSDCategory;
+	MyPhrasebookDB.QueryMethod m_queryMethod = MyPhrasebookDB.QueryMethod.Contains;
 	
     /** Called when the activity is first created. */
     @Override
@@ -54,9 +57,12 @@ public class PhrasebookForm extends Activity {
 	        super.onCreate(savedInstanceState);
 	        setContentView(R.layout.phrasebook);
 	        
+	        // Read query method from the app store
+	        m_queryMethod = getQueryMethod();
+	        
 	        InitCategoriesSpinner();
 	        
-			Cursor cursor = MyPhrasebookDB.Instance().FilterPhrasebookRows("", TblCategories.VAL_ALL);
+			Cursor cursor = MyPhrasebookDB.Instance().FilterPhrasebookRows("", TblCategories.VAL_ALL, m_queryMethod);
 	
 			// create the adapter and assign it to the list view
 			m_itemsAdapter = null;
@@ -115,6 +121,20 @@ public class PhrasebookForm extends Activity {
 					launchAddEditPhraseActivity( MyPhrasebookDB.INVALID_ROW_ID );
 				}
 			});
+
+			Button bttQueryMethod = (Button)findViewById(R.id.BttQueryMethod);
+			bttQueryMethod.setOnClickListener( new OnClickListener() {
+				public void onClick(View v) {
+					// Flip the value
+			    	m_queryMethod = (m_queryMethod == MyPhrasebookDB.QueryMethod.Contains) ? MyPhrasebookDB.QueryMethod.Exact : MyPhrasebookDB.QueryMethod.Contains;
+			    	setQueryMethod( m_queryMethod );
+					
+					updateTextMatchButton(); // Update the button control
+					
+					refreshList(); // And force the list to refresh according to new query method
+				}
+			});
+			updateTextMatchButton(); // Call the first time update
 			
 			// Prevent the keyboard from auto-popping-up when entering the activity.
 			this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN); 
@@ -127,6 +147,26 @@ public class PhrasebookForm extends Activity {
 			Log.d( "EXCEPTION", e.getMessage() );
 		}
 	}
+    
+	public MyPhrasebookDB.QueryMethod getQueryMethod()
+	{
+		// Get the ordinal index of the stored valud and convert to enum value
+		int nQueryMethodOrdinal = MPBApp.getInstance().get( keyPBQueryMethod, MyPhrasebookDB.QueryMethod.Contains.ordinal() );
+		MyPhrasebookDB.QueryMethod[] values = MyPhrasebookDB.QueryMethod.values();
+		return values[ nQueryMethodOrdinal ];
+	}	
+    
+	public void setQueryMethod( MyPhrasebookDB.QueryMethod queryMethod )
+	{
+		MPBApp.getInstance().set( keyPBQueryMethod, queryMethod.ordinal() );
+	}
+	
+    private void updateTextMatchButton()
+    {
+		Button bttQueryMethod = (Button)findViewById(R.id.BttQueryMethod);
+		
+    	bttQueryMethod.setText( (m_queryMethod == MyPhrasebookDB.QueryMethod.Contains) ? "!" : "*" );
+    }
 
 	private void launchAddEditPhraseActivity( long nEditedRowId )
 	{
@@ -145,7 +185,7 @@ public class PhrasebookForm extends Activity {
 	}
     
 	private void refreshList() {
-		Cursor cursor = MyPhrasebookDB.Instance().FilterPhrasebookRows( mThePhrase.getText().toString(), mSDCategory.getValue() );
+		Cursor cursor = MyPhrasebookDB.Instance().FilterPhrasebookRows( mThePhrase.getText().toString(), mSDCategory.getValue(), m_queryMethod );
 		m_itemsAdapter.changeCursor( cursor );
 	}
     
