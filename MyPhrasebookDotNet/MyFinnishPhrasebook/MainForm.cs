@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Collections;
 using System.IO;
+using MyFinnishPhrasebookNamespace.MPBDataSetTableAdaptersCustom;
 
 namespace MyFinnishPhrasebookNamespace
 {
@@ -114,6 +115,9 @@ namespace MyFinnishPhrasebookNamespace
 			nIdx += sDS.Length;
 
 			textBoxDBFilePath.Text = sTxt.Substring( nIdx ).Replace( "|DataDirectory|", AppDomain.CurrentDomain.GetData( "DataDirectory" ) as string );
+
+			string s = MyDBHelper.Instance.ExecuteScalar("select count(*) FROM Cat2Phrase");
+			s = MyDBHelper.Instance.ExecuteScalar( "SELECT max(_id) FROM Phrasebook" );
 		}
 
 		private void MainForm_Load( object sender, EventArgs e )

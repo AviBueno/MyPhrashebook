@@ -38,8 +38,8 @@
 			this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
 			this.mPBDataSet = new MyFinnishPhrasebookNamespace.MPBDataSet();
 			this.phrasebookBindingSource = new System.Windows.Forms.BindingSource( this.components );
-			this.phrasebookTableAdapter = new MyFinnishPhrasebookNamespace.MPBDataSetTableAdapters.PhrasebookTableAdapter();
-			this.tableAdapterManager = new MyFinnishPhrasebookNamespace.MPBDataSetTableAdapters.TableAdapterManager();
+			this.phrasebookTableAdapter = new MyFinnishPhrasebookNamespace.MPBDataSetTableAdaptersCustom.PhrasebookTableAdapter();
+			this.tableAdapterManager = new MyFinnishPhrasebookNamespace.MPBDataSetTableAdaptersCustom.TableAdapterManager();
 			finnishLabel = new System.Windows.Forms.Label();
 			englishLabel = new System.Windows.Forms.Label();
 			((System.ComponentModel.ISupportInitialize)(this.mPBDataSet)).BeginInit();
@@ -142,7 +142,7 @@
 			this.tableAdapterManager.Cat2PhraseTableAdapter = null;
 			this.tableAdapterManager.CategoriesTableAdapter = null;
 			this.tableAdapterManager.PhrasebookTableAdapter = this.phrasebookTableAdapter;
-			this.tableAdapterManager.UpdateOrder = MyFinnishPhrasebookNamespace.MPBDataSetTableAdapters.TableAdapterManager.UpdateOrderOption.InsertUpdateDelete;
+			this.tableAdapterManager.UpdateOrder = MyFinnishPhrasebookNamespace.MPBDataSetTableAdaptersCustom.TableAdapterManager.UpdateOrderOption.InsertUpdateDelete;
 			// 
 			// EditForm
 			// 
@@ -178,7 +178,7 @@
 		private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
 		private MPBDataSet mPBDataSet;
 		private System.Windows.Forms.BindingSource phrasebookBindingSource;
-		private MyFinnishPhrasebookNamespace.MPBDataSetTableAdapters.PhrasebookTableAdapter phrasebookTableAdapter;
-		private MyFinnishPhrasebookNamespace.MPBDataSetTableAdapters.TableAdapterManager tableAdapterManager;
+		private MyFinnishPhrasebookNamespace.MPBDataSetTableAdaptersCustom.PhrasebookTableAdapter phrasebookTableAdapter;
+		private MyFinnishPhrasebookNamespace.MPBDataSetTableAdaptersCustom.TableAdapterManager tableAdapterManager;
 	}
 }

@@ -65,6 +65,9 @@
     <Compile Include="CategoryForm.Designer.cs">
       <DependentUpon>CategoryForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="DataTableAdapters.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="FileVersion.cs" />
     <Compile Include="MPBDataSet.Designer.cs">
       <AutoGen>True</AutoGen>

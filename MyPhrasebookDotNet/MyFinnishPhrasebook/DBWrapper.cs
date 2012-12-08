@@ -24,13 +24,12 @@ namespace MyFinnishPhrasebookNamespace
 			InitializeComponent();
 			PopulateDatabase();
 
-			MyDataSet.Phrasebook._idColumn.AutoIncrement = true;
-			MyDataSet.Cat2Phrase._idColumn.AutoIncrement = true;
-			MyDataSet.Categories._idColumn.AutoIncrement = true;
+			InitIdColumn( MyDataSet.Phrasebook );
+			InitIdColumn( MyDataSet.Cat2Phrase );
+			InitIdColumn( MyDataSet.Categories );
 
 			SetDefaultColumnValues();
 
-			categoriesTableAdapter.Fill( MyDataSet.Categories );
 			ReadAndMapCategories();
 
 /*
@@ -48,8 +47,22 @@ namespace MyFinnishPhrasebookNamespace
 */
 		}
 
+		void InitIdColumn( DataTable dt )
+		{
+			int nIdColIdx = dt.Columns.IndexOf( "_id" );
+			DataColumn _id = dt.Columns[ nIdColIdx ];
+			_id.AllowDBNull = false;
+			_id.Unique = true;
+			_id.AutoIncrement = true;
+			_id.AutoIncrementSeed = -1;
+			_id.AutoIncrementStep = -1;
+			dt.PrimaryKey = new DataColumn[] { _id };
+		}
+
 		private void ReadAndMapCategories()
 		{
+			m_FilterFieldNameToQueryString.Clear();
+
 			foreach ( MPBDataSet.CategoriesRow catRow in MyDataSet.Categories )
 			{
 				// Compose the query that will be execute on the Cat2Phrase table
@@ -114,11 +127,6 @@ namespace MyFinnishPhrasebookNamespace
 			get { return MyDataSet.Cat2Phrase; }
 		}
 
-		public MPBDataSetTableAdapters.PhrasebookTableAdapter PhrasebookTableAdapter
-		{
-			get { return this.PhrasebookTableAdapter1; }
-		}
-
 		public MPBDataSet.PhrasebookRow CreateNewDataRow()
 		{
 			MPBDataSet.PhrasebookRow row = PhrasebookDataTable.NewPhrasebookRow();
@@ -137,11 +145,30 @@ namespace MyFinnishPhrasebookNamespace
 
 		public bool InsertRow( RowWithCategoryInfo rwci )
 		{
-			PhrasebookDataTable.AddPhrasebookRow( rwci.Row );
+			bool updated = false;
+			try
+			{
+//				MPBDataSet.PhrasebookRow newRow = PhrasebookDataTable.AddPhrasebookRow( rwci.Row._english, rwci.Row._language );
+				string _english = rwci.Row._english;
+				string _language = rwci.Row._language;
 
-			UpdateRow( rwci );
+				rwci.Row._id = this.phrasebookTableAdapter.Insert( rwci.Row._english, rwci.Row._language );
+				this.phrasebookTableAdapter.Update( MyDataSet );
+				CommitChanges();
 
-			return true;
+//				newRow = PhrasebookDataTable.Select( string.Format( "_english LIKE '{0}' AND _language LIKE '{1}'", _english, _language ) )[ 0 ] as MPBDataSet.PhrasebookRow;
+//				RowWithCategoryInfo newRWCI = new RowWithCategoryInfo( newRow );
+
+//				UpdateRow( newRWCI );
+				UpdateRow( rwci );
+
+				updated = true;
+			}
+			catch (System.Exception ex)
+			{				
+			}
+
+			return updated;
 		}
 
 		public void UpdateRow( RowWithCategoryInfo rwci )
@@ -155,27 +182,34 @@ namespace MyFinnishPhrasebookNamespace
 			{
 				if ( kvp.Value == true )
 				{
-					MPBDataSet.Cat2PhraseRow c2pRow = MyDataSet.Cat2Phrase.NewCat2PhraseRow();
-					c2pRow._catID = kvp.Key;
-					c2pRow._phraseID = rwci.Row._id;
-					MyDataSet.Cat2Phrase.AddCat2PhraseRow( c2pRow );
+					long _catID = kvp.Key;
+					long _phraseID = rwci.Row._id;
+					cat2PhraseTableAdapter.Insert( _catID, _phraseID );
 				}
 			}
 			
 			// Now update the database with any changes that occurred on rwci.Row
+			this.cat2PhraseTableAdapter.Update( MyDataSet );
 			CommitChanges();
+
+			DataRow[] c2pRows = MyDataSet.Cat2Phrase.Select( "_phraseID = 0" );
+			DataRow[] categories = DBWrapper.Instance.Cat2PhraseDataTable.Select( string.Format( "_phraseID = {0}", rwci.Row._id ) );
 		}
 
 		private void DeleteRowFromCat2Phrase( MPBDataSet.PhrasebookRow phrasebookRow )
 		{
 			// Clear prev. data
 			DataRow[] c2pRows = MyDataSet.Cat2Phrase.Select( string.Format( "_phraseID = {0}", phrasebookRow._id ) );
-			foreach ( DataRow row in c2pRows )
+			if ( c2pRows.Length > 0 )
 			{
-				row.Delete();
-			}
+				foreach ( DataRow row in c2pRows )
+				{
+					row.Delete();
+				}
 
-			CommitChanges();
+				this.cat2PhraseTableAdapter.Update( MyDataSet );
+				CommitChanges();
+			}
 		}
 
 		public void DeleteRowAt( MPBDataSet.PhrasebookRow dataRow )
@@ -183,15 +217,20 @@ namespace MyFinnishPhrasebookNamespace
 			DeleteRowFromCat2Phrase( dataRow );
 			dataRow.Delete();
 
-			CommitChanges();
+			this.phrasebookTableAdapter.Update( MyDataSet ); CommitChanges();
 		}
 
 		public void CommitChanges()
 		{
-			this.tableAdapterManager1.UpdateAll( MyDataSet );
-			this.PhrasebookTableAdapter1.Update( MyDataSet );
+/*
+//			PopulateDatabase();
+			this.phrasebookTableAdapter.Update( MyDataSet );
 			this.cat2PhraseTableAdapter.Update( MyDataSet );
 			this.categoriesTableAdapter.Update( MyDataSet );
+*/
+
+			this.tableAdapterManager.UpdateAll( MyDataSet );
+			MyDataSet.AcceptChanges();
 		}
 
 		public MPBDataSet.PhrasebookRow GetPhraseRowByID( long id )
@@ -253,8 +292,11 @@ namespace MyFinnishPhrasebookNamespace
 		
 		public void PopulateDatabase()
 		{
-			PhrasebookTableAdapter.Fill( PhrasebookDataTable );
+			phrasebookTableAdapter.Fill( PhrasebookDataTable );
 			this.cat2PhraseTableAdapter.Fill( MyDataSet.Cat2Phrase );
+
+			categoriesTableAdapter.Fill( MyDataSet.Categories );
+			ReadAndMapCategories();
 		}
 
 		public class RowWithCategoryInfo
@@ -288,18 +330,15 @@ namespace MyFinnishPhrasebookNamespace
 		{
 			try
 			{
-				MPBDataSet.CategoriesRow row = MPBDataSet1.Categories.NewCategoriesRow();
-				row._name = newCategoryName;
-				row._title = title;
-				MyDataSet.Categories.AddCategoriesRow( row );
-
+				this.categoriesTableAdapter.Insert( newCategoryName, title );
+				this.categoriesTableAdapter.Update( MyDataSet );
 				CommitChanges();
 
 				ReadAndMapCategories();	// Remap categories
 
 				return true;
 			}
-			catch (System.Exception)
+			catch (System.Exception e)
 			{				
 			}
 
