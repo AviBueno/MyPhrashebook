@@ -11,10 +11,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity android:name=".PhrasebookForm" />
         <activity android:name=".QuizForm" />
-	    <activity android:name=".AddEditPhraseForm" />
+	    <activity android:name=".AddEditPhraseForm" />	    
 </application>
 	
 <uses-sdk android:minSdkVersion="4" />
