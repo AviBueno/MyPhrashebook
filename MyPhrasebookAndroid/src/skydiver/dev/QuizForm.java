@@ -195,17 +195,17 @@ public class QuizForm extends Activity
 		{
 			mQuestionIsInLang1 = MPBApp.RNG().nextBoolean();
 		}
+
+		int nCat2PhraseRows = mCat2PhraseRows.getCount();
 		
 		// Reset the already used question rows in case no rows are left to choose from.
-		if ( mAlreadyUsedQuestionRows.size() >= mCat2PhraseRows.getCount() )
+		if ( mAlreadyUsedQuestionRows.size() >= nCat2PhraseRows )
 		{
 			mAlreadyUsedQuestionRows.clear();
 		}
 
 		// Find a question/answer row that was not yet used during
-		// the lifetime of this form
-		int nCat2PhraseRows = mCat2PhraseRows.getCount();
-		
+		// the lifetime of this form		
 		if ( bDrawNewQuestion )
 		{
 			// nLastQuestionRowIdx will be used to make sure we don't re-select the 
@@ -214,6 +214,7 @@ public class QuizForm extends Activity
 			int nLastQuestionRowIdx = mQuestionRowIdx; 
 			do
 			{
+				//Log.v("MPBApp-Quiz", String.format("Number of rows in category: %i", nCat2PhraseRows));
 				mQuestionRowIdx = MPBApp.RNG().nextInt( nCat2PhraseRows );
 			} while ( mAlreadyUsedQuestionRows.contains( mQuestionRowIdx ) || (mQuestionRowIdx == nLastQuestionRowIdx) );
 		}
@@ -578,7 +579,7 @@ public class QuizForm extends Activity
 	   
 		return super.onMenuItemSelected(featureId, item);
 	}
-	
+
 	class QuizLevelData
 	{
 		public QuizLevelData( String text, int nAnswers )
