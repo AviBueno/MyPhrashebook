@@ -10,6 +10,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -17,6 +18,7 @@ import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.KeyEvent;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnCreateContextMenuListener;
@@ -105,7 +107,8 @@ public class PhrasebookForm extends Activity {
 					
 					
 			// Hook the EditText's text-changed event handler
-			mThePhrase = (EditText) findViewById(R.id.EditedPhrase);
+			ClearableEditText cet = (ClearableEditText) findViewById(R.id.EditedPhrase);
+			mThePhrase = cet.edit_text;
 			mThePhrase.requestFocus();
 			mThePhrase.addTextChangedListener(new TextWatcher(){
 		        public void afterTextChanged(Editable s) {}
@@ -140,7 +143,7 @@ public class PhrasebookForm extends Activity {
 			this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN); 
 			
 			// Refresh the list (will filter according to mSDCategory)
-			refreshList();  
+			refreshList();
 		}
 		catch ( Exception e )
 		{

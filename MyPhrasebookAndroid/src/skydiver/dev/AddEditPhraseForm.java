@@ -42,8 +42,11 @@ public class AddEditPhraseForm extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_edit_phrase);
 
-        mTxtViewLang1 = (EditText)findViewById(R.id.txtLang1);
-        mTxtViewLang2 = (EditText)findViewById(R.id.txtLang2);
+        ClearableEditText cet = (ClearableEditText)findViewById(R.id.txtLang1);
+        mTxtViewLang1 = cet.edit_text;
+
+        cet = (ClearableEditText)findViewById(R.id.txtLang2);
+        mTxtViewLang2 = cet.edit_text;
         
         // 2011-02-12: When typing text that is wider than the visible text area, the text control widens up to the
         // until it reaches the width of the whole screen. The problem is that by doing so it exceeded the screen area.

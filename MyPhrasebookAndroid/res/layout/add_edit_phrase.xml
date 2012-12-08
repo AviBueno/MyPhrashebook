@@ -9,7 +9,7 @@
 	<TableLayout 
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
-	    android:stretchColumns="2"
+	    android:shrinkColumns="2"
 	    >
 
 	    <TableRow>
@@ -23,7 +23,7 @@
 			  	android:text=":"
 				/>
 	
-			<EditText
+			<skydiver.dev.ClearableEditText
 			  	android:id="@+id/txtLang1"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
@@ -41,7 +41,7 @@
 			  	android:text=":"
 				/>
 	
-			<EditText
+			<skydiver.dev.ClearableEditText
 			  	android:id="@+id/txtLang2"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"

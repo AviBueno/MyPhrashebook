@@ -7,10 +7,18 @@ android:orientation="vertical"
 xmlns:android="http://schemas.android.com/apk/res/android"
 >
 
+    <!--
+    Note that both stretchColumns and shrinkColumns are
+    used int the table layout. This is done in order to ensure
+    that the text box is stretched to the width of the screen
+    but when the text line is longer, the controls won't
+    exceed the width of the screen.
+    -->
 	<TableLayout
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		android:stretchColumns="0"
+		android:shrinkColumns="0"
 		>
 		<TableRow>
 				<Spinner
@@ -27,7 +35,7 @@ xmlns:android="http://schemas.android.com/apk/res/android"
 					/>
 		</TableRow>
 		<TableRow>
-				<EditText
+				<skydiver.dev.ClearableEditText
 					android:id="@+id/EditedPhrase"
 					android:layout_width="fill_parent"
 					android:layout_height="wrap_content"
@@ -41,12 +49,11 @@ xmlns:android="http://schemas.android.com/apk/res/android"
 					/>
 		</TableRow>
 	</TableLayout>
-
+	
 	<ListView
 		android:id="@android:id/list"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:layout_alignParentLeft="true"
 		/>
 
 </LinearLayout>
