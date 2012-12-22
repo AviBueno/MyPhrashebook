@@ -165,7 +165,8 @@ namespace MyFinnishPhrasebookNamespace
 				updated = true;
 			}
 			catch (System.Exception ex)
-			{				
+			{
+				MessageBox.Show( ex.Message );
 			}
 
 			return updated;
@@ -339,7 +340,8 @@ namespace MyFinnishPhrasebookNamespace
 				return true;
 			}
 			catch (System.Exception e)
-			{				
+			{
+				MessageBox.Show( e.Message );
 			}
 
 			return false;
