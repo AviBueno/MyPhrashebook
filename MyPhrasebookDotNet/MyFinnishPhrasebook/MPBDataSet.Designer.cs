@@ -1551,7 +1551,7 @@ namespace MyFinnishPhrasebookNamespace.MPBDataSetTableAdapters {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         private void InitConnection() {
             this._connection = new global::System.Data.SQLite.SQLiteConnection();
-            this._connection.ConnectionString = global::MyFinnishPhrasebookNamespace.Properties.Settings.Default.mpbConnectionString3;
+            this._connection.ConnectionString = global::MyFinnishPhrasebookNamespace.Properties.Settings.Default.MPBConnectionString;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1877,7 +1877,7 @@ namespace MyFinnishPhrasebookNamespace.MPBDataSetTableAdapters {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         private void InitConnection() {
             this._connection = new global::System.Data.SQLite.SQLiteConnection();
-            this._connection.ConnectionString = global::MyFinnishPhrasebookNamespace.Properties.Settings.Default.mpbConnectionString3;
+			this._connection.ConnectionString = global::MyFinnishPhrasebookNamespace.Properties.Settings.Default.MPBConnectionString;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -2245,7 +2245,7 @@ namespace MyFinnishPhrasebookNamespace.MPBDataSetTableAdapters {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         private void InitConnection() {
             this._connection = new global::System.Data.SQLite.SQLiteConnection();
-            this._connection.ConnectionString = global::MyFinnishPhrasebookNamespace.Properties.Settings.Default.mpbConnectionString3;
+			this._connection.ConnectionString = global::MyFinnishPhrasebookNamespace.Properties.Settings.Default.MPBConnectionString;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
