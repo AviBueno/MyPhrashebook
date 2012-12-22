@@ -102,3 +102,24 @@ select count(*) from Cat2Phrase where _id in (
 	)
 	ORDER BY _english ASC
 
+# Insert all words into a category if they are not already part of that category
+# In the following example, we are inserting into category 22 (Adverb)
+# Note 1: The words list is the same in both Sub SELECT clauses
+# Note 2: Tthe category ID 22 is repeated at the end of the SELECT clause
+	INSERT INTO Cat2Phrase (_phraseID, _catID)
+			SELECT DISTINCT(_phraseID), 22 FROM Cat2Phrase
+				WHERE (
+					_phraseID IN (
+								SELECT _id FROM Phrasebook WHERE _language IN
+									('aivan', 'aivan', 'eilen', 'ihan', 'ihan', 'melko', 'tietysti', 'tietysti', 'joko', 'nopeammin', 'nopeasti', 'mahdollisesti', 'jonnekin', 'taas', 'jo', 'muuten', 'todellakin', 'varmasti', 'kiitettävästi', 'ehkä', 'koskaan', 'tasan', 'ensin', 'toivottavasti', 'heti', 'myöhemmin', 'nyt', 'hitaasti', 'joskus', 'anteeksi', 'siellä', 'tänään', 'valitettavasti', 'ylös', 'kyllä', 'hitaammin', 'alhaalla', 'ylhäällä', 'alas', 'täydellisesti', 'ylihuomenna', 'toissapäivänä', 'aikaisemmin', 'yhtään', 'naimisissa', 'enää', 'vain', 'ainoastaan', 'luultavasti', 'nukuksissa', 'myöhään', 'lopullisesti', 'melkein', 'automaattisesti', 'siis', 'täällä', 'ainakin', 'ulkona', 'auki', 'kai')
+							)
+					AND
+					_phraseID NOT IN (
+						SELECT _phraseID FROM Cat2Phrase
+							WHERE 
+							( _phraseID IN (
+								SELECT _id FROM Phrasebook WHERE _language IN
+									('aivan', 'aivan', 'eilen', 'ihan', 'ihan', 'melko', 'tietysti', 'tietysti', 'joko', 'nopeammin', 'nopeasti', 'mahdollisesti', 'jonnekin', 'taas', 'jo', 'muuten', 'todellakin', 'varmasti', 'kiitettävästi', 'ehkä', 'koskaan', 'tasan', 'ensin', 'toivottavasti', 'heti', 'myöhemmin', 'nyt', 'hitaasti', 'joskus', 'anteeksi', 'siellä', 'tänään', 'valitettavasti', 'ylös', 'kyllä', 'hitaammin', 'alhaalla', 'ylhäällä', 'alas', 'täydellisesti', 'ylihuomenna', 'toissapäivänä', 'aikaisemmin', 'yhtään', 'naimisissa', 'enää', 'vain', 'ainoastaan', 'luultavasti', 'nukuksissa', 'myöhään', 'lopullisesti', 'melkein', 'automaattisesti', 'siis', 'täällä', 'ainakin', 'ulkona', 'auki', 'kai')
+							) AND (_catID = 22) )
+					)
+				)

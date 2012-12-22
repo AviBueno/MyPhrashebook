@@ -10,6 +10,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 
+/**
+ * EditText wrapper with an X button to clear all text at once.
+ * Based on http://arunbadole1209.wordpress.com/2011/12/16/how-to-create-edittext-with-crossx-button-at-end-of-it/
+ */
 public class ClearableEditText extends RelativeLayout {
 	LayoutInflater inflater = null;
 	EditText edit_text;
