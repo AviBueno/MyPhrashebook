@@ -1,8 +1,13 @@
-IF "%1"=="" goto ERROR
-sqlite3 %1 .dump > %1.txt
-GOTO END
+IF "%1"=="" goto DEFAULT_DB
+set MPB_DB=%1
+goto CONT
 
-:ERROR
-echo Pleaes enter filename
+:DEFAULT_DB
+set MPB_DB=mpb.db
+goto CONT
+
+:CONT
+sqlite3 %MPB_DB% .dump > %MPB_DB%.txt
+GOTO END
 
 :END
