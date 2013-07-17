@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using System.Collections;
 using System.IO;
 using MyFinnishPhrasebookNamespace.MPBDataSetTableAdaptersCustom;
+using System.Text.RegularExpressions;
 
 namespace MyFinnishPhrasebookNamespace
 {
@@ -248,6 +249,8 @@ namespace MyFinnishPhrasebookNamespace
 			string filterQuery = "";
 
 			string sSearchText = SearchTextBox.Text.Trim();
+			Regex illegalCharsPattern = new Regex( @"[\[\]]" );
+			sSearchText = illegalCharsPattern.Replace( sSearchText, "" );
 			if ( !string.IsNullOrEmpty( sSearchText ) )
 			{
 				sSearchText = sSearchText.Replace( "'", "''" );	// Overcome ending apostrophe issue
