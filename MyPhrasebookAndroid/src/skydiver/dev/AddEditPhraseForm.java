@@ -21,7 +21,7 @@ public class AddEditPhraseForm extends Activity {
 
 	public static final String IPARAM_DB_ROW_ID = "id";
 	public static final String IPARAM_LANG1_TEXT = "L1";
-	public static final String IPARAM_LANG2_TEXT = "L1";
+	public static final String IPARAM_LANG2_TEXT = "L2";
 	
 	static final int DLG_CATEGORIES = 0;
 	static final int DLG_NO_CATEGORY_SELECTED = 1;
