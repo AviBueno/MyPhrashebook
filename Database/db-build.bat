@@ -8,7 +8,7 @@ goto CONT
 
 :CONT
 IF EXIST %MPB_DB% del /q %MPB_DB%
-sqlite3 %MPB_DB% < %MPB_DB%.txt
+sqlite3 %MPB_DB% < %MPB_DB%.sql
 GOTO END
 
 :END

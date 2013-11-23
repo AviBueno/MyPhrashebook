@@ -7,7 +7,7 @@ set MPB_DB=mpb.db
 goto CONT
 
 :CONT
-sqlite3 %MPB_DB% .dump > %MPB_DB%.txt
+sqlite3 %MPB_DB% .dump > %MPB_DB%.sql
 GOTO END
 
 :END
