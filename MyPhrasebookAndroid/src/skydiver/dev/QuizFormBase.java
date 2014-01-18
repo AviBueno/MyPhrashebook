@@ -313,17 +313,7 @@ public abstract class QuizFormBase extends Activity
 						long id)
 				{
 					SpinnerData sd = (SpinnerData)parent.getAdapter().getItem( position );
-					if ( sd == mSDCategory )
-					{
-						return;
-					}
-
-					// Save the category
-					mSDCategory = sd;
-					String sCategory = sd.getValue();					
-					mMpbApp.setQuizCategory(sCategory);
-					
-					LoadQuestions( true );
+					changeCategory( sd );
 				}
 
 				public void onNothingSelected(AdapterView<?> parent) {
@@ -340,6 +330,23 @@ public abstract class QuizFormBase extends Activity
 			// In order to overcome this (android bug?), we use setSelection(int position, boolean animate).
 			spinner.setSelection(nSelPos, true);
 		}
+	}
+
+	protected void onCategoryChanged() {}
+
+	private void changeCategory(SpinnerData sd) {
+		if ( sd == mSDCategory ) {
+			return;
+		}
+		
+		// Save the category
+		mSDCategory = sd;
+		String sCategory = sd.getValue();
+		mMpbApp.setQuizCategory(sCategory);
+		
+		LoadQuestions( true );
+		
+		onCategoryChanged(); // Allow derived classes to perform additional tasks
 	}
 
 	private void InitLanguageSpinner()
@@ -363,16 +370,7 @@ public abstract class QuizFormBase extends Activity
 						long id)
 				{
 					SpinnerData sd = (SpinnerData)parent.getAdapter().getItem( position );
-					if ( sd == mSDLanguage )
-					{
-						return;
-					}
-
-					mSDLanguage = sd;
-					mQuestionLanguage = sd.getValue();
-					mMpbApp.setQuizLanguage(mQuestionLanguage);
-
-					DrawQuestion( false );
+					changeLanguage( sd );
 				}
 
 				public void onNothingSelected(AdapterView<?> parent) {
@@ -404,6 +402,23 @@ public abstract class QuizFormBase extends Activity
 			// In order to overcome this (android bug?), we use setSelection(int position, boolean animate).
 			spinner.setSelection(nSelPos, true); 
 		}
+	}
+
+	protected void onLanguageChange() {}
+	
+	private void changeLanguage(SpinnerData sd) {
+		if ( sd == mSDLanguage )
+		{
+			return;
+		}
+
+		mSDLanguage = sd;
+		mQuestionLanguage = sd.getValue();
+		mMpbApp.setQuizLanguage(mQuestionLanguage);
+
+		DrawQuestion( false );
+		
+		onLanguageChange(); // Allow derived classes to perform additional tasks
 	}
 	
 	private void LoadQuestions( boolean bReset )

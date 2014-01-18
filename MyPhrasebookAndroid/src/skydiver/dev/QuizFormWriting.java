@@ -80,14 +80,26 @@ public class QuizFormWriting extends QuizFormBase
 				    },
 				    500 // msec delay
 				);
+		
+		setFocusToEditText();
 	}
 	
+	/**
+	 * Return false if there are no questions to answer.
+	 * This will prevent the base class from drawing a question.
+	 */
 	@Override
 	protected boolean onPreDrawQuestion() {
 		int nQuestions = getCat2PhraseRows().getCount();
 		return nQuestions > 0;
-	}	
+	}
 
+	/**
+	 * Check if the given answer if correct.
+	 * This implementation is case insensitive and ignores any special chars.
+	 *  at the end of the correct answer.
+	 *  E.g." "who" will be considered a valid answer to the term "Who?" 
+	 */
 	@Override
 	protected boolean checkAnswer(String userAnswer, String realAnswer, Locale answerLocale) {
 		// Chop the answer at the first non-alphanumeric char (if any) in order
@@ -102,5 +114,27 @@ public class QuizFormWriting extends QuizFormBase
 		
 		boolean result = userAnswer.toLowerCase(answerLocale).equals( realAnswer.toLowerCase(answerLocale) );
 		return result;
+	}
+	
+	@Override
+	protected void onCategoryChanged() {
+		super.onCategoryChanged();
+		setFocusToEditText();
+	}
+	
+	@Override
+	protected void onLanguageChange() {
+		super.onLanguageChange();
+		setFocusToEditText();
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		setFocusToEditText();
+	}
+
+	public void setFocusToEditText() {
+		mWrittenAnswer.requestFocus();
 	}
 }
