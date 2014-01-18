@@ -7,6 +7,7 @@ import java.util.Random;
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.util.Log;
+import android.view.Gravity;
 import android.widget.Toast;
 
 public class MPBApp extends Application {
@@ -181,24 +182,31 @@ public class MPBApp extends Application {
 		prefsEditor.clear();
 		prefsEditor.commit();
 	}
+
+	private void ShowToast( String text, boolean shortToast )
+	{
+        Toast toast = Toast.makeText(this, text, shortToast ? Toast.LENGTH_SHORT : Toast.LENGTH_LONG );
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.show();
+	}
 	
 	public void ShortToast( String text )
 	{
-        Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
+		ShowToast(text, true);
 	}
 	
 	public void ShortToast( int stringResourceId )
 	{
-        Toast.makeText(this, stringResourceId, Toast.LENGTH_SHORT).show();
+		ShowToast(getString(stringResourceId), true);
 	}
 	
 	public void LongToast( String text )
 	{
-        Toast.makeText(this, text, Toast.LENGTH_LONG).show();
+		ShowToast(text, false);
 	}
 	
 	public void LongToast( int stringResourceId )
 	{
-        Toast.makeText(this, stringResourceId, Toast.LENGTH_LONG).show();
+		ShowToast(getString(stringResourceId), false);
 	}
 }
