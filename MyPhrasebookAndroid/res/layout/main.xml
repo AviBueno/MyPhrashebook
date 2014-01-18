@@ -27,10 +27,19 @@
 		/>
 	
 	<Button
-		android:id="@+id/QuizButton"
+		android:id="@+id/QuizButtonMultiChoice"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:text="@string/Quiz"
+		android:text="@string/QuizMultiChoice"
+		android:textSize="20sp"
+		android:layout_weight="1"
+		/>
+	
+	<Button
+		android:id="@+id/QuizButtonWriting"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:text="@string/QuizWriting"
 		android:textSize="20sp"
 		android:layout_weight="1"
 		/>

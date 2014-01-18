@@ -14,7 +14,8 @@
 	<string name="GuessingOn">Turn Guessing On</string>
 	<string name="GuessingOff">Turn Guessing Off</string>
 	<string name="Phrasebook">Phrasebook</string>
-	<string name="Quiz">Quiz</string>
+	<string name="QuizMultiChoice">Multi Choice Quiz</string>
+	<string name="QuizWriting">Writing Quiz</string>
 	<string name="Maintenance">Maintenance</string>			
 	<string name="SelectCategories">Select Categories</string>			
 	<string name="Add">Add</string>
@@ -29,6 +30,8 @@
 	<string name="QuizLevelEasy">Easy</string>
 	<string name="QuizLevelMedium">Medium</string>
 	<string name="QuizLevelHard">Hard</string><string name="PBMenuEditItem">Edit</string><string name="PBMenuDeleteItem">Delete</string><string name="PBMenuAddToPractice">Add to practice</string>
+	<string name="Pass">Pass</string>
+	<string name="NoRelevantQuestionsFound">No relevant questions found</string>
 	
 	<string name="PBMenuRemoveFromPractice">Remove from practice</string>
 	
