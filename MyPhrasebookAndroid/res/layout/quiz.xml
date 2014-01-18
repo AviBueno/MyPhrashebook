@@ -9,42 +9,35 @@ android:orientation="vertical"
 
 	<TableLayout 
 		android:id="@+id/panelSpinners"
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
 		android:layout_weight="0"
-	    android:stretchColumns="1"
-	    >
+		android:stretchColumns="1"
+		>
 	
-	    <TableRow>
-	        <TextView
-	            android:text="@string/CategorySpinTitle"
-	            android:layout_column="1"
-		    />
-	        <TextView
-	            android:text="@string/LanguageSpinTitle"
-	            />
-	    </TableRow>
+		<TableRow>
+			<TextView
+				android:text="@string/CategorySpinTitle"
+				android:layout_column="1"
+			/>
+			<TextView
+				android:text="@string/LanguageSpinTitle"
+				/>
+		</TableRow>
 	
-	    <TableRow>
+		<TableRow>
 			<Spinner
 				android:id="@+id/spinCategory"
-	            android:layout_column="1"
-	            />
+				android:layout_column="1"
+				/>
 			<Spinner
 				android:id="@+id/spinLanguage"
-	            />
-	    </TableRow>
+				/>
+		</TableRow>
 	
 	</TableLayout>
 	
-	<LinearLayout
-	android:id="@+id/panelMain"
-	android:layout_width="fill_parent"
-	android:layout_height="wrap_content"
-	android:orientation="vertical"
-	android:layout_weight="1"
-	>
-		<TextView
+	<TextView
 		android:id="@+id/txtQuestion"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
@@ -56,30 +49,86 @@ android:orientation="vertical"
 		android:paddingBottom="5px"
 		/>
 
-		<LinearLayout
-		android:id="@+id/panelAnswerButtons"
+	<ViewFlipper
+		android:id="@+id/viewFlipper"
 		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:orientation="vertical"
+		android:layout_height="fill_parent"
 		android:layout_weight="1"
 		>
-			<!-- Dynamic button resources will be embedded here -->	
+		
+		<!-- Multi-Choice Quiz -->
+		<LinearLayout
+			android:layout_width="fill_parent"
+			android:layout_height="fill_parent"
+			android:orientation="vertical"
+			>
+			
+			<LinearLayout
+				android:id="@+id/panelAnswerButtons"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:orientation="vertical"
+				android:layout_weight="1"
+				>
+				<!-- Dynamic button resources will be embedded here -->	
+			</LinearLayout>
+			
+			<ImageButton
+				android:id="@+id/bttRevealAnswer"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:layout_weight="1"
+				android:src="@drawable/question_mark"
+			/>
 		</LinearLayout>
 		
-		<ImageButton
-			android:id="@+id/bttRevealAnswer"
+		<!-- Writing Quiz -->
+		<LinearLayout
 			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			android:layout_weight="1"
-	   		android:src="@drawable/question_mark"
-		/>
-		
-	</LinearLayout>
+			android:layout_height="fill_parent"
+			android:orientation="vertical"
+			>
+			
+			<skydiver.dev.ClearableEditText
+				android:id="@+id/writtenAnswer"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:inputType="text"
+				android:focusable="true"
+				android:focusableInTouchMode="true"
+				/>
+			
+			<LinearLayout
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:orientation="horizontal"
+				>
+				
+				<Button
+					android:id="@+id/bttSubmit"
+					android:layout_width="0px"
+					android:layout_weight="3"
+					android:layout_height="wrap_content"
+					android:text="@string/OK"
+					/>
+				
+				<Button
+					android:id="@+id/bttPass"
+					android:layout_width="0px"
+					android:layout_weight="1"
+					android:layout_height="wrap_content"
+					android:text="@string/Pass"
+					/>
+				
+			</LinearLayout>
+			
+		</LinearLayout>
 
+	</ViewFlipper>
+	
 	<RelativeLayout
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:layout_weight="0"
 		>
 		
 		<TextView
@@ -99,6 +148,7 @@ android:orientation="vertical"
 		android:text="100%"
 		android:gravity="right"
 		/>
+		
 	</RelativeLayout>
 	
 </LinearLayout>

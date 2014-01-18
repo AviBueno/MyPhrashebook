@@ -25,10 +25,18 @@ public class MainForm extends Activity {
 			}
 		});
         
-        Button quizBtt = (Button)findViewById(R.id.QuizButton);
+        Button quizBtt = (Button)findViewById(R.id.QuizButtonMultiChoice);
         quizBtt.setOnClickListener( new OnClickListener() {
 			public void onClick(View v) {
-				Intent i = new Intent(MainForm.this.getApplicationContext(), QuizForm.class);
+				Intent i = new Intent(MainForm.this.getApplicationContext(), QuizFormMultiChoice.class);
+				startActivity(i);
+			}
+		});
+
+        quizBtt = (Button)findViewById(R.id.QuizButtonWriting);
+        quizBtt.setOnClickListener( new OnClickListener() {
+			public void onClick(View v) {
+				Intent i = new Intent(MainForm.this.getApplicationContext(), QuizFormWriting.class);
 				startActivity(i);
 			}
 		});
