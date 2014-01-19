@@ -74,7 +74,7 @@ public class QuizFormWriting extends QuizFormBase
 				    new Runnable() {
 				        public void run() {
 				            InputMethodManager inputMethodManager =  (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
-				            inputMethodManager.toggleSoftInputFromWindow(mWrittenAnswer.getApplicationWindowToken(), InputMethodManager.SHOW_FORCED, 0);
+				            inputMethodManager.toggleSoftInputFromWindow(mWrittenAnswer.getApplicationWindowToken(), InputMethodManager.SHOW_IMPLICIT, 0);
 				            mWrittenAnswer.requestFocus();
 				        }
 				    },
