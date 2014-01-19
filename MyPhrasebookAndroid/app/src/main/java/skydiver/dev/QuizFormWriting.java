@@ -68,20 +68,9 @@ public class QuizFormWriting extends QuizFormBase
 			}
 		});
 		
-		// In order to ensure the keyboard will pop up, we'll do it as a post event after a small delay 
-		Handler handler = new Handler();
-		handler.postDelayed(
-				    new Runnable() {
-				        public void run() {
-				            InputMethodManager inputMethodManager =  (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
-				            inputMethodManager.toggleSoftInputFromWindow(mWrittenAnswer.getApplicationWindowToken(), InputMethodManager.SHOW_IMPLICIT, 0);
-				            mWrittenAnswer.requestFocus();
-				        }
-				    },
-				    500 // msec delay
-				);
-		
 		setFocusToEditText();
+
+		popupKeyboard( mWrittenAnswer );
 	}
 	
 	/**
