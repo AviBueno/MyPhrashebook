@@ -1,19 +1,23 @@
 package skydiver.dev;
 
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Random;
 
-import skydiver.dev.QuizForm.QuizLevel;
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.util.Log;
+import android.view.Gravity;
 import android.widget.Toast;
 
 public class MPBApp extends Application {
 	public static final String keyQUIZ_LEVEL = "QuizLevel";
 	public static final String keyQUIZ_CATEGORY = "QuizCategory";
 	public static final String keyPHRASEBOOK_CATEGORY = "PhrasebookCategory";
-	public static final String keyLANGUAGE = "Language";	
+	public static final String keyLANGUAGE = "Language";
+
+	public static final Locale LANG1_LOCALE = new Locale("en");
+	public static final Locale LANG2_LOCALE = new Locale("fi");
 
 	private static MPBApp mInstance = null;
 	public MPBApp()
@@ -32,14 +36,14 @@ public class MPBApp extends Application {
 	static private Random smRandom = new Random();
 	public static Random RNG() { return smRandom; }
 	
-	public QuizLevel getQuizLevel( QuizLevel defaultQuizLevel )
+	public QuizFormMultiChoice.QuizLevel getQuizLevel( QuizFormMultiChoice.QuizLevel defaultQuizLevel )
 	{
 		int nQL = get( keyQUIZ_LEVEL, defaultQuizLevel.ordinal() );
-		QuizLevel ql = QuizLevel.values()[nQL];		
+		QuizFormMultiChoice.QuizLevel ql = QuizFormMultiChoice.QuizLevel.values()[nQL];		
 		return ql;
 	}
 
-	public void setQuizLevel( QuizLevel ql )
+	public void setQuizLevel( QuizFormMultiChoice.QuizLevel ql )
 	{
 		set( keyQUIZ_LEVEL, ql.ordinal() );
 	}
@@ -86,7 +90,7 @@ public class MPBApp extends Application {
 	
 	public String getQuizLanguage()
 	{
-		String sLanguage = get(keyLANGUAGE, QuizForm.LANG_ANY);
+		String sLanguage = get(keyLANGUAGE, QuizFormBase.LANG_ANY);
 		return sLanguage;
 	}
 	
@@ -178,24 +182,31 @@ public class MPBApp extends Application {
 		prefsEditor.clear();
 		prefsEditor.commit();
 	}
+
+	private void ShowToast( String text, boolean shortToast )
+	{
+        Toast toast = Toast.makeText(this, text, shortToast ? Toast.LENGTH_SHORT : Toast.LENGTH_LONG );
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.show();
+	}
 	
 	public void ShortToast( String text )
 	{
-        Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
+		ShowToast(text, true);
 	}
 	
 	public void ShortToast( int stringResourceId )
 	{
-        Toast.makeText(this, stringResourceId, Toast.LENGTH_SHORT).show();
+		ShowToast(getString(stringResourceId), true);
 	}
 	
 	public void LongToast( String text )
 	{
-        Toast.makeText(this, text, Toast.LENGTH_LONG).show();
+		ShowToast(text, false);
 	}
 	
 	public void LongToast( int stringResourceId )
 	{
-        Toast.makeText(this, stringResourceId, Toast.LENGTH_LONG).show();
+		ShowToast(getString(stringResourceId), false);
 	}
 }

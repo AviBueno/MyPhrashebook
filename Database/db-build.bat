@@ -1,9 +1,14 @@
-IF "%1"=="" goto ERROR
-IF EXIST %1 del /q %1
-sqlite3 %1 < %1.txt
-GOTO END
+IF "%1"=="" goto DEFAULT_DB
+set MPB_DB=%1
+goto CONT
 
-:ERROR
-echo Pleaes enter filename
+:DEFAULT_DB
+set MPB_DB=mpb.db
+goto CONT
+
+:CONT
+IF EXIST %MPB_DB% del /q %MPB_DB%
+sqlite3 %MPB_DB% < %MPB_DB%.sql
+GOTO END
 
 :END
