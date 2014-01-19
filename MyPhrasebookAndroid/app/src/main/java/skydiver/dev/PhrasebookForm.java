@@ -6,11 +6,9 @@ import java.util.List;
 import java.util.Set;
 
 import skydiver.dev.MyPhrasebookDB.TblCategories;
-import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -18,7 +16,6 @@ import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.KeyEvent;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnCreateContextMenuListener;
@@ -32,7 +29,7 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 
-public class PhrasebookForm extends Activity {
+public class PhrasebookForm extends BaseActivity {
 
 	final static int ACTIVITY_ADD_PHRASE = 0;
 	final static int ACTIVITY_EDIT_PHRASE = 1;

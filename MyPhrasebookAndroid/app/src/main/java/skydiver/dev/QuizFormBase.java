@@ -9,7 +9,6 @@ import java.util.Set;
 
 import skydiver.dev.MyPhrasebookDB.TblCat2Phrase;
 import skydiver.dev.MyPhrasebookDB.TblPhrasebook;
-import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
@@ -19,8 +18,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
-public abstract class QuizFormBase extends Activity
-{
+public abstract class QuizFormBase extends BaseActivity {
 	public enum QuizType { MultiChoice, Written };
 	
 	static final String LANG_ANY = "ANY";

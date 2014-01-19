@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -19,7 +18,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 
-public class AddEditPhraseForm extends Activity {
+public class AddEditPhraseForm extends BaseActivity {
 
 	public static final String IPARAM_DB_ROW_ID = "id";
 	public static final String IPARAM_LANG1_TEXT = "L1";
