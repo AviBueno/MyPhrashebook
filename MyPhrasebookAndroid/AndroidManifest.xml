@@ -12,10 +12,11 @@
             </intent-filter>
         </activity>
         <activity android:name=".PhrasebookForm" />
-        <activity android:name=".QuizForm" />
-	    <activity android:name=".AddEditPhraseForm" />	    
+        <activity android:name=".QuizFormMultiChoice" />
+        <activity android:name=".QuizFormWriting" />
+        <activity android:name=".AddEditPhraseForm" />
 </application>
 	
-<uses-sdk android:minSdkVersion="4" />
+<uses-sdk android:minSdkVersion="7" />
 
 </manifest> 

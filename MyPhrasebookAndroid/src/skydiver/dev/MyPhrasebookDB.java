@@ -349,9 +349,27 @@ public class MyPhrasebookDB
 	
 	public Cursor selectCat2PhraseRowsByCategoryTitle( String catTitle )
 	{
+		return selectCat2PhraseRowsByCategoryTitle( catTitle, false );
+	}
+	
+	public Cursor selectCat2PhraseRowsByCategoryTitle( String catTitle, boolean singleWordsOnly )
+	{
 		String query = null;
-		
-		if ( catTitle.equals( mStrCatTitleUncategorized ) )
+
+		if ( singleWordsOnly )
+		{
+			// Search for phrases with no space chars in any language
+			Long categoryID = mCatTitleToCatIdMap.get( catTitle );
+			query = "SELECT * FROM " + TblCat2Phrase.TABLE_NAME
+						+ " WHERE " + TblCat2Phrase.CATEGORY_ID + " = " + categoryID
+						+ " AND " + TblCat2Phrase.PHRASE_ID + " IN ( "
+									+ "SELECT " + TblPhrasebook.ID + " FROM " + TblPhrasebook.TABLE_NAME 
+										+ " WHERE " + TblPhrasebook.LANG1 + " NOT LIKE '% %'"
+											+ " AND " + TblPhrasebook.LANG2 + " NOT LIKE '% %'"
+								+ " ) "
+					;
+		}		
+		else if ( catTitle.equals( mStrCatTitleUncategorized ) )
 		{
 			// Select all phrases which have exactly one category --> i.e. the "All" category.
 			// These ones were never categorized and live in their own "uncategorized" category.
