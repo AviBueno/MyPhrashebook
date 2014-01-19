@@ -1,11 +1,8 @@
 package skydiver.dev;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 import skydiver.dev.MyPhrasebookDB.TblCat2Phrase;
 import skydiver.dev.MyPhrasebookDB.TblPhrasebook;
@@ -17,11 +14,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.Spinner;
 
 public class QuizFormMultiChoice extends QuizFormBase
 {
@@ -230,11 +224,6 @@ public class QuizFormMultiChoice extends QuizFormBase
 		mQuizLevel = MPBApp.getInstance().getQuizLevel( QuizLevel.Medium );
 	}
 
-	private String getQuizLevelString()
-	{
-		return mQuizLevelDataMap.get(mQuizLevel).getText();
-	}
-	
 	private int getQuizLevelNumAnswers()
 	{
 		return mQuizLevelDataMap.get(mQuizLevel).getNumAnswers();

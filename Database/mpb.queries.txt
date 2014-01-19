@@ -123,3 +123,11 @@ select count(*) from Cat2Phrase where _id in (
 							) AND (_catID = 22) )
 					)
 				)
+
+# Single words on both LANG1 and LANG2:
+	SELECT * FROM Cat2Phrase
+		WHERE _catID = 5 AND _phraseID IN ( 
+			SELECT _id FROM Phrasebook
+						WHERE _english NOT LIKE '% %'
+							AND _language NOT LIKE '% %'
+				)
