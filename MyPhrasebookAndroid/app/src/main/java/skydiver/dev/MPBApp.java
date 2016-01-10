@@ -27,19 +27,19 @@ public class MPBApp extends Application {
 			mInstance = this;
 		}
 	}
-	
+
 	public static MPBApp getInstance()
 	{
 		return mInstance;
 	}
-	
+
 	static private Random smRandom = new Random();
 	public static Random RNG() { return smRandom; }
-	
+
 	public QuizFormMultiChoice.QuizLevel getQuizLevel( QuizFormMultiChoice.QuizLevel defaultQuizLevel )
 	{
 		int nQL = get( keyQUIZ_LEVEL, defaultQuizLevel.ordinal() );
-		QuizFormMultiChoice.QuizLevel ql = QuizFormMultiChoice.QuizLevel.values()[nQL];		
+		QuizFormMultiChoice.QuizLevel ql = QuizFormMultiChoice.QuizLevel.values()[nQL];
 		return ql;
 	}
 
@@ -47,28 +47,28 @@ public class MPBApp extends Application {
 	{
 		set( keyQUIZ_LEVEL, ql.ordinal() );
 	}
-	
-	String mQuizCategory = null;	
-	public String getQuizCategory()
+
+	String mQuizCategory = null;
+	public String getQuizCategory( String pageId )
 	{
-		String sCategory = get( keyQUIZ_CATEGORY, MyPhrasebookDB.TblCategories.VAL_ALL );
+		String sCategory = get( keyQUIZ_CATEGORY + pageId, MyPhrasebookDB.TblCategories.VAL_ALL );
 		if (! sCategory.equals( mQuizCategory ) )
 		{
 			Log.v( "MPBApp-Get", String.format("cat.s:%s ; cat.m:%s", sCategory, mQuizCategory ) );
 			mQuizCategory = sCategory;
 		}
-		Log.v( "MPBApp-Get", sCategory ); 
+		Log.v( "MPBApp-Get", sCategory );
 		return sCategory;
 	}
-	
-	public void setQuizCategory( String sCategory )
+
+	public void setQuizCategory( String sCategory, String pageId )
 	{
 		Log.v( "MPBApp-Get", String.format("cat.s:%s ; cat.m:%s", sCategory, mQuizCategory ) );
-		Log.v( "MPBApp-Set", sCategory ); 
-		set(keyQUIZ_CATEGORY, sCategory);
+		Log.v( "MPBApp-Set", sCategory );
+		set(keyQUIZ_CATEGORY + pageId, sCategory);
 	}
-	
-	String mPhrasebookCategory = null;	
+
+	String mPhrasebookCategory = null;
 	public String getPhrasebookCategory()
 	{
 		String sCategory = get( keyPHRASEBOOK_CATEGORY, MyPhrasebookDB.TblCategories.VAL_ALL );
@@ -77,34 +77,34 @@ public class MPBApp extends Application {
 			Log.v( "MPBApp-Get", String.format("cat.s:%s ; cat.m:%s", sCategory, mPhrasebookCategory ) );
 			mPhrasebookCategory = sCategory;
 		}
-		Log.v( "MPBApp-Get", sCategory ); 
+		Log.v( "MPBApp-Get", sCategory );
 		return sCategory;
 	}
-	
+
 	public void setPhrasebookCategory( String sCategory )
 	{
 		Log.v( "MPBApp-Get", String.format("cat.s:%s ; cat.m:%s", sCategory, mPhrasebookCategory ) );
-		Log.v( "MPBApp-Set", sCategory ); 
+		Log.v( "MPBApp-Set", sCategory );
 		set(keyPHRASEBOOK_CATEGORY, sCategory);
 	}
-	
-	public String getQuizLanguage()
+
+	public String getQuizLanguage(String pageId)
 	{
-		String sLanguage = get(keyLANGUAGE, QuizFormBase.LANG_ANY);
+		String sLanguage = get(keyLANGUAGE + pageId, QuizFormBase.LANG_ANY);
 		return sLanguage;
 	}
-	
-	public void setQuizLanguage( String sLanguage )
+
+	public void setQuizLanguage( String sLanguage, String pageId )
 	{
-		set(keyLANGUAGE, sLanguage);
-	}	
+		set(keyLANGUAGE + pageId, sLanguage);
+	}
 
 	public void set( String fieldName, HashSet<Integer> set )
 	{
 		String setAsString = set.toString();
 		set(fieldName, setAsString);
 	}
-	
+
 	public HashSet<Integer> get( String fieldName )
 	{
 		HashSet<Integer> resultSet = new HashSet<Integer>();
@@ -114,63 +114,63 @@ public class MPBApp extends Application {
 		if ( data.length() > 0 )	// Not empty?
 		{
 	        String[] strings = data.split(", ");
-	
+
 			for (int i = 0; i < strings.length; i++) {
 	        	resultSet.add( Integer.parseInt(strings[i]) );
 	        }
 		}
-		
+
 		return resultSet;
 	}
-	
+
 	public int get(String fieldName, int defaultValue)
 	{
 		SharedPreferences prefs = getSharedPreferences();
 		int value = prefs.getInt(fieldName, defaultValue);
 		return value;
 	}
-	
+
 	public void set(String fieldName, int value)
 	{
 		SharedPreferences.Editor prefsEditor = getSharedPreferencesEditor();
 		prefsEditor.putInt( fieldName, value );
 		prefsEditor.commit();
 	}
-	
+
 	public boolean get(String fieldName, boolean defaultValue)
 	{
 		SharedPreferences prefs = getSharedPreferences();
 		boolean value = prefs.getBoolean(fieldName, defaultValue);
 		return value;
 	}
-	
+
 	public void set(String fieldName, boolean value)
 	{
 		SharedPreferences.Editor prefsEditor = getSharedPreferencesEditor();
 		prefsEditor.putBoolean( fieldName, value );
 		prefsEditor.commit();
 	}
-	
+
 	private void set( String fieldName, String value )
 	{
 		SharedPreferences.Editor prefsEditor = getSharedPreferencesEditor();
 		prefsEditor.putString( fieldName, value );
 		prefsEditor.commit();
 	}
-	
+
 	private String get( String fieldName, String defaultValue )
 	{
 		SharedPreferences prefs = getSharedPreferences();
 		String value = prefs.getString(fieldName, defaultValue);
 		return value;
 	}
-	
+
 	private SharedPreferences getSharedPreferences()
 	{
 		SharedPreferences prefs = getSharedPreferences("mpb", MODE_PRIVATE);
 		return prefs;
 	}
-	 
+
 	private SharedPreferences.Editor getSharedPreferencesEditor()
 	{
 		SharedPreferences.Editor prefsEditor = getSharedPreferences().edit();
@@ -189,22 +189,22 @@ public class MPBApp extends Application {
         toast.setGravity(Gravity.CENTER, 0, 0);
         toast.show();
 	}
-	
+
 	public void ShortToast( String text )
 	{
 		ShowToast(text, true);
 	}
-	
+
 	public void ShortToast( int stringResourceId )
 	{
 		ShowToast(getString(stringResourceId), true);
 	}
-	
+
 	public void LongToast( String text )
 	{
 		ShowToast(text, false);
 	}
-	
+
 	public void LongToast( int stringResourceId )
 	{
 		ShowToast(getString(stringResourceId), false);
