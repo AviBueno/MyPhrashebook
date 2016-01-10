@@ -10,7 +10,7 @@
 		android:id="@+id/Title"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:padding="10px"
+		android:padding="10dp"
 		android:text="@string/MyPhrasebookTitle"
 		android:textSize="24sp"
 		android:gravity="center"
@@ -34,15 +34,14 @@
 		android:textSize="20sp"
 		android:layout_weight="1"
 		/>
-	
+
 	<Button
-		android:id="@+id/QuizButtonWriting"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:text="@string/QuizWriting"
-		android:textSize="20sp"
-		android:layout_weight="1"
-		/>
+	    android:id="@+id/QuizButtonWriting"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_weight="1"
+	    android:text="@string/QuizWriting"
+	    android:textSize="20sp" />
 		
 	<Button
 		android:id="@+id/MaintenanceButton"

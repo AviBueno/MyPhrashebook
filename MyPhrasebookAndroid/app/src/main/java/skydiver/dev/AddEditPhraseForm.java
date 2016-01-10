@@ -6,20 +6,17 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnMultiChoiceClickListener;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 
-public class AddEditPhraseForm extends Activity {
+public class AddEditPhraseForm extends BaseActivity {
 
 	public static final String IPARAM_DB_ROW_ID = "id";
 	public static final String IPARAM_LANG1_TEXT = "L1";
@@ -44,11 +41,11 @@ public class AddEditPhraseForm extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_edit_phrase);
 
-        ClearableEditText cet = (ClearableEditText)findViewById(R.id.txtLang1);
-        mTxtViewLang1 = cet.edit_text;
+		ClearableEditText cetLang1 = (ClearableEditText)findViewById(R.id.txtLang1);
+		mTxtViewLang1 = cetLang1.edit_text;
 
-        cet = (ClearableEditText)findViewById(R.id.txtLang2);
-        mTxtViewLang2 = cet.edit_text;
+		ClearableEditText cetLang2 = (ClearableEditText)findViewById(R.id.txtLang2);
+		mTxtViewLang2 = cetLang2.edit_text;
         
         // 2011-02-12: When typing text that is wider than the visible text area, the text control widens up to the
         // until it reaches the width of the whole screen. The problem is that by doing so it exceeded the screen area.
@@ -101,20 +98,7 @@ public class AddEditPhraseForm extends Activity {
 			}
 		});
 
-        // In order to ensure the keyboard will pop up, we'll do it as a post event after a small delay
-		Handler handler = new Handler();
-		handler.postDelayed(
-				    new Runnable() {
-				        public void run() {
-				            InputMethodManager inputMethodManager =  (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
-
-				            View v = findViewById(R.id.txtLang1);
-				            inputMethodManager.toggleSoftInputFromWindow(v.getApplicationWindowToken(), InputMethodManager.SHOW_IMPLICIT, 0);
-				            v.requestFocus();
-				        }
-				    },
-				    500 // msec delay
-				);
+		popupKeyboard( cetLang1 );
     }    
     
     void OnAddOrUpdatePhrase()

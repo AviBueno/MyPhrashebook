@@ -1,36 +1,24 @@
 package skydiver.dev;
 
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 
 import skydiver.dev.MyPhrasebookDB.TblCat2Phrase;
 import skydiver.dev.MyPhrasebookDB.TblPhrasebook;
-import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
-public abstract class QuizFormBase extends Activity
-{
+public abstract class QuizFormBase extends BaseActivity {
 	public enum QuizType { MultiChoice, Written };
-	
+
 	static final String LANG_ANY = "ANY";
 	private static final int DRAW_NEW_QUESTION = -1;
-	
+
 	private String mTheQuestion;
 	private String mTheAnswer;
 	private String mQuestionLanguage = QuizFormBase.LANG_ANY;
-	private SpinnerData mSDCategory;
-	private SpinnerData mSDLanguage;
 	private Cursor mCat2PhraseRows = null;
 	private HashSet<Integer> mAlreadyUsedQuestionRows;
 	private TextView mTxtQuestion;
@@ -47,21 +35,21 @@ public abstract class QuizFormBase extends Activity
 	protected String getTheQuestion() {
 		return mTheQuestion;
 	}
-	
+
 	protected int getQuestionRowIdx() {
 		return mQuestionRowIdx;
 	}
-	
+
 	protected String getTheAnswer() {
 		return mTheAnswer;
 	}
-	
+
 	protected Cursor getCat2PhraseRows() {
 		return mCat2PhraseRows;
 	}
 
-	protected abstract QuizType getQuizType(); 
-	
+	protected abstract QuizType getQuizType();
+
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -75,7 +63,7 @@ public abstract class QuizFormBase extends Activity
 		mViewFlipper = (ViewFlipper)findViewById( R.id.viewFlipper );
 	}
 
-	
+
 	protected boolean isAnswerCorrect(String answer) {
 		mNumTotalAnswered++;
 
@@ -86,10 +74,10 @@ public abstract class QuizFormBase extends Activity
 
 		// Update UI
 		updatePercentageUI();
-		
+
 		return isCorrectAnswer;
 	}
-	
+
 	private boolean checkAnswer(String userAnswer) {
 		Locale answerLocale   = mQuestionIsInLang1 ? MPBApp.LANG2_LOCALE : MPBApp.LANG1_LOCALE;
 		return checkAnswer(userAnswer, getTheAnswer(), answerLocale);
@@ -104,49 +92,69 @@ public abstract class QuizFormBase extends Activity
 			// Add to the hash of already-used questions
 			mAlreadyUsedQuestionRows.add( mQuestionRowIdx );
 		}
-		
+
 		// Draw a new question
 		DrawQuestion( true );
 	}
-	
-	private void saveState()
-	{
-		// Save relevant data
-		mMpbApp.set( "mNumCorrectlyAnswered", mNumCorrectlyAnswered );
-		mMpbApp.set( "mNumTotalAnswered", mNumTotalAnswered );					
-		mMpbApp.set( "mAlreadyUsedQuestionRows", mAlreadyUsedQuestionRows );
 
-		mMpbApp.setQuizCategory( mSDCategory.getValue() );
-		mMpbApp.setQuizLanguage( mSDLanguage.getValue() );
-		mMpbApp.set( "mQuestionRowIdx", mQuestionRowIdx );	// Persist the value
+	private static final String QUIZ_PREF_NUM_CORRECTLY_ANSWERED = "NCA";
+	private static final String QUIZ_PREF_NUM_TOTAL_ANSWERED = "NTA";
+	private static final String QUIZ_PREF_ALREADY_USED_QUESTION_ROWS = "AUQR";
+	private static final String QUIZ_PREF_QUESTION_ROW_IDX = "QRI";
+
+	protected void saveState(String pageId)
+	{
+
+		// Save relevant data
+		mMpbApp.set( QUIZ_PREF_NUM_CORRECTLY_ANSWERED + pageId, mNumCorrectlyAnswered );
+		mMpbApp.set( QUIZ_PREF_NUM_TOTAL_ANSWERED + pageId, mNumTotalAnswered );
+		mMpbApp.set( QUIZ_PREF_ALREADY_USED_QUESTION_ROWS + pageId, mAlreadyUsedQuestionRows );
+
+		mMpbApp.setQuizCategory( getCategorySpinnerData().getValue(), pageId );
+		mMpbApp.setQuizLanguage( getLanguageSpinnerData().getValue(), pageId );
+		mMpbApp.set( QUIZ_PREF_QUESTION_ROW_IDX + pageId, mQuestionRowIdx );	// Persist the value
 	}
-	
-	private void restoreState()
+
+	protected void restoreState(String pageId)
 	{
 		// Load values that are persisted between application sessions
-		mAlreadyUsedQuestionRows = mMpbApp.get("mAlreadyUsedQuestionRows");
-		mNumCorrectlyAnswered = mMpbApp.get( "mNumCorrectlyAnswered", 0 );
-		mNumTotalAnswered = mMpbApp.get( "mNumTotalAnswered", 0 );
-		mQuestionRowIdx = mMpbApp.get( "mQuestionRowIdx", DRAW_NEW_QUESTION );
-		
-		InitCategoriesSpinner();
-		InitLanguageSpinner();
-		
+		mAlreadyUsedQuestionRows = mMpbApp.get(QUIZ_PREF_ALREADY_USED_QUESTION_ROWS + pageId);
+		mNumCorrectlyAnswered = mMpbApp.get( QUIZ_PREF_NUM_CORRECTLY_ANSWERED + pageId, 0 );
+		mNumTotalAnswered = mMpbApp.get( QUIZ_PREF_NUM_TOTAL_ANSWERED + pageId, 0 );
+		mQuestionRowIdx = mMpbApp.get( QUIZ_PREF_QUESTION_ROW_IDX + pageId, DRAW_NEW_QUESTION );
+
+		String storedSDCategoryValue = mMpbApp.getQuizCategory( pageId );
+        initCategoriesSpinner( storedSDCategoryValue, new CategoryChangedListener() {
+			@Override
+			public void onCategoryChanged(SpinnerData sd) {
+				changeCategory( sd );
+			}
+		});
+
+		mQuestionLanguage = mMpbApp.getQuizLanguage( pageId );
+		initLanguageSpinner( mQuestionLanguage, new LanguageChangedListener() {
+
+			@Override
+			public void onLanguageChanged(SpinnerData sd) {
+				changeLanguage( sd );
+			}
+		});
+
 		LoadQuestions( false );
-		
+
 		mViewFlipper.setDisplayedChild( getQuizType().ordinal() );
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-		saveState();
+		saveState( getQuizType().toString() );
 	}
 
 	@Override
-	protected void onResume() {
+	protected final void onResume() {
 		super.onResume();
-		restoreState();
+		restoreState( getQuizType().toString() );
 	}
 
 	private void updatePercentageUI()
@@ -157,18 +165,18 @@ public abstract class QuizFormBase extends Activity
 		int nQuestionIndex = nAnswers > 0 ? mAlreadyUsedQuestionRows.size() + 1 : 0;
 		mTxtQuestionsCounter.setText( String.format( "%d / %d", nQuestionIndex, nAnswers ) );
 	}
-	
+
 	/**
 	 * Actions to perform before drawing a question
 	 * @return boolean true = OK to continue, false = do not draw a question
 	 */
-	protected boolean onPreDrawQuestion() { return true; }	
+	protected boolean onPreDrawQuestion() { return true; }
 	protected void onPostDrawQuestion() {}
-	
+
 	protected boolean isQuestionInLang1() {
 		return mQuestionIsInLang1;
 	}
-	
+
 	private void DrawQuestion( boolean bDrawNewQuestion )
 	{
 		boolean bDrawQuestion = onPreDrawQuestion();
@@ -178,13 +186,13 @@ public abstract class QuizFormBase extends Activity
 			updatePercentageUI();
 			return;
 		}
-		
+
 		// Decide if to ask in LANG1 or LANG2
 		if ( mQuestionLanguage.equals( MyPhrasebookDB.TblPhrasebook.LANG1 ) )
 		{
 			mQuestionIsInLang1 = true;
 		}
-		else if (mQuestionLanguage.equals( MyPhrasebookDB.TblPhrasebook.LANG2 ) ) 
+		else if (mQuestionLanguage.equals( MyPhrasebookDB.TblPhrasebook.LANG2 ) )
 		{
 			mQuestionIsInLang1 = false;
 		}
@@ -194,7 +202,7 @@ public abstract class QuizFormBase extends Activity
 		}
 
 		int nCat2PhraseRows = mCat2PhraseRows.getCount();
-		
+
 		// Reset the already used question rows in case no rows are left to choose from.
 		if ( mAlreadyUsedQuestionRows.size() >= nCat2PhraseRows )
 		{
@@ -202,13 +210,13 @@ public abstract class QuizFormBase extends Activity
 		}
 
 		// Find a question/answer row that was not yet used during
-		// the lifetime of this form		
+		// the lifetime of this form
 		if ( bDrawNewQuestion )
 		{
-			// nLastQuestionRowIdx will be used to make sure we don't re-select the 
+			// nLastQuestionRowIdx will be used to make sure we don't re-select the
 			// last question (in the case that all questions were asked and we now
 			// start a new round of questions).
-			int nLastQuestionRowIdx = mQuestionRowIdx; 
+			int nLastQuestionRowIdx = mQuestionRowIdx;
 			do
 			{
 				//Log.v("MPBApp-Quiz", String.format("Number of rows in category: %i", nCat2PhraseRows));
@@ -223,7 +231,7 @@ public abstract class QuizFormBase extends Activity
 			int phraseRowId = MyPhrasebookDB.getInt( mCat2PhraseRows, TblCat2Phrase.PHRASE_ID );
 			quizRow = MyPhrasebookDB.Instance().GetPhraseRowByID( phraseRowId );
 		}
-		
+
 		if ( quizRow != null )
 		{
 			quizRow.moveToFirst();
@@ -231,202 +239,61 @@ public abstract class QuizFormBase extends Activity
 
 	   	// Select the question text
    		mTheQuestion = getQuestion( mQuestionIsInLang1, quizRow );
-		
+
 		// Set the form's question text
 		mTxtQuestion.setText( mTheQuestion );
-		
+
 		// Select the answer text (opposite language of the question)
 		mTheAnswer = getAnswer( mQuestionIsInLang1, quizRow );
 
 		// Update quiz counter
 		mTxtQuestionsCounter.setText( String.format( "%d / %d", mAlreadyUsedQuestionRows.size() + 1, mCat2PhraseRows.getCount() ) );
-		
+
 		onPostDrawQuestion();
-		
+
 		updatePercentageUI();
 	}
-	
+
 	private String getQuestion( boolean bQuestionIsInLang1, Cursor row )
 	{
 		return bQuestionIsInLang1 	? MyPhrasebookDB.getString( row, TblPhrasebook.LANG1 )
-									: MyPhrasebookDB.getString( row, TblPhrasebook.LANG2 );		
+									: MyPhrasebookDB.getString( row, TblPhrasebook.LANG2 );
 	}
-	
+
 	private String getAnswer( boolean bQuestionIsInLang1, Cursor row )
 	{
 		return bQuestionIsInLang1 	? MyPhrasebookDB.getString( row, TblPhrasebook.LANG2 )
-									: MyPhrasebookDB.getString( row, TblPhrasebook.LANG1 );		
-	}
-	
-	private void InitCategoriesSpinner()
-	{
-		Spinner spinner = (Spinner)findViewById(R.id.spinCategory);
-
-		ArrayAdapter<SpinnerData> adapter = 
-			new ArrayAdapter<SpinnerData>( 
-					this,
-					android.R.layout.simple_spinner_item
-				);
-
-		Set<String> categoryTitles = MyPhrasebookDB.Instance().getCategoryTitles();
-		String storedSDCategoryValue = mMpbApp.getQuizCategory();
-
-		SpinnerData allSD = null;
-		for (String catTitle : categoryTitles)
-		{
-			SpinnerData sd = new SpinnerData( catTitle, catTitle );
-			adapter.add( sd );
-			
-			// Test if this was the prev. selected category
-			if ( storedSDCategoryValue.equals( sd.getValue() ) )
-			{
-				mSDCategory = sd;
-			}
-			
-			// Remember the "All" object
-			if ( catTitle.equals( MyPhrasebookDB.TblCategories.VAL_ALL ) )
-			{
-				allSD = sd;
-			}
-		}
-		
-		adapter.sort(new Comparator<SpinnerData>() {
-			public int compare(SpinnerData object1, SpinnerData object2) {
-				return object1.compareTo(object2);
-			};
-		});
-
-		// Put the "All" category first one on the list
-		adapter.remove(allSD);
-		adapter.insert(allSD, 0);
-		
-		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		
-		spinner.setAdapter(adapter);
-		spinner.setOnItemSelectedListener(
-			new AdapterView.OnItemSelectedListener()
-			{
-				public void onItemSelected(
-						AdapterView<?> parent, 
-						View view, 
-						int position, 
-						long id)
-				{
-					SpinnerData sd = (SpinnerData)parent.getAdapter().getItem( position );
-					changeCategory( sd );
-				}
-
-				public void onNothingSelected(AdapterView<?> parent) {
-				}
-			}
-		);
-		
-		// Select the prev. selected category
-		int nSelPos = adapter.getPosition(mSDCategory);
-		if ( nSelPos >= 0 )
-		{
-			// NOTE: For some reason, setSelection(int position) displayed the text of position=0 instead of position.
-			// Specifically: when switching off the screen are switching it on again.
-			// In order to overcome this (android bug?), we use setSelection(int position, boolean animate).
-			spinner.setSelection(nSelPos, true);
-		}
+									: MyPhrasebookDB.getString( row, TblPhrasebook.LANG1 );
 	}
 
 	protected void onCategoryChanged() {}
 
 	private void changeCategory(SpinnerData sd) {
-		if ( sd == mSDCategory ) {
-			return;
-		}
-		
-		// Save the category
-		mSDCategory = sd;
 		String sCategory = sd.getValue();
-		mMpbApp.setQuizCategory(sCategory);
-		
+		mMpbApp.setQuizCategory(sCategory, getQuizType().toString());
+
 		LoadQuestions( true );
-		
+
 		onCategoryChanged(); // Allow derived classes to perform additional tasks
 	}
 
-	private void InitLanguageSpinner()
-	{
-		Spinner spinner = (Spinner)findViewById(R.id.spinLanguage);
-		ArrayAdapter<SpinnerData> adapter = 
-			new ArrayAdapter<SpinnerData>( 
-					this,
-					android.R.layout.simple_spinner_item
-				);
-
-		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		spinner.setAdapter(adapter);
-		spinner.setOnItemSelectedListener(
-			new AdapterView.OnItemSelectedListener()
-			{
-				public void onItemSelected(
-						AdapterView<?> parent, 
-						View view, 
-						int position, 
-						long id)
-				{
-					SpinnerData sd = (SpinnerData)parent.getAdapter().getItem( position );
-					changeLanguage( sd );
-				}
-
-				public void onNothingSelected(AdapterView<?> parent) {
-				}
-			}
-		);
-		
-		List<SpinnerData> items = new ArrayList<SpinnerData>();
-		items.add( new SpinnerData( getString(R.string.LangBoth), QuizFormBase.LANG_ANY ) );
-		items.add( new SpinnerData( getString(R.string.Lang1), MyPhrasebookDB.TblPhrasebook.LANG1 ) );
-		items.add( new SpinnerData( getString(R.string.Lang2), MyPhrasebookDB.TblPhrasebook.LANG2 ) );
-		
-		mQuestionLanguage = mMpbApp.getQuizLanguage();
-		for ( SpinnerData sd : items )
-		{
-			adapter.add( sd );
-			if ( sd.getValue().equals(mQuestionLanguage) )
-			{
-				mSDLanguage = sd;
-			}
-		}
-		
-		// Select the prev. selected category
-		int nSelPos = adapter.getPosition(mSDLanguage);
-		if ( nSelPos >= 0 )
-		{
-			// NOTE: For some reason, setSelection(int position) displayed the text of position=0 instead of position.
-			// Specifically: when switching off the screen are switching it on again.
-			// In order to overcome this (android bug?), we use setSelection(int position, boolean animate).
-			spinner.setSelection(nSelPos, true); 
-		}
-	}
-
 	protected void onLanguageChange() {}
-	
-	private void changeLanguage(SpinnerData sd) {
-		if ( sd == mSDLanguage )
-		{
-			return;
-		}
 
-		mSDLanguage = sd;
-		mQuestionLanguage = sd.getValue();
-		mMpbApp.setQuizLanguage(mQuestionLanguage);
+	private void changeLanguage(SpinnerData sd) {
+		mQuestionLanguage = getLanguageSpinnerData().getValue();
+		mMpbApp.setQuizLanguage(mQuestionLanguage, getQuizType().toString());
 
 		DrawQuestion( false );
-		
+
 		onLanguageChange(); // Allow derived classes to perform additional tasks
 	}
-	
+
 	private void LoadQuestions( boolean bReset )
 	{
-		String catTitle = mSDCategory.getValue();
+		String catTitle = getCategorySpinnerData().getValue();
 		boolean selectSingleWordsOnly = (getQuizType() == QuizType.Written) ? true : false;
 		mCat2PhraseRows = MyPhrasebookDB.Instance().selectCat2PhraseRowsByCategoryTitle( catTitle, selectSingleWordsOnly );
-		
+
 		if ( bReset )
 		{
 			mAlreadyUsedQuestionRows.clear();
@@ -434,8 +301,8 @@ public abstract class QuizFormBase extends Activity
 			mNumTotalAnswered = 0;
 			mQuestionRowIdx = DRAW_NEW_QUESTION;
 		}
-		
-		updatePercentageUI();		
+
+		updatePercentageUI();
 
 		boolean bDrawNewQuestion = (mQuestionRowIdx == QuizFormBase.DRAW_NEW_QUESTION) ? true : false;
 		DrawQuestion( bDrawNewQuestion );

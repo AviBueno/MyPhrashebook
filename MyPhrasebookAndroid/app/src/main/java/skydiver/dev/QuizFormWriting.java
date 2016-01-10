@@ -3,25 +3,23 @@ package skydiver.dev;
 import java.util.Locale;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 
 public class QuizFormWriting extends QuizFormBase
 {
 	private ClearableEditText mWrittenAnswer;
-	
+
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		mWrittenAnswer = (ClearableEditText)findViewById(R.id.writtenAnswer);
-		
-		MPBApp.getInstance().setQuizLanguage( MyPhrasebookDB.TblPhrasebook.LANG1 );
-		
+
+		MPBApp.getInstance().setQuizLanguage( MyPhrasebookDB.TblPhrasebook.LANG1, getQuizType().toString() );
+
 		InitControls();
 	}
 
@@ -33,7 +31,7 @@ public class QuizFormWriting extends QuizFormBase
 	private void InitControls() {
 		Button bttOK = (Button)findViewById(R.id.bttSubmit);
 		bttOK.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				String userInput = mWrittenAnswer.getText().toString();
@@ -49,41 +47,30 @@ public class QuizFormWriting extends QuizFormBase
 				}
 			}
 		});
-		
+
 		Button bttPass = (Button)findViewById(R.id.bttPass);
 		bttPass.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				// Deliberately check a wrong answer in order to fail and calculate percentage
 				isAnswerCorrect( "" );
-				
+
 				// Toast the right answer
 				String answer = getTheAnswer();
 				MPBApp.getInstance().ShortToast(answer);
-				
+
 				// Next please.
 				mWrittenAnswer.clearText(); // Clear the text
 				drawNextQuestion();
 			}
 		});
-		
-		// In order to ensure the keyboard will pop up, we'll do it as a post event after a small delay 
-		Handler handler = new Handler();
-		handler.postDelayed(
-				    new Runnable() {
-				        public void run() {
-				            InputMethodManager inputMethodManager =  (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
-				            inputMethodManager.toggleSoftInputFromWindow(mWrittenAnswer.getApplicationWindowToken(), InputMethodManager.SHOW_IMPLICIT, 0);
-				            mWrittenAnswer.requestFocus();
-				        }
-				    },
-				    500 // msec delay
-				);
-		
+
 		setFocusToEditText();
+
+		popupKeyboard( mWrittenAnswer );
 	}
-	
+
 	/**
 	 * Return false if there are no questions to answer.
 	 * This will prevent the base class from drawing a question.
@@ -98,7 +85,7 @@ public class QuizFormWriting extends QuizFormBase
 	 * Check if the given answer if correct.
 	 * This implementation is case insensitive and ignores any special chars.
 	 *  at the end of the correct answer.
-	 *  E.g." "who" will be considered a valid answer to the term "Who?" 
+	 *  E.g." "who" will be considered a valid answer to the term "Who?"
 	 */
 	@Override
 	protected boolean checkAnswer(String userAnswer, String realAnswer, Locale answerLocale) {
@@ -111,26 +98,26 @@ public class QuizFormWriting extends QuizFormBase
 				break;
 			}
 		}
-		
+
 		boolean result = userAnswer.toLowerCase(answerLocale).equals( realAnswer.toLowerCase(answerLocale) );
 		return result;
 	}
-	
+
 	@Override
 	protected void onCategoryChanged() {
 		super.onCategoryChanged();
 		setFocusToEditText();
 	}
-	
+
 	@Override
 	protected void onLanguageChange() {
 		super.onLanguageChange();
 		setFocusToEditText();
 	}
-	
+
 	@Override
-	protected void onResume() {
-		super.onResume();
+	protected void restoreState(String pageId) {
+		super.restoreState(pageId);
 		setFocusToEditText();
 	}
 
