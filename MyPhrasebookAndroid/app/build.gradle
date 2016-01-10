@@ -1,0 +1,26 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 15
+    buildToolsVersion "21.1.2"
+
+    defaultConfig {
+        applicationId "skydiver.dev"
+        minSdkVersion 15
+        targetSdkVersion 15
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+    }
+}
+
+task copyFiles(type: Copy) {
+    from '../../Database/mpb.db'
+    into 'src/main/assets/'
+}
+
+preBuild.dependsOn(copyFiles)

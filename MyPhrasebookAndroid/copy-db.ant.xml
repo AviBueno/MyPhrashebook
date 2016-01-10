@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project name="copy-db" default="copy-db" basedir=".">
-
-    <target name="copy-db" description="Copy updated database file">
-        <copy file="../Database/mpb.db" todir="assets" />
-    </target>
-	
-</project>
