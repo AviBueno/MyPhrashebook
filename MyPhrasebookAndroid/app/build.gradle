@@ -17,3 +17,10 @@ android {
         }
     }
 }
+
+task copyFiles(type: Copy) {
+    from '../../Database/mpb.db'
+    into 'src/main/assets/'
+}
+
+preBuild.dependsOn(copyFiles)
